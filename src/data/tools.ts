@@ -24,11 +24,11 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: "ai", name: "AI Tools", description: "AI-powered generation and analysis", icon: Brain, color: "neon-cyan", toolCount: 10 },
-  { id: "seo", name: "SEO Tools", description: "Optimize your search rankings", icon: Search, color: "neon-magenta", toolCount: 10 },
-  { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 9 },
-  { id: "image", name: "Image Tools", description: "Image conversion and editing", icon: Image, color: "neon-blue", toolCount: 8 },
-  { id: "utility", name: "Utility Tools", description: "Everyday productivity tools", icon: Wrench, color: "neon-cyan", toolCount: 11 },
+  { id: "ai", name: "AI Tools", description: "AI-powered generation and analysis", icon: Brain, color: "neon-cyan", toolCount: 15 },
+  { id: "seo", name: "SEO Tools", description: "Optimize your search rankings", icon: Search, color: "neon-magenta", toolCount: 13 },
+  { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 15 },
+  { id: "image", name: "Image Tools", description: "Image conversion and editing", icon: Image, color: "neon-blue", toolCount: 10 },
+  { id: "utility", name: "Utility Tools", description: "Everyday productivity tools", icon: Wrench, color: "neon-cyan", toolCount: 16 },
 ];
 
 export const tools: Tool[] = [
