@@ -11,6 +11,7 @@ const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
   const tool = id ? getToolById(id) : undefined;
   const { user } = useAuth();
+  const { trackUsage } = useTrackToolUsage();
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
