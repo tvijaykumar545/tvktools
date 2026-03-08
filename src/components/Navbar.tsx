@@ -63,6 +63,15 @@ const Navbar = () => {
                 <User className="h-4 w-4" />
                 {profile?.display_name || "Dashboard"}
               </Link>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="rounded p-2 text-secondary transition-all hover:bg-secondary/10"
+                  title="Admin Panel"
+                >
+                  <Shield className="h-4 w-4" />
+                </Link>
+              )}
               <Link
                 to="/settings"
                 className="rounded p-2 text-muted-foreground transition-all hover:text-primary hover:bg-primary/10"
