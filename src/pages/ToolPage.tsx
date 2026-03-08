@@ -17,6 +17,7 @@ const ToolPage = () => {
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
   const requiresLogin = tool && !tool.isFree && !user;
 
   if (!tool) {
@@ -33,8 +34,6 @@ const ToolPage = () => {
   const placeholder = getToolPlaceholder(tool.id);
   const faqs = getToolFaq(tool.id);
   const relatedTools = tools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, 4);
-
-  const abortRef = useRef<AbortController | null>(null);
 
   const handleRun = async () => {
     if (loading) {
