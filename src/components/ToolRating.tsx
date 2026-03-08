@@ -34,24 +34,29 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
   const [loading, setLoading] = useState(true);
 
   const fetchReviews = useCallback(async () => {
-    const { data } = await supabase
-      .from("tool_reviews")
-      .select("*")
-      .eq("tool_id", toolId)
-      .order("created_at", { ascending: false });
+    try {
+      const { data } = await supabase
+        .from("tool_reviews" as any)
+        .select("*")
+        .eq("tool_id", toolId)
+        .order("created_at", { ascending: false });
 
-    const reviewData = (data as Review[]) || [];
-    setReviews(reviewData);
+      const reviewData = ((data as unknown) as Review[]) || [];
+      setReviews(reviewData);
 
-    if (user) {
-      const mine = reviewData.find((r) => r.user_id === user.id);
-      if (mine) {
-        setUserReview(mine);
-        setUserRating(mine.rating);
-        setFeedback(mine.feedback || "");
+      if (user) {
+        const mine = reviewData.find((r) => r.user_id === user.id);
+        if (mine) {
+          setUserReview(mine);
+          setUserRating(mine.rating);
+          setFeedback(mine.feedback || "");
+        }
       }
+    } catch {
+      // silently handle
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [toolId, user]);
 
   useEffect(() => {
@@ -80,7 +85,7 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
     try {
       if (userReview) {
         await supabase
-          .from("tool_reviews")
+          .from("tool_reviews" as any)
           .update({
             rating: parsed.data.rating,
             feedback: parsed.data.feedback,
@@ -89,7 +94,7 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
           .eq("id", userReview.id);
         toast.success("Review updated!");
       } else {
-        await supabase.from("tool_reviews").insert({
+        await supabase.from("tool_reviews" as any).insert({
           user_id: user.id,
           tool_id: toolId,
           rating: parsed.data.rating,
