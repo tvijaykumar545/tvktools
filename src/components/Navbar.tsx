@@ -130,6 +130,11 @@ const Navbar = () => {
                 <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="rounded px-3 py-2 text-sm text-primary">
                   Dashboard
                 </Link>
+                {isAdmin && (
+                  <Link to="/admin" onClick={() => setMobileOpen(false)} className="rounded px-3 py-2 text-sm text-secondary">
+                    Admin Panel
+                  </Link>
+                )}
                 <button onClick={() => { signOut(); setMobileOpen(false); }} className="rounded px-3 py-2 text-left text-sm text-muted-foreground">
                   Logout
                 </button>
