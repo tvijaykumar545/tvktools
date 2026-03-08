@@ -54,7 +54,7 @@ export const useToolUsageStats = (): UsageStats => {
         categoryBreakdown: Object.entries(catCounts)
           .map(([category, count]) => ({ category, count }))
           .sort((a, b) => b.count - a.count),
-        recentTools: allUsage.slice(0, 5),
+        recentTools: allUsage,
         loading: false,
       });
     };
