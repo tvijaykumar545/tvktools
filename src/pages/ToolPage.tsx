@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye } from "lucide-react";
 import { getToolById, tools } from "@/data/tools";
@@ -12,6 +12,7 @@ import { useToolFavorites } from "@/hooks/useToolFavorites";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import ToolRating from "@/components/ToolRating";
+import { useTypingEffect } from "@/hooks/useTypingEffect";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,6 +26,8 @@ const ToolPage = () => {
   const [loading, setLoading] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const requiresLogin = tool?.type === "backend" && !user;
+  const demoText = useMemo(() => tool ? getToolDemoOutput(tool.id) : "", [tool?.id]);
+  const { displayed: typedDemo, isTyping } = useTypingEffect(requiresLogin ? demoText : "", 15);
 
   if (!tool) {
     return (
@@ -232,7 +235,8 @@ const ToolPage = () => {
               </div>
               <div className="relative overflow-hidden rounded border border-primary/20 bg-card">
                 <pre className="p-4 font-body text-sm text-foreground whitespace-pre-wrap min-h-[200px] max-h-[250px] overflow-hidden">
-                  {getToolDemoOutput(tool.id)}
+                  {typedDemo}
+                  {isTyping && <span className="inline-block w-1.5 h-4 bg-primary animate-pulse ml-0.5 align-middle" />}
                 </pre>
                 {/* Blur overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
