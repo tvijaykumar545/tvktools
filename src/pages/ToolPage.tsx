@@ -11,6 +11,7 @@ import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
 import { useToolFavorites } from "@/hooks/useToolFavorites";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
+import ToolRating from "@/components/ToolRating";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
