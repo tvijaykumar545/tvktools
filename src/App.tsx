@@ -23,6 +23,7 @@ import Terms from "./pages/Terms";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Documentation from "./pages/Documentation";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
               <Route path="/tool/:id" element={<ToolPage />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />

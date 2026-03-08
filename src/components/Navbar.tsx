@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Menu, X, User } from "lucide-react";
+import { Search, Menu, X, User, Settings } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -60,6 +60,13 @@ const Navbar = () => {
               >
                 <User className="h-4 w-4" />
                 {profile?.display_name || "Dashboard"}
+              </Link>
+              <Link
+                to="/settings"
+                className="rounded p-2 text-muted-foreground transition-all hover:text-primary hover:bg-primary/10"
+                title="Settings"
+              >
+                <Settings className="h-4 w-4" />
               </Link>
               <button
                 onClick={signOut}
