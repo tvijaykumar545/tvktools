@@ -223,7 +223,7 @@ const ToolPage = () => {
         {requiresLogin && (
           <div className="mt-8 rounded border border-secondary/30 bg-card p-8 text-center neon-glow-magenta">
             <Lock className="mx-auto h-8 w-8 text-secondary" />
-            <h3 className="mt-3 font-heading text-lg font-bold text-secondary neon-text-magenta">Pro Tool — Login Required</h3>
+            <h3 className="mt-3 font-heading text-lg font-bold text-secondary neon-text-magenta">Login Required</h3>
             <p className="mt-2 text-sm text-muted-foreground">Sign in or create an account to use this tool.</p>
             <div className="mt-4 flex justify-center gap-3">
               <Link to="/login" className="rounded border border-primary/30 px-6 py-2 font-heading text-xs text-primary hover:bg-primary/10">Login</Link>
