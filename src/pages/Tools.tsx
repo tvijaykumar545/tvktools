@@ -1,15 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { tools as staticTools, categories, type ToolCategory } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
 import { useManagedTools } from "@/hooks/useManagedTools";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const Tools = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<ToolCategory | "all">("all");
   const [showFreeOnly, setShowFreeOnly] = useState(false);
   const { data: dbTools } = useManagedTools();
+  const { user } = useAuth();
   const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
+
+  // Load user's default category preference
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.id)
+        .single()
+        .then(({ data }) => {
+          const defaultCat = (data as any)?.default_category;
+          if (defaultCat && defaultCat !== "all") {
+            setActiveCategory(defaultCat as ToolCategory);
+          }
+        });
+    }
+  }, [user]);
 
   const filtered = tools.filter((t) => {
     if (activeCategory !== "all" && t.category !== activeCategory) return false;
