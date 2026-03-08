@@ -20,7 +20,21 @@ const Index = () => {
 
   return (
     <div className="cyber-grid">
-      {/* Hero */}
+      <SEOHead
+        path="/"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "TVK Tools",
+          url: "https://tvktools.lovable.app",
+          description: "Free AI-powered tools for SEO, developers, and creators.",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://tvktools.lovable.app/tools?q={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        }}
+      />
       <section className="relative overflow-hidden py-20 md:py-32">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
         <div className="container relative mx-auto px-4 text-center">
