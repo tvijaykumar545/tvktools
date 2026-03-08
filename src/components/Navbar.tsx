@@ -8,6 +8,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
 
   const links = [
     { to: "/", label: "Home" },
