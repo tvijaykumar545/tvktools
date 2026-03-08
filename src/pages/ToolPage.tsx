@@ -235,7 +235,8 @@ const ToolPage = () => {
               </div>
               <div className="relative overflow-hidden rounded border border-primary/20 bg-card">
                 <pre className="p-4 font-body text-sm text-foreground whitespace-pre-wrap min-h-[200px] max-h-[250px] overflow-hidden">
-                  {getToolDemoOutput(tool.id)}
+                  {typedDemo}
+                  {isTyping && <span className="inline-block w-1.5 h-4 bg-primary animate-pulse ml-0.5 align-middle" />}
                 </pre>
                 {/* Blur overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
