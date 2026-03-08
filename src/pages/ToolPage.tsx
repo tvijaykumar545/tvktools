@@ -7,6 +7,7 @@ import ToolCard from "@/components/ToolCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
