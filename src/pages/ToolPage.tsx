@@ -300,6 +300,9 @@ const ToolPage = () => {
         </div>
         )}
 
+        {/* Ratings & Feedback */}
+        <ToolRating toolId={tool.id} />
+
         {/* FAQ */}
         <section className="mt-16">
           <h2 className="font-heading text-xl font-bold text-foreground">FAQ</h2>
