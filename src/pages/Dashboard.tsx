@@ -1,19 +1,22 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { User, Key, History, Star, BarChart3 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { User, Key, History, Star, BarChart3, Heart, ChevronDown } from "lucide-react";
 import { useToolUsageStats } from "@/hooks/useToolUsageStats";
+import { useToolFavorites } from "@/hooks/useToolFavorites";
 
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const stats = useToolUsageStats();
+  const { favorites, loading: favLoading } = useToolFavorites();
+  const [showAllHistory, setShowAllHistory] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
   }, [user, loading, navigate]);
 
-  if (loading || stats.loading) {
+  if (loading || stats.loading || favLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="font-heading text-sm text-primary animate-pulse-neon">Loading...</div>
@@ -26,8 +29,11 @@ const Dashboard = () => {
   const statCards = [
     { label: "Total Tool Runs", value: stats.totalUses.toString(), icon: Star },
     { label: "Tools Used", value: stats.toolBreakdown.length.toString(), icon: BarChart3 },
+    { label: "Favorites", value: favorites.length.toString(), icon: Heart },
     { label: "Categories", value: stats.categoryBreakdown.length.toString(), icon: Key },
   ];
+
+  const displayedHistory = showAllHistory ? stats.recentTools : stats.recentTools.slice(0, 10);
 
   return (
     <div className="cyber-grid min-h-screen py-8">
@@ -68,7 +74,7 @@ const Dashboard = () => {
         </div>
 
         {/* Stats */}
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {statCards.map((stat) => (
             <div key={stat.label} className="rounded border border-primary/10 bg-card p-5 border-glow">
               <div className="flex items-center gap-3">
@@ -80,6 +86,36 @@ const Dashboard = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Favorites */}
+        <div className="mt-8 rounded border border-primary/10 bg-card p-5 border-glow">
+          <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+            <Heart className="h-4 w-4 text-destructive" />
+            Favorite Tools
+          </h2>
+          {favorites.length === 0 ? (
+            <p className="mt-4 text-xs text-muted-foreground">
+              No favorites yet. Click the ❤️ button on any tool page to save it here.{" "}
+              <Link to="/tools" className="text-primary hover:underline">Browse tools</Link>
+            </p>
+          ) : (
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {favorites.map((fav) => (
+                <Link
+                  key={fav.id}
+                  to={`/tool/${fav.tool_id}`}
+                  className="flex items-center gap-3 rounded border border-primary/10 bg-muted/30 p-3 transition-all hover:border-primary/40 hover:bg-primary/5"
+                >
+                  <Heart className="h-4 w-4 fill-destructive text-destructive shrink-0" />
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-foreground truncate">{fav.tool_name}</div>
+                    <div className="text-[10px] text-muted-foreground capitalize">{fav.category}</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Usage Breakdown */}
@@ -147,29 +183,45 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Recent Activity */}
+        {/* Full Usage History */}
         <div className="mt-6 rounded border border-primary/10 bg-card p-5 border-glow">
           <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
             <History className="h-4 w-4 text-primary" />
-            Recent Activity
+            Usage History
+            {stats.recentTools.length > 0 && (
+              <span className="ml-auto text-[10px] text-muted-foreground font-normal">
+                {stats.recentTools.length} total runs
+              </span>
+            )}
           </h2>
           {stats.recentTools.length === 0 ? (
             <p className="mt-4 text-xs text-muted-foreground">No recent activity.</p>
           ) : (
-            <div className="mt-4 space-y-2">
-              {stats.recentTools.map((item) => (
-                <Link
-                  key={item.created_at}
-                  to={`/tool/${item.tool_id}`}
-                  className="flex items-center justify-between rounded bg-muted/50 px-3 py-2 text-xs transition-all hover:bg-primary/10"
+            <>
+              <div className="mt-4 space-y-2">
+                {displayedHistory.map((item, i) => (
+                  <Link
+                    key={`${item.created_at}-${i}`}
+                    to={`/tool/${item.tool_id}`}
+                    className="flex items-center justify-between rounded bg-muted/50 px-3 py-2 text-xs transition-all hover:bg-primary/10"
+                  >
+                    <span className="text-foreground">{item.tool_name}</span>
+                    <span className="text-muted-foreground">
+                      {new Date(item.created_at).toLocaleString()}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+              {stats.recentTools.length > 10 && (
+                <button
+                  onClick={() => setShowAllHistory(!showAllHistory)}
+                  className="mt-3 flex items-center gap-1 text-xs text-primary hover:underline mx-auto"
                 >
-                  <span className="text-foreground">{item.tool_name}</span>
-                  <span className="text-muted-foreground">
-                    {new Date(item.created_at).toLocaleString()}
-                  </span>
-                </Link>
-              ))}
-            </div>
+                  <ChevronDown className={`h-3 w-3 transition-transform ${showAllHistory ? "rotate-180" : ""}`} />
+                  {showAllHistory ? "Show less" : `Show all ${stats.recentTools.length} entries`}
+                </button>
+              )}
+            </>
           )}
         </div>
 
