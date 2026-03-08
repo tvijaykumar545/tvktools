@@ -12,7 +12,7 @@ const About = () => {
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
           {[
             { icon: Zap, title: "AI-Powered", desc: "Leverage cutting-edge AI models to generate content, analyze data, and automate workflows." },
-            { icon: Globe, title: "n8n Automation", desc: "Backend tools are powered by n8n workflow automation for reliable, scalable processing." },
+            { icon: Globe, title: "TVK Technologies", desc: "Backend tools are powered by TVK Technologies' infrastructure for reliable, scalable processing." },
             { icon: Users, title: "Built for Everyone", desc: "From solo creators to enterprise teams — tools that scale with your needs." },
             { icon: Shield, title: "Secure & Private", desc: "Your data is never stored or shared. All processing is done securely in real-time." },
           ].map((item) => (
