@@ -1,17 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, X, User } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { user, profile, signOut } = useAuth();
 
   const links = [
     { to: "/", label: "Home" },
     { to: "/tools", label: "Tools" },
     { to: "/categories", label: "Categories" },
     { to: "/pricing", label: "Pricing" },
-    { to: "/blog", label: "Blog" },
   ];
 
   return (
@@ -50,18 +51,39 @@ const Navbar = () => {
             <Search className="h-4 w-4" />
             Search tools...
           </Link>
-          <Link
-            to="/login"
-            className="rounded border border-primary/30 px-4 py-2 font-heading text-xs font-semibold text-primary transition-all hover:bg-primary/10 hover:neon-glow"
-          >
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className="rounded bg-primary px-4 py-2 font-heading text-xs font-semibold text-primary-foreground transition-all hover:bg-primary/90 neon-glow"
-          >
-            Sign Up
-          </Link>
+
+          {user ? (
+            <div className="flex items-center gap-2">
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-2 rounded border border-primary/30 px-3 py-2 font-heading text-xs text-primary transition-all hover:bg-primary/10"
+              >
+                <User className="h-4 w-4" />
+                {profile?.display_name || "Dashboard"}
+              </Link>
+              <button
+                onClick={signOut}
+                className="rounded px-3 py-2 font-heading text-xs text-muted-foreground transition-all hover:text-destructive"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="rounded border border-primary/30 px-4 py-2 font-heading text-xs font-semibold text-primary transition-all hover:bg-primary/10"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="rounded bg-primary px-4 py-2 font-heading text-xs font-semibold text-primary-foreground transition-all hover:bg-primary/90 neon-glow"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -85,14 +107,25 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <div className="mt-2 flex gap-2">
-              <Link to="/login" className="flex-1 rounded border border-primary/30 px-4 py-2 text-center font-heading text-xs text-primary">
-                Login
-              </Link>
-              <Link to="/signup" className="flex-1 rounded bg-primary px-4 py-2 text-center font-heading text-xs text-primary-foreground neon-glow">
-                Sign Up
-              </Link>
-            </div>
+            {user ? (
+              <>
+                <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="rounded px-3 py-2 text-sm text-primary">
+                  Dashboard
+                </Link>
+                <button onClick={() => { signOut(); setMobileOpen(false); }} className="rounded px-3 py-2 text-left text-sm text-muted-foreground">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <div className="mt-2 flex gap-2">
+                <Link to="/login" onClick={() => setMobileOpen(false)} className="flex-1 rounded border border-primary/30 px-4 py-2 text-center font-heading text-xs text-primary">
+                  Login
+                </Link>
+                <Link to="/signup" onClick={() => setMobileOpen(false)} className="flex-1 rounded bg-primary px-4 py-2 text-center font-heading text-xs text-primary-foreground neon-glow">
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}
