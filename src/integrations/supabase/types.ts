@@ -108,8 +108,12 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          default_category: string
           display_name: string | null
+          email_notifications: boolean
           id: string
+          language: string
+          notifications_enabled: boolean
           plan: string
           theme: string
           updated_at: string
@@ -118,8 +122,12 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          default_category?: string
           display_name?: string | null
+          email_notifications?: boolean
           id?: string
+          language?: string
+          notifications_enabled?: boolean
           plan?: string
           theme?: string
           updated_at?: string
@@ -128,8 +136,12 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
+          default_category?: string
           display_name?: string | null
+          email_notifications?: boolean
           id?: string
+          language?: string
+          notifications_enabled?: boolean
           plan?: string
           theme?: string
           updated_at?: string
