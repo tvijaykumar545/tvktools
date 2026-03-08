@@ -34,24 +34,31 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
   const [loading, setLoading] = useState(true);
 
   const fetchReviews = useCallback(async () => {
-    const { data } = await supabase
-      .from("tool_reviews" as any)
-      .select("*")
-      .eq("tool_id", toolId)
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("tool_reviews" as any)
+        .select("*")
+        .eq("tool_id", toolId)
+        .order("created_at", { ascending: false });
 
-    const reviewData = ((data as unknown) as Review[]) || [];
-    setReviews(reviewData);
+      console.log("ToolRating fetch:", { data, error, toolId });
 
-    if (user) {
-      const mine = reviewData.find((r) => r.user_id === user.id);
-      if (mine) {
-        setUserReview(mine);
-        setUserRating(mine.rating);
-        setFeedback(mine.feedback || "");
+      const reviewData = ((data as unknown) as Review[]) || [];
+      setReviews(reviewData);
+
+      if (user) {
+        const mine = reviewData.find((r) => r.user_id === user.id);
+        if (mine) {
+          setUserReview(mine);
+          setUserRating(mine.rating);
+          setFeedback(mine.feedback || "");
+        }
       }
+    } catch (e) {
+      console.error("ToolRating error:", e);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [toolId, user]);
 
   useEffect(() => {
