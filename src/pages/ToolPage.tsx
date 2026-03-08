@@ -12,6 +12,7 @@ import { useToolFavorites } from "@/hooks/useToolFavorites";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import ToolRating from "@/components/ToolRating";
+import { useTypingEffect } from "@/hooks/useTypingEffect";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
