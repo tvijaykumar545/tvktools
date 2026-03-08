@@ -35,13 +35,11 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
 
   const fetchReviews = useCallback(async () => {
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("tool_reviews" as any)
         .select("*")
         .eq("tool_id", toolId)
         .order("created_at", { ascending: false });
-
-      console.log("ToolRating fetch:", { data, error, toolId });
 
       const reviewData = ((data as unknown) as Review[]) || [];
       setReviews(reviewData);
@@ -54,8 +52,8 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
           setFeedback(mine.feedback || "");
         }
       }
-    } catch (e) {
-      console.error("ToolRating error:", e);
+    } catch {
+      // silently handle
     } finally {
       setLoading(false);
     }
