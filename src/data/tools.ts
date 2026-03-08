@@ -74,6 +74,12 @@ export const tools: Tool[] = [
   { id: "html-minifier", name: "HTML Minifier", description: "Minify HTML for better performance", category: "developer", icon: "📄", isFree: true, type: "frontend" },
   { id: "css-minifier", name: "CSS Minifier", description: "Compress CSS files", category: "developer", icon: "🎨", isFree: true, type: "frontend" },
   { id: "js-minifier", name: "JavaScript Minifier", description: "Minify JavaScript code", category: "developer", icon: "⚡", isFree: true, type: "frontend" },
+  { id: "regex-tester", name: "Regex Tester", description: "Test and debug regular expressions", category: "developer", icon: "🔍", isFree: true, isNew: true, type: "frontend" },
+  { id: "json-to-csv", name: "JSON to CSV Converter", description: "Convert JSON data to CSV format", category: "developer", icon: "📊", isFree: true, type: "frontend" },
+  { id: "csv-to-json", name: "CSV to JSON Converter", description: "Convert CSV data to JSON format", category: "developer", icon: "📋", isFree: true, type: "frontend" },
+  { id: "color-converter", name: "Color Converter", description: "Convert between HEX, RGB, HSL color formats", category: "developer", icon: "🎨", isFree: true, type: "frontend" },
+  { id: "markdown-preview", name: "Markdown Preview", description: "Preview markdown with live rendering", category: "developer", icon: "📝", isFree: true, type: "frontend" },
+  { id: "sql-formatter", name: "SQL Formatter", description: "Format and beautify SQL queries", category: "developer", icon: "🗃️", isFree: true, isNew: true, type: "frontend" },
 
   // Image Tools
   { id: "image-converter", name: "Image Converter", description: "Convert images between formats", category: "image", icon: "🖼️", isFree: true, type: "frontend" },
