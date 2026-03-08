@@ -27,6 +27,8 @@ import Settings from "./pages/Settings";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminBlog from "./pages/admin/AdminBlog";
+import AdminTools from "./pages/admin/AdminTools";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
