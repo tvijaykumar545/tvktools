@@ -19,6 +19,7 @@ import Contact from "./pages/Contact";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Terms from "./pages/Terms";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
 
@@ -45,6 +46,7 @@ const App = () => (
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-conditions" element={<Terms />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
               <Route path="/documentation" element={<Documentation />} />
             </Route>
             <Route path="/login" element={<Login />} />
