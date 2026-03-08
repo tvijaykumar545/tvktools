@@ -23,11 +23,11 @@ export const useToolFavorites = () => {
       return;
     }
     const { data } = await supabase
-      .from("tool_favorites")
+      .from("tool_favorites" as any)
       .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
-    setFavorites((data as Favorite[]) || []);
+    setFavorites(((data as unknown) as Favorite[]) || []);
     setLoading(false);
   }, [user]);
 
