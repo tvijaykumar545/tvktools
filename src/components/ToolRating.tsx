@@ -89,7 +89,7 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
           .eq("id", userReview.id);
         toast.success("Review updated!");
       } else {
-        await supabase.from("tool_reviews").insert({
+        await supabase.from("tool_reviews" as any).insert({
           user_id: user.id,
           tool_id: toolId,
           rating: parsed.data.rating,
