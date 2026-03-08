@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Search, ArrowRight, Zap, Shield, Globe } from "lucide-react";
 import { tools, categories, getPopularTools, getNewTools } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
+import SEOHead from "@/components/SEOHead";
 
 const Index = () => {
   const [search, setSearch] = useState("");
