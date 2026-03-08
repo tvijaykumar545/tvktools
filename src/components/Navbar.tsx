@@ -1,12 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Menu, X, User, Settings } from "lucide-react";
+import { Search, Menu, X, User, Settings, Shield } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
+  const { isAdmin } = useIsAdmin();
 
   const links = [
     { to: "/", label: "Home" },
@@ -61,6 +63,15 @@ const Navbar = () => {
                 <User className="h-4 w-4" />
                 {profile?.display_name || "Dashboard"}
               </Link>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="rounded p-2 text-secondary transition-all hover:bg-secondary/10"
+                  title="Admin Panel"
+                >
+                  <Shield className="h-4 w-4" />
+                </Link>
+              )}
               <Link
                 to="/settings"
                 className="rounded p-2 text-muted-foreground transition-all hover:text-primary hover:bg-primary/10"
@@ -119,6 +130,11 @@ const Navbar = () => {
                 <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="rounded px-3 py-2 text-sm text-primary">
                   Dashboard
                 </Link>
+                {isAdmin && (
+                  <Link to="/admin" onClick={() => setMobileOpen(false)} className="rounded px-3 py-2 text-sm text-secondary">
+                    Admin Panel
+                  </Link>
+                )}
                 <button onClick={() => { signOut(); setMobileOpen(false); }} className="rounded px-3 py-2 text-left text-sm text-muted-foreground">
                   Logout
                 </button>
