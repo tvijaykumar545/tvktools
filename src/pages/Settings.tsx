@@ -2,14 +2,30 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Camera, Save, ArrowLeft, Shield, Mail } from "lucide-react";
+import { User, Camera, Save, ArrowLeft, Shield, Mail, Bell, Globe, Layers } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/contexts/ThemeContext";
+import { categories } from "@/data/tools";
+
+const LANGUAGES = [
+  { code: "en", label: "English" },
+  { code: "hi", label: "Hindi" },
+  { code: "es", label: "Spanish" },
+  { code: "fr", label: "French" },
+  { code: "de", label: "German" },
+  { code: "ja", label: "Japanese" },
+  { code: "zh", label: "Chinese" },
+  { code: "pt", label: "Portuguese" },
+  { code: "ar", label: "Arabic" },
+  { code: "ko", label: "Korean" },
+];
 
 const Settings = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { theme, toggleTheme } = useTheme();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [displayName, setDisplayName] = useState("");
@@ -17,9 +33,16 @@ const Settings = () => {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // Preferences
+  const [defaultCategory, setDefaultCategory] = useState("all");
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [language, setLanguage] = useState("en");
+  const [prefsLoading, setPrefsLoading] = useState(false);
+  const [prefsSaving, setPrefsSaving] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
@@ -31,6 +54,34 @@ const Settings = () => {
       setAvatarUrl(profile.avatar_url);
     }
   }, [profile]);
+
+  // Load preferences from DB
+  useEffect(() => {
+    if (user) {
+      const loadPrefs = async () => {
+        setPrefsLoading(true);
+        try {
+          const { data } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("user_id", user.id)
+            .single();
+
+          if (data) {
+            const d = data as any;
+            setDefaultCategory(d.default_category || "all");
+            setNotificationsEnabled(d.notifications_enabled ?? true);
+            setEmailNotifications(d.email_notifications ?? true);
+            setLanguage(d.language || "en");
+          }
+        } catch (error) {
+          console.error("Error loading preferences:", error);
+        }
+        setPrefsLoading(false);
+      };
+      loadPrefs();
+    }
+  }, [user]);
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -93,6 +144,28 @@ const Settings = () => {
     setSaving(false);
   };
 
+  const handleSavePreferences = async () => {
+    if (!user) return;
+    setPrefsSaving(true);
+
+    const { error } = await supabase
+      .from("profiles")
+      .update({
+        default_category: defaultCategory,
+        notifications_enabled: notificationsEnabled,
+        email_notifications: emailNotifications,
+        language,
+      } as any)
+      .eq("user_id", user.id);
+
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Preferences saved", description: "Your preferences have been updated." });
+    }
+    setPrefsSaving(false);
+  };
+
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword.length < 6) {
@@ -110,7 +183,6 @@ const Settings = () => {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Password updated", description: "Your password has been changed successfully." });
-      setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     }
@@ -147,7 +219,6 @@ const Settings = () => {
           </h2>
 
           <div className="mt-5 flex flex-col items-center gap-4 sm:flex-row sm:items-start">
-            {/* Avatar */}
             <div className="relative group">
               <div className="h-20 w-20 overflow-hidden rounded-full border-2 border-primary/30 bg-muted flex items-center justify-center">
                 {avatarUrl ? (
@@ -177,7 +248,6 @@ const Settings = () => {
               )}
             </div>
 
-            {/* Name + Email */}
             <div className="flex-1 w-full space-y-4">
               <div>
                 <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
@@ -225,6 +295,133 @@ const Settings = () => {
           </div>
         </div>
 
+        {/* Preferences */}
+        <div className="mt-6 rounded border border-primary/20 bg-card p-6 border-glow">
+          <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+            <Layers className="h-4 w-4 text-primary" /> Preferences
+          </h2>
+
+          {prefsLoading ? (
+            <div className="mt-4 text-xs text-muted-foreground animate-pulse">Loading preferences...</div>
+          ) : (
+            <div className="mt-5 space-y-5">
+              {/* Theme */}
+              <div>
+                <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Theme
+                </label>
+                <div className="mt-1 flex gap-2">
+                  <button
+                    onClick={() => { if (theme === "light") toggleTheme(); }}
+                    className={`flex-1 rounded border px-4 py-2.5 font-heading text-xs font-semibold transition-all ${
+                      theme === "dark"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-primary/20 text-muted-foreground hover:border-primary/40"
+                    }`}
+                  >
+                    🌙 Dark
+                  </button>
+                  <button
+                    onClick={() => { if (theme === "dark") toggleTheme(); }}
+                    className={`flex-1 rounded border px-4 py-2.5 font-heading text-xs font-semibold transition-all ${
+                      theme === "light"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-primary/20 text-muted-foreground hover:border-primary/40"
+                    }`}
+                  >
+                    ☀️ Light
+                  </button>
+                </div>
+              </div>
+
+              {/* Default Category */}
+              <div>
+                <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Default Tool Category
+                </label>
+                <select
+                  value={defaultCategory}
+                  onChange={(e) => setDefaultCategory(e.target.value)}
+                  className="mt-1 h-10 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground outline-none focus:border-primary/50 appearance-none cursor-pointer"
+                >
+                  <option value="all">All Categories</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Language */}
+              <div>
+                <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                  <Globe className="h-3 w-3" /> Language
+                </label>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="mt-1 h-10 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground outline-none focus:border-primary/50 appearance-none cursor-pointer"
+                >
+                  {LANGUAGES.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Notification Settings */}
+              <div>
+                <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                  <Bell className="h-3 w-3" /> Notifications
+                </label>
+                <div className="mt-2 space-y-3">
+                  <label className="flex items-center justify-between cursor-pointer group">
+                    <span className="text-sm text-foreground">Push Notifications</span>
+                    <button
+                      onClick={() => setNotificationsEnabled(!notificationsEnabled)}
+                      className={`relative h-6 w-11 rounded-full transition-colors ${
+                        notificationsEnabled ? "bg-primary" : "bg-muted-foreground/30"
+                      }`}
+                    >
+                      <span
+                        className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-background transition-transform shadow-sm ${
+                          notificationsEnabled ? "translate-x-5" : ""
+                        }`}
+                      />
+                    </button>
+                  </label>
+                  <label className="flex items-center justify-between cursor-pointer group">
+                    <span className="text-sm text-foreground">Email Notifications</span>
+                    <button
+                      onClick={() => setEmailNotifications(!emailNotifications)}
+                      className={`relative h-6 w-11 rounded-full transition-colors ${
+                        emailNotifications ? "bg-primary" : "bg-muted-foreground/30"
+                      }`}
+                    >
+                      <span
+                        className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-background transition-transform shadow-sm ${
+                          emailNotifications ? "translate-x-5" : ""
+                        }`}
+                      />
+                    </button>
+                  </label>
+                </div>
+              </div>
+
+              <button
+                onClick={handleSavePreferences}
+                disabled={prefsSaving}
+                className="flex items-center gap-2 rounded bg-primary px-5 py-2.5 font-heading text-xs font-bold text-primary-foreground neon-glow disabled:opacity-50"
+              >
+                <Save className="h-3.5 w-3.5" />
+                {prefsSaving ? "Saving..." : "Save Preferences"}
+              </button>
+            </div>
+          )}
+        </div>
+
         {/* Change Password */}
         <div className="mt-6 rounded border border-primary/20 bg-card p-6 border-glow">
           <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
@@ -269,7 +466,7 @@ const Settings = () => {
         </div>
 
         {/* Danger Zone */}
-        <div className="mt-6 rounded border border-destructive/20 bg-card p-6">
+        <div className="mt-6 mb-8 rounded border border-destructive/20 bg-card p-6">
           <h2 className="font-heading text-sm font-bold text-destructive flex items-center gap-2">
             <Shield className="h-4 w-4" /> Danger Zone
           </h2>
