@@ -43,6 +43,34 @@ export const runFrontendTool = (toolId: string, input: string): string => {
       return metaTagGenerator(input);
     case "serp-preview":
       return serpPreview(input);
+    case "readability-checker":
+      return readabilityChecker(input);
+    case "slug-generator":
+      return slugGenerator(input);
+    case "open-graph-generator":
+      return openGraphGenerator(input);
+    case "regex-tester":
+      return regexTester(input);
+    case "json-to-csv":
+      return jsonToCsv(input);
+    case "csv-to-json":
+      return csvToJson(input);
+    case "color-converter":
+      return colorConverter(input);
+    case "markdown-preview":
+      return markdownPreview(input);
+    case "sql-formatter":
+      return sqlFormatter(input);
+    case "lorem-ipsum":
+      return loremIpsumGenerator(input);
+    case "diff-checker":
+      return diffChecker(input);
+    case "emoji-picker":
+      return emojiSearch(input);
+    case "ip-lookup":
+      return ipLookup(input);
+    case "unit-converter":
+      return unitConverter(input);
     default:
       return "This tool uses AI processing. Click Run Tool to generate results.";
   }
