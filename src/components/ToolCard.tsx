@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Lock } from "lucide-react";
 import type { Tool } from "@/data/tools";
 import { Badge } from "@/components/ui/badge";
 
