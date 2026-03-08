@@ -163,7 +163,7 @@ function hashGenerator(input: string): string {
     }
     return Math.abs(hash).toString(16).padStart(mod, "0");
   };
-  return `Hash results for: "${input.substring(0, 50)}${input.length > 50 ? "..." : ""}"\n\nSimulated MD5: ${simpleHash(input, 32)}\nSimulated SHA-1: ${simpleHash(input + "sha1", 40)}\nSimulated SHA-256: ${simpleHash(input + "sha256", 64)}\n\n⚠️ Note: These are simulated hashes for demo. Connect n8n for cryptographic hashes.`;
+  return `Hash results for: "${input.substring(0, 50)}${input.length > 50 ? "..." : ""}"\n\nSimulated MD5: ${simpleHash(input, 32)}\nSimulated SHA-1: ${simpleHash(input + "sha1", 40)}\nSimulated SHA-256: ${simpleHash(input + "sha256", 64)}\n\n⚠️ Note: These are simulated hashes for demo purposes.`;
 }
 
 function htmlMinifier(input: string): string {
