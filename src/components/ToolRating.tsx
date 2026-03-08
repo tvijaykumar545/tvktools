@@ -40,7 +40,7 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
       .eq("tool_id", toolId)
       .order("created_at", { ascending: false });
 
-    const reviewData = (data as Review[]) || [];
+    const reviewData = ((data as unknown) as Review[]) || [];
     setReviews(reviewData);
 
     if (user) {
