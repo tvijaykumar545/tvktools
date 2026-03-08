@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Copy, Check, ArrowLeft, Download, Play, Lock } from "lucide-react";
+import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2 } from "lucide-react";
 import { getToolById, tools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
+import { toast } from "sonner";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
