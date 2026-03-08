@@ -10,6 +10,8 @@ const Tools = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<ToolCategory | "all">("all");
   const [showFreeOnly, setShowFreeOnly] = useState(false);
+  const [preferredCategory, setPreferredCategory] = useState<string | null>(null);
+  const [showPrefBanner, setShowPrefBanner] = useState(false);
   const { data: dbTools } = useManagedTools();
   const { user } = useAuth();
   const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
@@ -26,6 +28,9 @@ const Tools = () => {
           const defaultCat = (data as any)?.default_category;
           if (defaultCat && defaultCat !== "all") {
             setActiveCategory(defaultCat as ToolCategory);
+            const catName = categories.find(c => c.id === defaultCat)?.name || defaultCat;
+            setPreferredCategory(catName);
+            setShowPrefBanner(true);
           }
         });
     }
@@ -45,6 +50,25 @@ const Tools = () => {
           <h1 className="font-heading text-3xl font-bold text-primary neon-text">All Tools</h1>
           <p className="mt-1 text-sm text-muted-foreground">Browse and search 50+ tools</p>
         </div>
+
+        {/* Preferred category banner */}
+        {showPrefBanner && preferredCategory && (
+          <div className="mb-6 flex items-center justify-between rounded border border-primary/20 bg-primary/5 px-4 py-3">
+            <p className="text-sm text-foreground">
+              <span className="text-muted-foreground">Showing your preferred category:</span>{" "}
+              <span className="font-heading font-bold text-primary">{preferredCategory}</span>
+            </p>
+            <button
+              onClick={() => {
+                setActiveCategory("all");
+                setShowPrefBanner(false);
+              }}
+              className="rounded border border-primary/20 px-3 py-1 font-heading text-[10px] font-semibold text-muted-foreground transition-all hover:text-primary hover:border-primary/40"
+            >
+              Show All
+            </button>
+          </div>
+        )}
 
         {/* Filters */}
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center">
