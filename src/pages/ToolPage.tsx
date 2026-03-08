@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye } from "lucide-react";
 import { getToolById, tools } from "@/data/tools";
