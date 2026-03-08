@@ -47,13 +47,21 @@ const ToolCard = ({ tool }: ToolCardProps) => {
         </p>
       </div>
 
-      <div className="mt-auto flex items-center gap-2 text-[10px] text-muted-foreground">
-        <span className="rounded bg-muted px-1.5 py-0.5 font-heading uppercase">
-          {tool.category}
-        </span>
-        <span className="rounded bg-muted px-1.5 py-0.5">
-          {tool.type === "frontend" ? "Instant" : "AI-Powered"}
-        </span>
+      <div className="mt-auto flex items-center justify-between text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <span className="rounded bg-muted px-1.5 py-0.5 font-heading uppercase">
+            {tool.category}
+          </span>
+          <span className="rounded bg-muted px-1.5 py-0.5">
+            {tool.type === "frontend" ? "Instant" : "AI-Powered"}
+          </span>
+        </div>
+        {tool.type === "backend" && (
+          <span className="flex items-center gap-1 rounded bg-secondary/10 px-1.5 py-0.5 text-secondary">
+            <Lock className="h-2.5 w-2.5" />
+            Login
+          </span>
+        )}
       </div>
     </Link>
   );
