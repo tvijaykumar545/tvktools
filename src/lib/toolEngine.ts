@@ -527,3 +527,38 @@ export const getToolFaq = (toolId: string): { q: string; a: string }[] => {
   ];
   return defaultFaq;
 };
+
+export const getToolDemoOutput = (toolId: string): string => {
+  const demos: Record<string, string> = {
+    "json-formatter": '{\n  "name": "TVK Tools",\n  "version": 1,\n  "features": [\n    "formatting",\n    "validation"\n  ]\n}',
+    "json-validator": "✅ Valid JSON!\n\n{\n  \"key\": \"value\"\n}",
+    "base64-encoder": "SGVsbG8sIFdvcmxkIQ==",
+    "base64-decoder": "Hello, World!",
+    "jwt-decoder": "Header:\n{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}\n\nPayload:\n{\n  \"sub\": \"1234567890\",\n  \"name\": \"John Doe\",\n  \"iat\": 1516239022\n}\n\nSignature: SflKxwRJSMeKKF2QT4...",
+    "word-counter": "📊 Text Analysis\n\nWords: 12\nCharacters: 72\nCharacters (no spaces): 61\nSentences: 1\nParagraphs: 1\nReading time: ~1 min",
+    "text-case": "UPPERCASE:\nCONVERT THIS TEXT\n\nlowercase:\nconvert this text\n\nTitle Case:\nConvert This Text",
+    "uuid-generator": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d\nf6e5d4c3-b2a1-4987-6543-210fedcba987\n...",
+    "password-generator": "Generated 5 passwords (length: 16):\n\nxK#9mP$2vL@5nQ&8\nBw7!hR3^jF6*tY0%\n...",
+    "ai-blog-title": "🎯 Blog Title Suggestions:\n\n1. \"10 Digital Marketing Trends That Will Dominate 2026\"\n2. \"The Future of Digital Marketing: What You Need to Know in 2026\"\n3. \"Digital Marketing in 2026: Strategies That Actually Work\"\n4. \"Why 2026 Will Change Digital Marketing Forever\"\n5. \"The Ultimate Guide to Digital Marketing Trends 2026\"",
+    "ai-prompt-generator": "🎯 Optimized Prompt:\n\nYou are an expert content strategist. Write a comprehensive, SEO-optimized blog post about sustainable living tips...\n\n📝 Variations included...",
+    "ai-image-prompt": "🎨 Image Prompt:\n\nA sprawling cyberpunk metropolis at night, bathed in vibrant neon lights of cyan, magenta, and electric blue...\n\n🎯 Style modifiers included...",
+    "ai-tweet-generator": "🐦 Tweet Options:\n\n1. Remote work isn't the future — it's the present. Here's why developers who embrace it are 3x more productive 🧵\n\n2. Hot take: The office...",
+    "ai-hashtag-generator": "# Trending Hashtags:\n\n#FitnessCoaching #WellnessJourney #HealthyLifestyle #FitLife #WellnessCoach\n#MindBodySoul #FitnessMotivation...",
+    "ai-summarizer": "📄 Summary:\n\nThe article discusses key findings about... [AI-generated concise summary of your content will appear here]",
+    "ai-paraphraser": "🔄 Paraphrased:\n\nThe nimble brown fox leaps across the sluggish canine. This particular sentence serves as a common exercise for typing practice...",
+    "keyword-density": "📊 Keyword Density Analysis\nTotal words: 15\n\nkeyword: 3 (20.0%)\ncontent: 2 (13.3%)\n...",
+    "meta-tag-generator": '<title>My Page Title</title>\n<meta name="description" content="A description..." />\n<meta property="og:title" content="My Page Title" />',
+    "color-converter": "🎨 Color Conversion\n\nHEX: #FF5733\nRGB: rgb(255, 87, 51)\nHSL: hsl(11, 100%, 60%)\nCSS: color: #FF5733;",
+    "slug-generator": "URL Slug:\nhow-to-build-a-react-app-in-2026-a-complete-guide\n\nFull URL example:\nhttps://example.com/how-to-build-a-react-app-in-2026-a-complete-guide",
+    "unit-converter": "📏 Unit Conversions for 100\n\n🌡️ Temperature:\n  100°C = 212.00°F = 373.15K\n\n📐 Length:\n  100 cm = 39.3701 in...",
+    "regex-tester": "Pattern: /[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}/g\n\n✅ 2 match(es):\n  1. \"test@email.com\"\n  2. \"user@domain.org\"",
+  };
+
+  // Fallback for tools without specific demo
+  const fallbackByType: Record<string, string> = {
+    frontend: "⚡ Instant results generated!\n\nYour processed output will appear here with formatted results, ready to copy or download.\n\n📋 Full output available after sign up...",
+    backend: "🤖 AI-Generated Output:\n\nHigh-quality, context-aware results powered by advanced AI models.\n\nSign up to unlock full AI-powered generation with streaming output...",
+  };
+
+  return demos[toolId] || fallbackByType["frontend"];
+};
