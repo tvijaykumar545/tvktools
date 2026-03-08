@@ -43,6 +43,11 @@ export const tools: Tool[] = [
   { id: "ai-email-generator", name: "AI Email Generator", description: "Craft professional emails in seconds", category: "ai", icon: "📧", isFree: false, type: "backend" },
   { id: "ai-code-generator", name: "AI Code Generator", description: "Generate code snippets with AI", category: "ai", icon: "💻", isFree: false, type: "backend" },
   { id: "ai-chat", name: "AI Chat Assistant", description: "Chat with an intelligent AI assistant", category: "ai", icon: "🤖", isFree: false, type: "backend" },
+  { id: "ai-summarizer", name: "AI Text Summarizer", description: "Summarize long articles and documents instantly", category: "ai", icon: "📄", isFree: true, isNew: true, type: "backend" },
+  { id: "ai-paraphraser", name: "AI Paraphraser", description: "Rewrite text in different tones and styles", category: "ai", icon: "🔄", isFree: true, type: "backend" },
+  { id: "ai-story-generator", name: "AI Story Generator", description: "Generate creative stories from prompts", category: "ai", icon: "📖", isFree: false, isNew: true, type: "backend" },
+  { id: "ai-slogan-generator", name: "AI Slogan Generator", description: "Create catchy slogans for brands and products", category: "ai", icon: "💡", isFree: true, type: "backend" },
+  { id: "ai-grammar-checker", name: "AI Grammar Checker", description: "Fix grammar, spelling, and punctuation errors", category: "ai", icon: "✏️", isFree: true, isPopular: true, type: "backend" },
 
   // SEO Tools
   { id: "keyword-suggestions", name: "Keyword Suggestions", description: "Discover high-value keywords for your content", category: "seo", icon: "🔑", isFree: true, isPopular: true, type: "backend" },
