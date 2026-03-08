@@ -155,10 +155,31 @@ const ToolPage = () => {
 
   return (
     <div className="cyber-grid min-h-screen py-8">
+      <SEOHead
+        title={tool.name}
+        description={tool.description}
+        path={`/tool/${tool.id}`}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: tool.name,
+          description: tool.description,
+          applicationCategory: "WebApplication",
+          operatingSystem: "Web",
+          offers: {
+            "@type": "Offer",
+            price: tool.isFree ? "0" : "9.99",
+            priceCurrency: "USD",
+          },
+        }}
+      />
       <div className="container mx-auto px-4">
-        <Link to="/tools" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary">
-          <ArrowLeft className="h-3 w-3" /> All Tools
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link to="/tools" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary">
+            <ArrowLeft className="h-3 w-3" /> All Tools
+          </Link>
+          <ShareButtons title={`${tool.name} — TVK Tools`} url={`/tool/${tool.id}`} />
+        </div>
 
         {/* Hero */}
         <div className="mt-4 flex items-start gap-4">
