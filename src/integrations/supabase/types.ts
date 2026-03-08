@@ -56,6 +56,54 @@ export type Database = {
         }
         Relationships: []
       }
+      managed_tools: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          is_active: boolean
+          is_free: boolean
+          is_new: boolean
+          is_popular: boolean
+          name: string
+          sort_order: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id: string
+          is_active?: boolean
+          is_free?: boolean
+          is_new?: boolean
+          is_popular?: boolean
+          name: string
+          sort_order?: number
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          is_free?: boolean
+          is_new?: boolean
+          is_popular?: boolean
+          name?: string
+          sort_order?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
