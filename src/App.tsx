@@ -19,6 +19,7 @@ import Contact from "./pages/Contact";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Terms from "./pages/Terms";
 import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Documentation from "./pages/Documentation";
 import NotFound from "./pages/NotFound";
 
