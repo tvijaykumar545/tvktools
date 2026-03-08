@@ -156,6 +156,7 @@ const ToolPage = () => {
             </pre>
           </div>
         </div>
+        )}
 
         {/* FAQ */}
         <section className="mt-16">
