@@ -10,6 +10,8 @@ const Tools = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<ToolCategory | "all">("all");
   const [showFreeOnly, setShowFreeOnly] = useState(false);
+  const [preferredCategory, setPreferredCategory] = useState<string | null>(null);
+  const [showPrefBanner, setShowPrefBanner] = useState(false);
   const { data: dbTools } = useManagedTools();
   const { user } = useAuth();
   const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
@@ -26,6 +28,9 @@ const Tools = () => {
           const defaultCat = (data as any)?.default_category;
           if (defaultCat && defaultCat !== "all") {
             setActiveCategory(defaultCat as ToolCategory);
+            const catName = categories.find(c => c.id === defaultCat)?.name || defaultCat;
+            setPreferredCategory(catName);
+            setShowPrefBanner(true);
           }
         });
     }
