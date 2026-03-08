@@ -219,15 +219,47 @@ const ToolPage = () => {
           </div>
         </div>
 
-        {/* Login Gate */}
+        {/* Demo Preview & Login Gate */}
         {requiresLogin && (
-          <div className="mt-8 rounded border border-secondary/30 bg-card p-8 text-center neon-glow-magenta">
-            <Lock className="mx-auto h-8 w-8 text-secondary" />
-            <h3 className="mt-3 font-heading text-lg font-bold text-secondary neon-text-magenta">Login Required</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Sign in or create an account to use this tool.</p>
-            <div className="mt-4 flex justify-center gap-3">
-              <Link to="/login" className="rounded border border-primary/30 px-6 py-2 font-heading text-xs text-primary hover:bg-primary/10">Login</Link>
-              <Link to="/signup" className="rounded bg-primary px-6 py-2 font-heading text-xs text-primary-foreground neon-glow">Sign Up Free</Link>
+          <div className="mt-8 space-y-6">
+            {/* Demo Output Preview */}
+            <div className="relative">
+              <div className="flex items-center gap-2 mb-3">
+                <Eye className="h-4 w-4 text-primary" />
+                <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
+                  Sample Output Preview
+                </label>
+              </div>
+              <div className="relative overflow-hidden rounded border border-primary/20 bg-card">
+                <pre className="p-4 font-body text-sm text-foreground whitespace-pre-wrap min-h-[200px] max-h-[250px] overflow-hidden">
+                  {getToolDemoOutput(tool.id)}
+                </pre>
+                {/* Blur overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                  <Lock className="h-8 w-8 text-secondary mb-3" />
+                  <h3 className="font-heading text-lg font-bold text-secondary neon-text-magenta">
+                    Sign Up to Unlock Full Results
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground max-w-md">
+                    Create a free account to run this tool with your own input and get complete, downloadable results.
+                  </p>
+                  <div className="mt-4 flex gap-3">
+                    <Link
+                      to="/login"
+                      className="rounded border border-primary/30 px-6 py-2 font-heading text-xs text-primary hover:bg-primary/10 transition-all"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="rounded bg-primary px-6 py-2 font-heading text-xs text-primary-foreground neon-glow transition-all hover:bg-primary/90"
+                    >
+                      Sign Up Free
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
