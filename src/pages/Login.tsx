@@ -76,6 +76,16 @@ const Login = () => {
           </button>
         </form>
 
+        <div className="mt-4 flex items-center gap-3">
+          <div className="h-px flex-1 bg-primary/20" />
+          <span className="text-[10px] text-muted-foreground font-heading">OR</span>
+          <div className="h-px flex-1 bg-primary/20" />
+        </div>
+
+        <div className="mt-4">
+          <GoogleSignInButton />
+        </div>
+
         <div className="mt-6 text-center text-xs text-muted-foreground">
           Don't have an account?{" "}
           <Link to="/signup" className="text-primary hover:underline">Sign up</Link>
