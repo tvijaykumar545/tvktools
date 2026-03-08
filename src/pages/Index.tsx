@@ -105,11 +105,11 @@ const Index = () => {
       {/* Stats */}
       <section className="border-y border-primary/10 bg-card/50 py-8">
         <div className="container mx-auto flex flex-wrap items-center justify-center gap-8 px-4 md:gap-16">
-          {[
-            { icon: Zap, label: "50+ Tools", desc: "Ready to use" },
-            { icon: Shield, label: "Free Access", desc: "No login needed" },
-            { icon: Globe, label: "n8n Powered", desc: "Automated workflows" },
-          ].map((stat) => (
+           {[
+             { icon: Zap, label: "50+ Tools", desc: "Ready to use" },
+             { icon: Shield, label: "Free Access", desc: "No login needed" },
+             { icon: Globe, label: "TVK Technologies", desc: "Crafted with care" },
+           ].map((stat) => (
             <div key={stat.label} className="flex items-center gap-3">
               <stat.icon className="h-6 w-6 text-primary" />
               <div>
