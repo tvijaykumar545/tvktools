@@ -180,7 +180,20 @@ const ToolPage = () => {
           <Link to="/tools" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary">
             <ArrowLeft className="h-3 w-3" /> All Tools
           </Link>
-          <ShareButtons title={`${tool.name} — TVK Tools`} url={`/tool/${tool.id}`} />
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => toggleFavorite(tool.id, tool.name, tool.category)}
+              className="flex items-center gap-1 rounded border border-primary/20 px-3 py-1.5 text-xs transition-all hover:border-primary/50"
+            >
+              <Heart
+                className={`h-3.5 w-3.5 transition-colors ${isFavorite(tool.id) ? "fill-destructive text-destructive" : "text-muted-foreground"}`}
+              />
+              <span className={isFavorite(tool.id) ? "text-destructive" : "text-muted-foreground"}>
+                {isFavorite(tool.id) ? "Saved" : "Save"}
+              </span>
+            </button>
+            <ShareButtons title={`${tool.name} — TVK Tools`} url={`/tool/${tool.id}`} />
+          </div>
         </div>
 
         {/* Hero */}
