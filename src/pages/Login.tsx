@@ -10,6 +10,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -20,17 +23,35 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setNeedsVerification(false);
+    setResent(false);
     setLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       setError(error.message);
     } else if (data.user && !data.user.email_confirmed_at) {
       await supabase.auth.signOut();
-      setError("Please verify your email address before signing in. Check your inbox for the confirmation link.");
+      setNeedsVerification(true);
     } else {
       navigate("/dashboard");
     }
     setLoading(false);
+  };
+
+  const handleResendVerification = async () => {
+    setResending(true);
+    setResent(false);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: window.location.origin },
+    });
+    if (error) {
+      setError(error.message);
+    } else {
+      setResent(true);
+    }
+    setResending(false);
   };
 
   return (
@@ -42,6 +63,23 @@ const Login = () => {
         </div>
 
         <form onSubmit={handleLogin} className="mt-8 space-y-4">
+          {needsVerification && (
+            <div className="rounded border border-accent/30 bg-accent/10 p-3 text-xs text-accent-foreground space-y-2">
+              <p>Please verify your email address before signing in. Check your inbox for the confirmation link.</p>
+              {resent ? (
+                <p className="text-primary font-semibold">✓ Verification email sent! Check your inbox.</p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleResendVerification}
+                  disabled={resending}
+                  className="rounded bg-primary px-3 py-1.5 font-heading text-[10px] font-bold text-primary-foreground neon-glow disabled:opacity-50"
+                >
+                  {resending ? "Sending..." : "Resend Verification Email"}
+                </button>
+              )}
+            </div>
+          )}
           {error && (
             <div className="rounded border border-destructive/50 bg-destructive/10 p-3 text-xs text-destructive">
               {error}
