@@ -212,8 +212,10 @@ const ToolPage = () => {
               disabled={loading}
               className="flex items-center justify-center gap-2 rounded bg-primary px-6 py-3 font-heading text-xs font-bold text-primary-foreground transition-all hover:bg-primary/90 neon-glow disabled:opacity-50"
             >
-              {loading ? (
-                <span className="animate-pulse-neon">Processing...</span>
+            {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> {tool.type === "backend" ? "Generating..." : "Processing..."}
+                </>
               ) : (
                 <>
                   <Play className="h-4 w-4" /> Run Tool

@@ -44,7 +44,7 @@ export const runFrontendTool = (toolId: string, input: string): string => {
     case "serp-preview":
       return serpPreview(input);
     default:
-      return "This tool requires backend processing. Connect n8n webhook to enable.";
+      return "This tool uses AI processing. Click Run Tool to generate results.";
   }
 };
 
