@@ -10,6 +10,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -20,17 +23,35 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setNeedsVerification(false);
+    setResent(false);
     setLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       setError(error.message);
     } else if (data.user && !data.user.email_confirmed_at) {
       await supabase.auth.signOut();
-      setError("Please verify your email address before signing in. Check your inbox for the confirmation link.");
+      setNeedsVerification(true);
     } else {
       navigate("/dashboard");
     }
     setLoading(false);
+  };
+
+  const handleResendVerification = async () => {
+    setResending(true);
+    setResent(false);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: { emailRedirectTo: window.location.origin },
+    });
+    if (error) {
+      setError(error.message);
+    } else {
+      setResent(true);
+    }
+    setResending(false);
   };
 
   return (
