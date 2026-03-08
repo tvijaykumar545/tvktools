@@ -48,7 +48,7 @@ export const useToolFavorites = () => {
       }
       const existing = favorites.find((f) => f.tool_id === toolId);
       if (existing) {
-        await supabase.from("tool_favorites").delete().eq("id", existing.id);
+        await supabase.from("tool_favorites" as any).delete().eq("id", existing.id);
         setFavorites((prev) => prev.filter((f) => f.id !== existing.id));
         toast.success("Removed from favorites");
       } else {
