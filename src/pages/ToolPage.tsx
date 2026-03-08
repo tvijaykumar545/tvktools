@@ -39,6 +39,7 @@ const ToolPage = () => {
       const result = runFrontendTool(tool.id, input || placeholder);
       setOutput(result);
       setLoading(false);
+      trackUsage(tool.id, tool.name, tool.category);
     }, 300);
   };
 
