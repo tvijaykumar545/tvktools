@@ -4,6 +4,8 @@ import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2 } from "lucide-re
 import { getToolById, tools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
+import SEOHead from "@/components/SEOHead";
+import ShareButtons from "@/components/ShareButtons";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
 import { toast } from "sonner";
