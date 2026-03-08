@@ -32,12 +32,13 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         try {
           const { data: profileData } = await supabase
             .from("profiles")
-            .select("theme")
+            .select("*")
             .eq("user_id", user.id)
             .single();
 
-          if (profileData?.theme) {
-            setTheme(profileData.theme as Theme);
+          const themeValue = (profileData as any)?.theme;
+          if (themeValue) {
+            setTheme(themeValue as Theme);
           }
         } catch (error) {
           console.error("Error loading theme preference:", error);
