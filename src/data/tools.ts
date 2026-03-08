@@ -105,6 +105,11 @@ export const tools: Tool[] = [
   { id: "random-number", name: "Random Number Generator", description: "Generate random numbers in any range", category: "utility", icon: "🎲", isFree: true, type: "frontend" },
   { id: "secret-keys", name: "Secret Keys Generator", description: "Generate secure API keys and secrets", category: "utility", icon: "🗝️", isFree: true, isNew: true, type: "frontend" },
   { id: "smtp-tester", name: "SMTP Tester", description: "Test SMTP server connections", category: "utility", icon: "📮", isFree: false, type: "backend" },
+  { id: "lorem-ipsum", name: "Lorem Ipsum Generator", description: "Generate placeholder text for designs", category: "utility", icon: "📜", isFree: true, type: "frontend" },
+  { id: "diff-checker", name: "Text Diff Checker", description: "Compare two texts and find differences", category: "utility", icon: "🔀", isFree: true, isNew: true, type: "frontend" },
+  { id: "emoji-picker", name: "Emoji Search", description: "Search and copy emojis by keyword", category: "utility", icon: "😀", isFree: true, type: "frontend" },
+  { id: "ip-lookup", name: "IP Address Lookup", description: "Look up details for any IP address", category: "utility", icon: "🌍", isFree: true, type: "frontend" },
+  { id: "unit-converter", name: "Unit Converter", description: "Convert between common measurement units", category: "utility", icon: "📏", isFree: true, type: "frontend" },
 ];
 
 export const getToolsByCategory = (category: ToolCategory) => tools.filter(t => t.category === category);
