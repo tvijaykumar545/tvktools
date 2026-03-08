@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 
@@ -114,6 +115,16 @@ const Signup = () => {
             {loading ? "Creating account..." : "Create Account"}
           </button>
         </form>
+
+        <div className="mt-4 flex items-center gap-3">
+          <div className="h-px flex-1 bg-primary/20" />
+          <span className="text-[10px] text-muted-foreground font-heading">OR</span>
+          <div className="h-px flex-1 bg-primary/20" />
+        </div>
+
+        <div className="mt-4">
+          <GoogleSignInButton />
+        </div>
 
         <div className="mt-6 text-center text-xs text-muted-foreground">
           Already have an account?{" "}
