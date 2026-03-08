@@ -51,16 +51,21 @@ const Footer = () => {
 
           <div>
             <h4 className="mb-3 font-heading text-xs font-semibold uppercase tracking-wider text-primary">
-              Legal
+              Company
             </h4>
             <div className="flex flex-col gap-2">
-              {["About", "Contact", "Privacy Policy", "Terms & Conditions"].map((item) => (
+              {[
+                { label: "About", to: "/about" },
+                { label: "Contact", to: "/contact" },
+                { label: "Privacy Policy", to: "/privacy-policy" },
+                { label: "Terms & Conditions", to: "/terms-conditions" },
+              ].map((item) => (
                 <Link
-                  key={item}
-                  to={`/${item.toLowerCase().replace(/ & /g, "-").replace(/ /g, "-")}`}
+                  key={item.label}
+                  to={item.to}
                   className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
-                  {item}
+                  {item.label}
                 </Link>
               ))}
             </div>
