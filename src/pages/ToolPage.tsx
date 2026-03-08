@@ -24,7 +24,7 @@ const ToolPage = () => {
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
-  const requiresLogin = !user;
+  const requiresLogin = tool?.type === "backend" && !user;
 
   if (!tool) {
     return (
