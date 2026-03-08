@@ -24,11 +24,11 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: "ai", name: "AI Tools", description: "AI-powered generation and analysis", icon: Brain, color: "neon-cyan", toolCount: 10 },
-  { id: "seo", name: "SEO Tools", description: "Optimize your search rankings", icon: Search, color: "neon-magenta", toolCount: 10 },
-  { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 9 },
-  { id: "image", name: "Image Tools", description: "Image conversion and editing", icon: Image, color: "neon-blue", toolCount: 8 },
-  { id: "utility", name: "Utility Tools", description: "Everyday productivity tools", icon: Wrench, color: "neon-cyan", toolCount: 11 },
+  { id: "ai", name: "AI Tools", description: "AI-powered generation and analysis", icon: Brain, color: "neon-cyan", toolCount: 15 },
+  { id: "seo", name: "SEO Tools", description: "Optimize your search rankings", icon: Search, color: "neon-magenta", toolCount: 13 },
+  { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 15 },
+  { id: "image", name: "Image Tools", description: "Image conversion and editing", icon: Image, color: "neon-blue", toolCount: 10 },
+  { id: "utility", name: "Utility Tools", description: "Everyday productivity tools", icon: Wrench, color: "neon-cyan", toolCount: 16 },
 ];
 
 export const tools: Tool[] = [
@@ -43,6 +43,11 @@ export const tools: Tool[] = [
   { id: "ai-email-generator", name: "AI Email Generator", description: "Craft professional emails in seconds", category: "ai", icon: "📧", isFree: false, type: "backend" },
   { id: "ai-code-generator", name: "AI Code Generator", description: "Generate code snippets with AI", category: "ai", icon: "💻", isFree: false, type: "backend" },
   { id: "ai-chat", name: "AI Chat Assistant", description: "Chat with an intelligent AI assistant", category: "ai", icon: "🤖", isFree: false, type: "backend" },
+  { id: "ai-summarizer", name: "AI Text Summarizer", description: "Summarize long articles and documents instantly", category: "ai", icon: "📄", isFree: true, isNew: true, type: "backend" },
+  { id: "ai-paraphraser", name: "AI Paraphraser", description: "Rewrite text in different tones and styles", category: "ai", icon: "🔄", isFree: true, type: "backend" },
+  { id: "ai-story-generator", name: "AI Story Generator", description: "Generate creative stories from prompts", category: "ai", icon: "📖", isFree: false, isNew: true, type: "backend" },
+  { id: "ai-slogan-generator", name: "AI Slogan Generator", description: "Create catchy slogans for brands and products", category: "ai", icon: "💡", isFree: true, type: "backend" },
+  { id: "ai-grammar-checker", name: "AI Grammar Checker", description: "Fix grammar, spelling, and punctuation errors", category: "ai", icon: "✏️", isFree: true, isPopular: true, type: "backend" },
 
   // SEO Tools
   { id: "keyword-suggestions", name: "Keyword Suggestions", description: "Discover high-value keywords for your content", category: "seo", icon: "🔑", isFree: true, isPopular: true, type: "backend" },
@@ -55,6 +60,9 @@ export const tools: Tool[] = [
   { id: "backlink-checker", name: "Backlink Checker", description: "Analyze backlinks for any domain", category: "seo", icon: "🔗", isFree: false, type: "backend" },
   { id: "domain-authority", name: "Domain Authority Checker", description: "Check domain authority score", category: "seo", icon: "🏆", isFree: false, type: "backend" },
   { id: "competitor-ranking", name: "Competitor Ranking Keywords", description: "See what keywords competitors rank for", category: "seo", icon: "📈", isFree: false, type: "backend" },
+  { id: "readability-checker", name: "Readability Checker", description: "Analyze content readability score and grade level", category: "seo", icon: "📖", isFree: true, isNew: true, type: "frontend" },
+  { id: "slug-generator", name: "URL Slug Generator", description: "Generate SEO-friendly URL slugs", category: "seo", icon: "🔗", isFree: true, type: "frontend" },
+  { id: "open-graph-generator", name: "Open Graph Generator", description: "Generate Open Graph meta tags for social sharing", category: "seo", icon: "🌐", isFree: true, type: "frontend" },
 
   // Developer Tools
   { id: "json-formatter", name: "JSON Formatter", description: "Format and beautify JSON data", category: "developer", icon: "{ }", isFree: true, isPopular: true, type: "frontend" },
@@ -66,6 +74,12 @@ export const tools: Tool[] = [
   { id: "html-minifier", name: "HTML Minifier", description: "Minify HTML for better performance", category: "developer", icon: "📄", isFree: true, type: "frontend" },
   { id: "css-minifier", name: "CSS Minifier", description: "Compress CSS files", category: "developer", icon: "🎨", isFree: true, type: "frontend" },
   { id: "js-minifier", name: "JavaScript Minifier", description: "Minify JavaScript code", category: "developer", icon: "⚡", isFree: true, type: "frontend" },
+  { id: "regex-tester", name: "Regex Tester", description: "Test and debug regular expressions", category: "developer", icon: "🔍", isFree: true, isNew: true, type: "frontend" },
+  { id: "json-to-csv", name: "JSON to CSV Converter", description: "Convert JSON data to CSV format", category: "developer", icon: "📊", isFree: true, type: "frontend" },
+  { id: "csv-to-json", name: "CSV to JSON Converter", description: "Convert CSV data to JSON format", category: "developer", icon: "📋", isFree: true, type: "frontend" },
+  { id: "color-converter", name: "Color Converter", description: "Convert between HEX, RGB, HSL color formats", category: "developer", icon: "🎨", isFree: true, type: "frontend" },
+  { id: "markdown-preview", name: "Markdown Preview", description: "Preview markdown with live rendering", category: "developer", icon: "📝", isFree: true, type: "frontend" },
+  { id: "sql-formatter", name: "SQL Formatter", description: "Format and beautify SQL queries", category: "developer", icon: "🗃️", isFree: true, isNew: true, type: "frontend" },
 
   // Image Tools
   { id: "image-converter", name: "Image Converter", description: "Convert images between formats", category: "image", icon: "🖼️", isFree: true, type: "frontend" },
@@ -76,6 +90,8 @@ export const tools: Tool[] = [
   { id: "image-cropper", name: "Image Cropper", description: "Crop images to custom sizes", category: "image", icon: "✂️", isFree: true, type: "frontend" },
   { id: "image-format", name: "Image Format Converter", description: "Convert between image formats", category: "image", icon: "🔀", isFree: true, type: "frontend" },
   { id: "mini-studio", name: "Mini Image Studio", description: "Basic image editing in browser", category: "image", icon: "🎬", isFree: false, isNew: true, type: "frontend" },
+  { id: "svg-to-png", name: "SVG to PNG Converter", description: "Convert SVG files to PNG images", category: "image", icon: "🖌️", isFree: true, type: "frontend" },
+  { id: "color-picker", name: "Color Picker from Image", description: "Extract colors from any image", category: "image", icon: "🎯", isFree: true, isNew: true, type: "frontend" },
 
   // Utility Tools
   { id: "qr-generator", name: "QR Code Generator", description: "Generate QR codes for any URL or text", category: "utility", icon: "📱", isFree: true, isPopular: true, type: "frontend" },
@@ -89,6 +105,11 @@ export const tools: Tool[] = [
   { id: "random-number", name: "Random Number Generator", description: "Generate random numbers in any range", category: "utility", icon: "🎲", isFree: true, type: "frontend" },
   { id: "secret-keys", name: "Secret Keys Generator", description: "Generate secure API keys and secrets", category: "utility", icon: "🗝️", isFree: true, isNew: true, type: "frontend" },
   { id: "smtp-tester", name: "SMTP Tester", description: "Test SMTP server connections", category: "utility", icon: "📮", isFree: false, type: "backend" },
+  { id: "lorem-ipsum", name: "Lorem Ipsum Generator", description: "Generate placeholder text for designs", category: "utility", icon: "📜", isFree: true, type: "frontend" },
+  { id: "diff-checker", name: "Text Diff Checker", description: "Compare two texts and find differences", category: "utility", icon: "🔀", isFree: true, isNew: true, type: "frontend" },
+  { id: "emoji-picker", name: "Emoji Search", description: "Search and copy emojis by keyword", category: "utility", icon: "😀", isFree: true, type: "frontend" },
+  { id: "ip-lookup", name: "IP Address Lookup", description: "Look up details for any IP address", category: "utility", icon: "🌍", isFree: true, type: "frontend" },
+  { id: "unit-converter", name: "Unit Converter", description: "Convert between common measurement units", category: "utility", icon: "📏", isFree: true, type: "frontend" },
 ];
 
 export const getToolsByCategory = (category: ToolCategory) => tools.filter(t => t.category === category);
