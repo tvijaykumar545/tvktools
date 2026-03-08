@@ -97,7 +97,9 @@ const Blog = () => {
               </p>
               <div className="mt-4 flex items-center justify-between">
                 <span className="text-[10px] text-muted-foreground">{post.date}</span>
-                <span className="text-xs text-primary group-hover:underline">Read more →</span>
+                <Link to={`/blog/${post.id}`} className="text-xs text-primary group-hover:underline">
+                  Read more →
+                </Link>
               </div>
             </article>
           ))}
