@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Search, ArrowRight, Zap, Shield, Globe } from "lucide-react";
-import { tools, categories, getPopularTools, getNewTools } from "@/data/tools";
+import { tools as staticTools, categories } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
 import SEOHead from "@/components/SEOHead";
+import { useManagedTools } from "@/hooks/useManagedTools";
 
 const Index = () => {
   const [search, setSearch] = useState("");
-  const popular = getPopularTools();
-  const newTools = getNewTools();
+  const { data: dbTools } = useManagedTools();
+  const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
+  const popular = useMemo(() => tools.filter(t => t.isPopular), [tools]);
+  const newTools = useMemo(() => tools.filter(t => t.isNew), [tools]);
 
   const filtered = search
     ? tools.filter(
