@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, BarChart3, Wrench, Shield } from "lucide-react";
+import { Users, BarChart3, Wrench, Shield, FileText } from "lucide-react";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading } = useAuth();
