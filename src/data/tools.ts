@@ -60,6 +60,9 @@ export const tools: Tool[] = [
   { id: "backlink-checker", name: "Backlink Checker", description: "Analyze backlinks for any domain", category: "seo", icon: "🔗", isFree: false, type: "backend" },
   { id: "domain-authority", name: "Domain Authority Checker", description: "Check domain authority score", category: "seo", icon: "🏆", isFree: false, type: "backend" },
   { id: "competitor-ranking", name: "Competitor Ranking Keywords", description: "See what keywords competitors rank for", category: "seo", icon: "📈", isFree: false, type: "backend" },
+  { id: "readability-checker", name: "Readability Checker", description: "Analyze content readability score and grade level", category: "seo", icon: "📖", isFree: true, isNew: true, type: "frontend" },
+  { id: "slug-generator", name: "URL Slug Generator", description: "Generate SEO-friendly URL slugs", category: "seo", icon: "🔗", isFree: true, type: "frontend" },
+  { id: "open-graph-generator", name: "Open Graph Generator", description: "Generate Open Graph meta tags for social sharing", category: "seo", icon: "🌐", isFree: true, type: "frontend" },
 
   // Developer Tools
   { id: "json-formatter", name: "JSON Formatter", description: "Format and beautify JSON data", category: "developer", icon: "{ }", isFree: true, isPopular: true, type: "frontend" },
