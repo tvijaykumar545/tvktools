@@ -9,10 +9,12 @@ import { useAuth } from "@/contexts/AuthContext";
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
   const tool = id ? getToolById(id) : undefined;
+  const { user } = useAuth();
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const requiresLogin = tool && !tool.isFree && !user;
 
   if (!tool) {
     return (
