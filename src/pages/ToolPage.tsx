@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2 } from "lucide-react";
+import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart } from "lucide-react";
 import { getToolById, tools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
@@ -8,6 +8,7 @@ import SEOHead from "@/components/SEOHead";
 import ShareButtons from "@/components/ShareButtons";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
+import { useToolFavorites } from "@/hooks/useToolFavorites";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 
