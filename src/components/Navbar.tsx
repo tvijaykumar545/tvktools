@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Menu, X, User, Settings } from "lucide-react";
+import { Search, Menu, X, User, Settings, Shield } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
