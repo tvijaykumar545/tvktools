@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { tools, categories, type ToolCategory } from "@/data/tools";
+import { tools as staticTools, categories, type ToolCategory } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
+import { useManagedTools } from "@/hooks/useManagedTools";
 
 const Tools = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<ToolCategory | "all">("all");
   const [showFreeOnly, setShowFreeOnly] = useState(false);
+  const { data: dbTools } = useManagedTools();
+  const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
 
   const filtered = tools.filter((t) => {
     if (activeCategory !== "all" && t.category !== activeCategory) return false;

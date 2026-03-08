@@ -1,11 +1,14 @@
 import { useParams, Link } from "react-router-dom";
-import { categories, getToolsByCategory } from "@/data/tools";
+import { categories, tools as staticTools } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
+import { useManagedTools } from "@/hooks/useManagedTools";
 
 const CategoryPage = () => {
   const { id } = useParams<{ id: string }>();
   const category = categories.find((c) => c.id === id);
-  const catTools = id ? getToolsByCategory(id as any) : [];
+  const { data: dbTools } = useManagedTools();
+  const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
+  const catTools = id ? tools.filter(t => t.category === id) : [];
 
   if (!category) {
     return (

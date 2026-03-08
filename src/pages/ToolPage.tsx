@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye } from "lucide-react";
-import { getToolById, tools } from "@/data/tools";
+import { getToolById as getStaticToolById, tools as staticTools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq, getToolDemoOutput } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
 import SEOHead from "@/components/SEOHead";
@@ -13,10 +13,13 @@ import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import ToolRating from "@/components/ToolRating";
 import { useTypingEffect } from "@/hooks/useTypingEffect";
+import { useManagedTools } from "@/hooks/useManagedTools";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
-  const tool = id ? getToolById(id) : undefined;
+  const { data: dbTools } = useManagedTools();
+  const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
+  const tool = id ? tools.find(t => t.id === id) : undefined;
   const { user } = useAuth();
   const { trackUsage } = useTrackToolUsage();
   const { isFavorite, toggleFavorite } = useToolFavorites();
