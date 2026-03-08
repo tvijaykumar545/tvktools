@@ -181,7 +181,7 @@ const Dashboard = () => {
               { label: "Browse Tools", to: "/tools", icon: "🔧" },
               { label: "View Pricing", to: "/pricing", icon: "💎" },
               { label: "API Access", to: "/api-access", icon: "🔑" },
-              { label: "Settings", to: "/dashboard", icon: "⚙️" },
+              { label: "Settings", to: "/settings", icon: "⚙️" },
             ].map((action) => (
               <Link
                 key={action.label}
