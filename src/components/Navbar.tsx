@@ -10,6 +10,7 @@ const Navbar = () => {
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
   const { isAdmin } = useIsAdmin();
+  const { theme, toggleTheme } = useTheme();
 
   const links = [
     { to: "/", label: "Home" },
