@@ -166,12 +166,11 @@
 
   .scanline {
     position: relative;
-    overflow: hidden;
   }
 
   .scanline::after {
     content: '';
-    position: absolute;
+    position: fixed;
     inset: 0;
     background: repeating-linear-gradient(
       0deg,
@@ -181,6 +180,7 @@
       hsl(var(--primary) / 0.02) 4px
     );
     pointer-events: none;
+    z-index: 50;
   }
 }
 
