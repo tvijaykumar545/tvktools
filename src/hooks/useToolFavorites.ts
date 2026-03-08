@@ -53,12 +53,12 @@ export const useToolFavorites = () => {
         toast.success("Removed from favorites");
       } else {
         const { data } = await supabase
-          .from("tool_favorites")
+          .from("tool_favorites" as any)
           .insert({ user_id: user.id, tool_id: toolId, tool_name: toolName, category })
           .select()
           .single();
         if (data) {
-          setFavorites((prev) => [data as Favorite, ...prev]);
+          setFavorites((prev) => [(data as unknown as Favorite), ...prev]);
           toast.success("Added to favorites!");
         }
       }
