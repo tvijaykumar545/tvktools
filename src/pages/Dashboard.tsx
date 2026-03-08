@@ -1,17 +1,19 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { User, Settings, CreditCard, Key, History, Star } from "lucide-react";
+import { User, Key, History, Star, BarChart3 } from "lucide-react";
+import { useToolUsageStats } from "@/hooks/useToolUsageStats";
 
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const stats = useToolUsageStats();
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
   }, [user, loading, navigate]);
 
-  if (loading) {
+  if (loading || stats.loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="font-heading text-sm text-primary animate-pulse-neon">Loading...</div>
@@ -21,10 +23,10 @@ const Dashboard = () => {
 
   if (!user) return null;
 
-  const stats = [
-    { label: "Tools Used", value: "0", icon: Star },
-    { label: "API Calls", value: "0", icon: Key },
-    { label: "Saved Results", value: "0", icon: History },
+  const statCards = [
+    { label: "Total Tool Runs", value: stats.totalUses.toString(), icon: Star },
+    { label: "Tools Used", value: stats.toolBreakdown.length.toString(), icon: BarChart3 },
+    { label: "Categories", value: stats.categoryBreakdown.length.toString(), icon: Key },
   ];
 
   return (
@@ -45,7 +47,7 @@ const Dashboard = () => {
           </button>
         </div>
 
-        {/* Plan Badge */}
+        {/* Profile Card */}
         <div className="mt-6 rounded border border-primary/20 bg-card p-6 gradient-cyber">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -67,7 +69,7 @@ const Dashboard = () => {
 
         {/* Stats */}
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
-          {stats.map((stat) => (
+          {statCards.map((stat) => (
             <div key={stat.label} className="rounded border border-primary/10 bg-card p-5 border-glow">
               <div className="flex items-center gap-3">
                 <stat.icon className="h-5 w-5 text-primary" />
@@ -78,6 +80,97 @@ const Dashboard = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Usage Breakdown */}
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          {/* Most Used Tools */}
+          <div className="rounded border border-primary/10 bg-card p-5 border-glow">
+            <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+              <BarChart3 className="h-4 w-4 text-primary" />
+              Most Used Tools
+            </h2>
+            {stats.toolBreakdown.length === 0 ? (
+              <p className="mt-4 text-xs text-muted-foreground">No tool usage yet. <Link to="/tools" className="text-primary hover:underline">Try a tool!</Link></p>
+            ) : (
+              <div className="mt-4 space-y-3">
+                {stats.toolBreakdown.map((item) => {
+                  const maxCount = stats.toolBreakdown[0]?.count || 1;
+                  return (
+                    <div key={item.tool_name}>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-foreground">{item.tool_name}</span>
+                        <span className="text-muted-foreground">{item.count} runs</span>
+                      </div>
+                      <div className="mt-1 h-1.5 rounded-full bg-muted">
+                        <div
+                          className="h-full rounded-full bg-primary transition-all"
+                          style={{ width: `${(item.count / maxCount) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Category Breakdown */}
+          <div className="rounded border border-primary/10 bg-card p-5 border-glow">
+            <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+              <Star className="h-4 w-4 text-primary" />
+              Usage by Category
+            </h2>
+            {stats.categoryBreakdown.length === 0 ? (
+              <p className="mt-4 text-xs text-muted-foreground">No usage data yet.</p>
+            ) : (
+              <div className="mt-4 space-y-3">
+                {stats.categoryBreakdown.map((item) => {
+                  const maxCount = stats.categoryBreakdown[0]?.count || 1;
+                  return (
+                    <div key={item.category}>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-foreground capitalize">{item.category}</span>
+                        <span className="text-muted-foreground">{item.count} runs</span>
+                      </div>
+                      <div className="mt-1 h-1.5 rounded-full bg-muted">
+                        <div
+                          className="h-full rounded-full bg-secondary transition-all"
+                          style={{ width: `${(item.count / maxCount) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="mt-6 rounded border border-primary/10 bg-card p-5 border-glow">
+          <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+            <History className="h-4 w-4 text-primary" />
+            Recent Activity
+          </h2>
+          {stats.recentTools.length === 0 ? (
+            <p className="mt-4 text-xs text-muted-foreground">No recent activity.</p>
+          ) : (
+            <div className="mt-4 space-y-2">
+              {stats.recentTools.map((item) => (
+                <Link
+                  key={item.created_at}
+                  to={`/tool/${item.tool_id}`}
+                  className="flex items-center justify-between rounded bg-muted/50 px-3 py-2 text-xs transition-all hover:bg-primary/10"
+                >
+                  <span className="text-foreground">{item.tool_name}</span>
+                  <span className="text-muted-foreground">
+                    {new Date(item.created_at).toLocaleString()}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Quick Actions */}
@@ -102,7 +195,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Upgrade CTA for free users */}
+        {/* Upgrade CTA */}
         {profile?.plan === "free" && (
           <div className="mt-8 rounded border border-secondary/30 bg-card p-6 text-center neon-glow-magenta">
             <h3 className="font-heading text-lg font-bold text-secondary neon-text-magenta">

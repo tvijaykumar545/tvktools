@@ -5,11 +5,13 @@ import { getToolById, tools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
   const tool = id ? getToolById(id) : undefined;
   const { user } = useAuth();
+  const { trackUsage } = useTrackToolUsage();
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
@@ -37,6 +39,7 @@ const ToolPage = () => {
       const result = runFrontendTool(tool.id, input || placeholder);
       setOutput(result);
       setLoading(false);
+      trackUsage(tool.id, tool.name, tool.category);
     }, 300);
   };
 

@@ -44,6 +44,33 @@ export type Database = {
         }
         Relationships: []
       }
+      tool_usage: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          tool_id: string
+          tool_name: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          tool_id: string
+          tool_name: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          tool_id?: string
+          tool_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
