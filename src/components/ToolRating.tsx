@@ -35,7 +35,7 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
 
   const fetchReviews = useCallback(async () => {
     const { data } = await supabase
-      .from("tool_reviews")
+      .from("tool_reviews" as any)
       .select("*")
       .eq("tool_id", toolId)
       .order("created_at", { ascending: false });
