@@ -26,6 +26,8 @@ const ToolPage = () => {
   const [loading, setLoading] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const requiresLogin = tool?.type === "backend" && !user;
+  const demoText = useMemo(() => tool ? getToolDemoOutput(tool.id) : "", [tool?.id]);
+  const { displayed: typedDemo, isTyping } = useTypingEffect(requiresLogin ? demoText : "", 15);
 
   if (!tool) {
     return (
