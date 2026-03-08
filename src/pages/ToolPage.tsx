@@ -7,6 +7,7 @@ import ToolCard from "@/components/ToolCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
 import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -247,9 +248,15 @@ const ToolPage = () => {
                 </div>
               )}
             </div>
-            <pre className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4 font-body text-sm text-foreground whitespace-pre-wrap">
-              {output || "Results will appear here..."}
-            </pre>
+            {output && tool.type === "backend" ? (
+              <div className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4 text-sm text-foreground prose prose-invert prose-sm max-w-none prose-headings:text-primary prose-strong:text-foreground prose-li:text-foreground prose-p:text-foreground">
+                <ReactMarkdown>{output}</ReactMarkdown>
+              </div>
+            ) : (
+              <pre className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4 font-body text-sm text-foreground whitespace-pre-wrap">
+                {output || "Results will appear here..."}
+              </pre>
+            )}
           </div>
         </div>
         )}
