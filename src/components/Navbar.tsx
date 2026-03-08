@@ -135,6 +135,13 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            <button
+              onClick={toggleTheme}
+              className="flex items-center gap-2 rounded px-3 py-2 text-sm text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {theme === "dark" ? "Light Mode" : "Dark Mode"}
+            </button>
             {user ? (
               <>
                 <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="rounded px-3 py-2 text-sm text-primary">
