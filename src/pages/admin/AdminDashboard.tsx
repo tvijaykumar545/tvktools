@@ -81,7 +81,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Quick links */}
-        <div className="mt-8 grid gap-3 sm:grid-cols-3">
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Link to="/admin/users" className="flex items-center gap-3 rounded border border-primary/10 bg-card p-4 transition-all hover:border-primary/40 border-glow">
             <Users className="h-5 w-5 text-primary" />
             <span className="font-heading text-xs font-semibold text-foreground">User Management</span>
@@ -90,9 +90,13 @@ const AdminDashboard = () => {
             <BarChart3 className="h-5 w-5 text-primary" />
             <span className="font-heading text-xs font-semibold text-foreground">Tool Analytics</span>
           </Link>
-          <Link to="/dashboard" className="flex items-center gap-3 rounded border border-primary/10 bg-card p-4 transition-all hover:border-primary/40 border-glow">
+          <Link to="/admin/blog" className="flex items-center gap-3 rounded border border-primary/10 bg-card p-4 transition-all hover:border-primary/40 border-glow">
+            <FileText className="h-5 w-5 text-primary" />
+            <span className="font-heading text-xs font-semibold text-foreground">Blog Management</span>
+          </Link>
+          <Link to="/admin/tools" className="flex items-center gap-3 rounded border border-primary/10 bg-card p-4 transition-all hover:border-primary/40 border-glow">
             <Wrench className="h-5 w-5 text-primary" />
-            <span className="font-heading text-xs font-semibold text-foreground">Back to Dashboard</span>
+            <span className="font-heading text-xs font-semibold text-foreground">Tool Management</span>
           </Link>
         </div>
       </div>
