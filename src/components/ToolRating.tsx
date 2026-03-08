@@ -80,7 +80,7 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
     try {
       if (userReview) {
         await supabase
-          .from("tool_reviews")
+          .from("tool_reviews" as any)
           .update({
             rating: parsed.data.rating,
             feedback: parsed.data.feedback,
