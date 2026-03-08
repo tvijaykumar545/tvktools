@@ -73,7 +73,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 border-t border-primary/10 pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} TVK Tools. All rights reserved. Powered by n8n automation.
+          © {new Date().getFullYear()} TVK Tools. All rights reserved. Powered by TVK Technologies.
         </div>
       </div>
     </footer>
