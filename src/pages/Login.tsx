@@ -87,9 +87,12 @@ const Login = () => {
           <GoogleSignInButton />
         </div>
 
-        <div className="mt-6 text-center text-xs text-muted-foreground">
-          Don't have an account?{" "}
-          <Link to="/signup" className="text-primary hover:underline">Sign up</Link>
+        <div className="mt-6 flex flex-col items-center gap-2 text-xs text-muted-foreground">
+          <Link to="/forgot-password" className="text-primary hover:underline">Forgot your password?</Link>
+          <span>
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-primary hover:underline">Sign up</Link>
+          </span>
         </div>
       </div>
     </div>
