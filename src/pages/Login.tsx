@@ -21,9 +21,12 @@ const Login = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       setError(error.message);
+    } else if (data.user && !data.user.email_confirmed_at) {
+      await supabase.auth.signOut();
+      setError("Please verify your email address before signing in. Check your inbox for the confirmation link.");
     } else {
       navigate("/dashboard");
     }
