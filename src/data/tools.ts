@@ -90,6 +90,8 @@ export const tools: Tool[] = [
   { id: "image-cropper", name: "Image Cropper", description: "Crop images to custom sizes", category: "image", icon: "✂️", isFree: true, type: "frontend" },
   { id: "image-format", name: "Image Format Converter", description: "Convert between image formats", category: "image", icon: "🔀", isFree: true, type: "frontend" },
   { id: "mini-studio", name: "Mini Image Studio", description: "Basic image editing in browser", category: "image", icon: "🎬", isFree: false, isNew: true, type: "frontend" },
+  { id: "svg-to-png", name: "SVG to PNG Converter", description: "Convert SVG files to PNG images", category: "image", icon: "🖌️", isFree: true, type: "frontend" },
+  { id: "color-picker", name: "Color Picker from Image", description: "Extract colors from any image", category: "image", icon: "🎯", isFree: true, isNew: true, type: "frontend" },
 
   // Utility Tools
   { id: "qr-generator", name: "QR Code Generator", description: "Generate QR codes for any URL or text", category: "utility", icon: "📱", isFree: true, isPopular: true, type: "frontend" },
