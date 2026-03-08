@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Copy, Check, ArrowLeft, Download, Play, Lock } from "lucide-react";
+import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2 } from "lucide-react";
 import { getToolById, tools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
+import { toast } from "sonner";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +17,7 @@ const ToolPage = () => {
   const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
   const requiresLogin = tool && !tool.isFree && !user;
 
   if (!tool) {
@@ -33,14 +35,103 @@ const ToolPage = () => {
   const faqs = getToolFaq(tool.id);
   const relatedTools = tools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, 4);
 
-  const handleRun = () => {
+  const handleRun = async () => {
+    if (loading) {
+      abortRef.current?.abort();
+      return;
+    }
     setLoading(true);
-    setTimeout(() => {
-      const result = runFrontendTool(tool.id, input || placeholder);
-      setOutput(result);
-      setLoading(false);
+    setOutput("");
+
+    if (tool.type === "frontend") {
+      setTimeout(() => {
+        const result = runFrontendTool(tool.id, input || placeholder);
+        setOutput(result);
+        setLoading(false);
+        trackUsage(tool.id, tool.name, tool.category);
+      }, 300);
+      return;
+    }
+
+    // Backend AI tool - stream from edge function
+    const controller = new AbortController();
+    abortRef.current = controller;
+    const userInput = input || placeholder;
+
+    try {
+      const resp = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-tool`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ toolId: tool.id, input: userInput }),
+          signal: controller.signal,
+        }
+      );
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({ error: "AI processing failed" }));
+        toast.error(err.error || "AI processing failed");
+        setOutput(err.error || "Error processing request.");
+        setLoading(false);
+        return;
+      }
+
+      if (!resp.body) {
+        setOutput("Error: No response stream");
+        setLoading(false);
+        return;
+      }
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = "";
+      let fullOutput = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") break;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              fullOutput += content;
+              setOutput(fullOutput);
+            }
+          } catch {
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
+        }
+      }
+
       trackUsage(tool.id, tool.name, tool.category);
-    }, 300);
+    } catch (e: any) {
+      if (e.name !== "AbortError") {
+        toast.error("Failed to process. Please try again.");
+        setOutput("Error: Failed to connect to AI service.");
+      }
+    } finally {
+      setLoading(false);
+      abortRef.current = null;
+    }
   };
 
   const handleCopy = () => {
@@ -120,8 +211,10 @@ const ToolPage = () => {
               disabled={loading}
               className="flex items-center justify-center gap-2 rounded bg-primary px-6 py-3 font-heading text-xs font-bold text-primary-foreground transition-all hover:bg-primary/90 neon-glow disabled:opacity-50"
             >
-              {loading ? (
-                <span className="animate-pulse-neon">Processing...</span>
+            {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> {tool.type === "backend" ? "Generating..." : "Processing..."}
+                </>
               ) : (
                 <>
                   <Play className="h-4 w-4" /> Run Tool

@@ -44,7 +44,7 @@ export const runFrontendTool = (toolId: string, input: string): string => {
     case "serp-preview":
       return serpPreview(input);
     default:
-      return "This tool requires backend processing. Connect n8n webhook to enable.";
+      return "This tool uses AI processing. Click Run Tool to generate results.";
   }
 };
 
@@ -163,7 +163,7 @@ function hashGenerator(input: string): string {
     }
     return Math.abs(hash).toString(16).padStart(mod, "0");
   };
-  return `Hash results for: "${input.substring(0, 50)}${input.length > 50 ? "..." : ""}"\n\nSimulated MD5: ${simpleHash(input, 32)}\nSimulated SHA-1: ${simpleHash(input + "sha1", 40)}\nSimulated SHA-256: ${simpleHash(input + "sha256", 64)}\n\n⚠️ Note: These are simulated hashes for demo. Connect n8n for cryptographic hashes.`;
+  return `Hash results for: "${input.substring(0, 50)}${input.length > 50 ? "..." : ""}"\n\nSimulated MD5: ${simpleHash(input, 32)}\nSimulated SHA-1: ${simpleHash(input + "sha1", 40)}\nSimulated SHA-256: ${simpleHash(input + "sha256", 64)}\n\n⚠️ Note: These are simulated hashes for demo purposes.`;
 }
 
 function htmlMinifier(input: string): string {
@@ -237,6 +237,24 @@ export const getToolPlaceholder = (toolId: string): string => {
     "keyword-density": "Paste your article or blog post content here to analyze keyword density and frequency.",
     "meta-tag-generator": "My Page Title\nA description of my page for search engines\nkeyword1, keyword2, keyword3",
     "serp-preview": "My Amazing Page Title\nhttps://example.com/page\nThis is the meta description that will appear in Google search results.",
+    "ai-prompt-generator": "Write a blog post about sustainable living tips",
+    "ai-blog-title": "digital marketing trends 2026",
+    "ai-image-prompt": "A futuristic cyberpunk city at night with neon lights",
+    "ai-tweet-generator": "The benefits of remote work for developers",
+    "ai-hashtag-generator": "fitness and wellness coaching",
+    "ai-bio-generator": "Software engineer, 5 years experience, specializing in React and TypeScript, open source contributor",
+    "ai-product-desc": "Wireless noise-cancelling headphones with 40-hour battery life, premium sound quality, comfortable memory foam ear cups",
+    "ai-email-generator": "Follow up email to a client about a project proposal meeting next week",
+    "ai-code-generator": "A React component that displays a countdown timer with start, pause, and reset buttons",
+    "ai-chat": "What are the best practices for building a REST API?",
+    "keyword-suggestions": "best coffee machines for home",
+    "seo-title-generator": "Topic: healthy meal prep\nKeyword: meal prep ideas",
+    "competitor-keywords": "hubspot.com",
+    "seo-audit": "https://example.com - an e-commerce site selling handmade jewelry",
+    "backlink-checker": "example.com",
+    "domain-authority": "example.com",
+    "competitor-ranking": "project management software niche",
+    "smtp-tester": "smtp.gmail.com:587",
   };
   return placeholders[toolId] || "Enter your input here...";
 };
