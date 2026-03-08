@@ -85,8 +85,21 @@ const ToolPage = () => {
           </div>
         </div>
 
+        {/* Login Gate */}
+        {requiresLogin && (
+          <div className="mt-8 rounded border border-secondary/30 bg-card p-8 text-center neon-glow-magenta">
+            <Lock className="mx-auto h-8 w-8 text-secondary" />
+            <h3 className="mt-3 font-heading text-lg font-bold text-secondary neon-text-magenta">Pro Tool — Login Required</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Sign in or create an account to use this tool.</p>
+            <div className="mt-4 flex justify-center gap-3">
+              <Link to="/login" className="rounded border border-primary/30 px-6 py-2 font-heading text-xs text-primary hover:bg-primary/10">Login</Link>
+              <Link to="/signup" className="rounded bg-primary px-6 py-2 font-heading text-xs text-primary-foreground neon-glow">Sign Up Free</Link>
+            </div>
+          </div>
+        )}
+
         {/* Tool Interface */}
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {!requiresLogin && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
             <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
