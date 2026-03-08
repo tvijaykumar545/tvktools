@@ -1,14 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Menu, X, User, Settings, Shield } from "lucide-react";
+import { Search, Menu, X, User, Settings, Shield, Sun, Moon } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
   const { isAdmin } = useIsAdmin();
+  const { theme, toggleTheme } = useTheme();
 
   const links = [
     { to: "/", label: "Home" },
@@ -53,6 +55,14 @@ const Navbar = () => {
             <Search className="h-4 w-4" />
             Search tools...
           </Link>
+
+          <button
+            onClick={toggleTheme}
+            className="rounded p-2 text-muted-foreground transition-all hover:text-primary hover:bg-primary/10"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
 
           {user ? (
             <div className="flex items-center gap-2">
@@ -125,6 +135,13 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
+            <button
+              onClick={toggleTheme}
+              className="flex items-center gap-2 rounded px-3 py-2 text-sm text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {theme === "dark" ? "Light Mode" : "Dark Mode"}
+            </button>
             {user ? (
               <>
                 <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="rounded px-3 py-2 text-sm text-primary">
