@@ -5,6 +5,7 @@ import { getToolById, tools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
