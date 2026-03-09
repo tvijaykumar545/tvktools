@@ -17,6 +17,7 @@ export const useToolUsageStats = (): UsageStats => {
     totalUses: 0,
     toolBreakdown: [],
     categoryBreakdown: [],
+    hourlyBreakdown: [],
     recentTools: [],
     loading: true,
   });
