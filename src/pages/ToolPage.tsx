@@ -36,6 +36,12 @@ const ToolPage = () => {
   const { trackUsage } = useTrackToolUsage();
   const { isFavorite, toggleFavorite } = useToolFavorites();
   const { remaining, isLimitReached, consumeUsage, dailyLimit, isGuest } = useUsageLimit();
+  const trackUsageWithToast = useToolUsageWithToast();
+  
+  const handleToolUsage = () => {
+    trackUsageWithToast();
+    if (tool) trackUsage(tool.id, tool.name, tool.category);
+  };
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
