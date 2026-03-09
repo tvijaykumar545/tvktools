@@ -5,7 +5,6 @@ import { User, Key, History, Star, BarChart3, Heart, ChevronDown, Clock } from "
 import { useToolUsageStats } from "@/hooks/useToolUsageStats";
 import { useToolFavorites } from "@/hooks/useToolFavorites";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { useToolFavorites } from "@/hooks/useToolFavorites";
 
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
