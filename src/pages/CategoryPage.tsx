@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { categories, tools as staticTools } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";

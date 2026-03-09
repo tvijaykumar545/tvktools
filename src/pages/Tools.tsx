@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Search } from "lucide-react";
 import { tools as staticTools, categories, type ToolCategory } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
