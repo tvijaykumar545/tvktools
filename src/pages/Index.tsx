@@ -9,7 +9,12 @@ import { useManagedTools } from "@/hooks/useManagedTools";
 const Index = () => {
   const [search, setSearch] = useState("");
   const { data: dbTools } = useManagedTools();
-  const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
+  const tools = useMemo(() => {
+    if (!dbTools || dbTools.length === 0) return staticTools;
+    const dbIds = new Set(dbTools.map(t => t.id));
+    const missingStatic = staticTools.filter(t => !dbIds.has(t.id));
+    return [...dbTools, ...missingStatic];
+  }, [dbTools]);
   const popular = useMemo(() => tools.filter(t => t.isPopular), [tools]);
   const newTools = useMemo(() => tools.filter(t => t.isNew), [tools]);
 

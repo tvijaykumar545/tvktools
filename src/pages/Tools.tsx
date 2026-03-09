@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Search } from "lucide-react";
 import { tools as staticTools, categories, type ToolCategory } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
@@ -14,7 +14,12 @@ const Tools = () => {
   const [showPrefBanner, setShowPrefBanner] = useState(false);
   const { data: dbTools } = useManagedTools();
   const { user } = useAuth();
-  const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
+  const tools = useMemo(() => {
+    if (!dbTools || dbTools.length === 0) return staticTools;
+    const dbIds = new Set(dbTools.map(t => t.id));
+    const missingStatic = staticTools.filter(t => !dbIds.has(t.id));
+    return [...dbTools, ...missingStatic];
+  }, [dbTools]);
 
   // Load user's default category preference
   useEffect(() => {

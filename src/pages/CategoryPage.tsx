@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { categories, tools as staticTools } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
@@ -7,7 +8,12 @@ const CategoryPage = () => {
   const { id } = useParams<{ id: string }>();
   const category = categories.find((c) => c.id === id);
   const { data: dbTools } = useManagedTools();
-  const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
+  const tools = useMemo(() => {
+    if (!dbTools || dbTools.length === 0) return staticTools;
+    const dbIds = new Set(dbTools.map(t => t.id));
+    const missingStatic = staticTools.filter(t => !dbIds.has(t.id));
+    return [...dbTools, ...missingStatic];
+  }, [dbTools]);
   const catTools = id ? tools.filter(t => t.category === id) : [];
 
   if (!category) {
