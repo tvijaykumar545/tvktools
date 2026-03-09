@@ -29,6 +29,7 @@ export const categories: Category[] = [
   { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 15 },
   { id: "image", name: "Image Tools", description: "Image conversion and editing", icon: Image, color: "neon-blue", toolCount: 10 },
   { id: "utility", name: "Utility Tools", description: "Everyday productivity tools", icon: Wrench, color: "neon-cyan", toolCount: 16 },
+  { id: "pdf", name: "PDF Tools", description: "Edit, convert, and manage PDF files", icon: FileText, color: "neon-magenta", toolCount: 15 },
 ];
 
 export const tools: Tool[] = [
