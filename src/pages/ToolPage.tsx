@@ -328,11 +328,11 @@ const ToolPage = () => {
             >
             {loading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> {tool.type === "backend" ? "Generating..." : "Processing..."}
+                  <Loader2 className="h-4 w-4 animate-spin" /> {isImageGenerator ? "Generating Image..." : tool.type === "backend" ? "Generating..." : "Processing..."}
                 </>
               ) : (
                 <>
-                  <Play className="h-4 w-4" /> Run Tool
+                  {isImageGenerator ? <ImageIcon className="h-4 w-4" /> : <Play className="h-4 w-4" />} {isImageGenerator ? "Generate Image" : "Run Tool"}
                 </>
               )}
             </button>
