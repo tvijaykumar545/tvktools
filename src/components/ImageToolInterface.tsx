@@ -382,7 +382,7 @@ const ImageToolInterface = ({ toolId, toolName, onTrackUsage }: ImageToolInterfa
 
   // ── Settings Panel per tool ─────────────────────────────────
   const renderSettings = () => {
-    if (!file) return null;
+    const disabled = !file;
 
     return (
       <div className="space-y-3 rounded border border-primary/10 bg-card p-4">
