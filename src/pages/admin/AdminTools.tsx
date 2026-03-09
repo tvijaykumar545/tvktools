@@ -396,6 +396,7 @@ const AdminTools = () => {
                   <option value="developer">Developer</option>
                   <option value="image">Image</option>
                   <option value="utility">Utility</option>
+                  <option value="pdf">PDF</option>
                 </select>
               </div>
               <div>
