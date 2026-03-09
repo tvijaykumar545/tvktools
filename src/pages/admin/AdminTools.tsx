@@ -195,6 +195,7 @@ const AdminTools = () => {
     { value: "developer", label: "Developer" },
     { value: "image", label: "Image" },
     { value: "utility", label: "Utility" },
+    { value: "pdf", label: "PDF" },
   ];
 
   return (
