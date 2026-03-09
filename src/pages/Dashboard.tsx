@@ -185,6 +185,55 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Usage by Time of Day */}
+        <div className="mt-6 rounded border border-primary/10 bg-card p-5 border-glow">
+          <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+            <Clock className="h-4 w-4 text-primary" />
+            Usage by Time of Day
+          </h2>
+          {stats.totalUses === 0 ? (
+            <p className="mt-4 text-xs text-muted-foreground">No usage data yet.</p>
+          ) : (
+            <div className="mt-4 h-48">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.hourlyBreakdown}>
+                  <XAxis
+                    dataKey="hour"
+                    tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                    tickLine={false}
+                    axisLine={false}
+                    interval={2}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                    tickLine={false}
+                    axisLine={false}
+                    allowDecimals={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      background: "hsl(var(--card))",
+                      border: "1px solid hsl(var(--primary) / 0.2)",
+                      borderRadius: "6px",
+                      fontSize: "12px",
+                      color: "hsl(var(--foreground))",
+                    }}
+                    formatter={(value: number) => [`${value} runs`, "Usage"]}
+                  />
+                  <Bar dataKey="count" radius={[3, 3, 0, 0]}>
+                    {stats.hourlyBreakdown.map((entry, index) => (
+                      <Cell
+                        key={index}
+                        fill={entry.count > 0 ? "hsl(var(--primary))" : "hsl(var(--muted))"}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
+
         {/* Full Usage History */}
         <div className="mt-6 rounded border border-primary/10 bg-card p-5 border-glow">
           <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
