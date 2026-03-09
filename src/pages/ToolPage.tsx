@@ -331,7 +331,11 @@ const ToolPage = () => {
           />
         )}
 
-        {!requiresLogin && isPdfTool(tool.id) && (
+        {!requiresLogin && tool.id === "reorder-pdf" && (
+          <PDFReorderTool onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)} />
+        )}
+
+        {!requiresLogin && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
           <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}
