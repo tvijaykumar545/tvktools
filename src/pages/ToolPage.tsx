@@ -13,6 +13,7 @@ import ShareButtons from "@/components/ShareButtons";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
 import { useToolFavorites } from "@/hooks/useToolFavorites";
+import { useToolUsageWithToast } from "@/hooks/useToolUsageWithToast";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import ToolRating from "@/components/ToolRating";
@@ -35,6 +36,12 @@ const ToolPage = () => {
   const { trackUsage } = useTrackToolUsage();
   const { isFavorite, toggleFavorite } = useToolFavorites();
   const { remaining, isLimitReached, consumeUsage, dailyLimit, isGuest } = useUsageLimit();
+  const trackUsageWithToast = useToolUsageWithToast();
+  
+  const handleToolUsage = () => {
+    trackUsageWithToast();
+    if (tool) trackUsage(tool.id, tool.name, tool.category);
+  };
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -283,26 +290,26 @@ const ToolPage = () => {
 
         {/* Tool Interface — gated only by usage limit */}
         {!isLimitReached && tool.id === "qr-generator" && (
-          <QRCodeGenerator onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
+          <QRCodeGenerator onTrackUsage={handleToolUsage} />
         )}
 
         {!isLimitReached && isImageTool(tool.id) && (
           <ImageToolInterface
             toolId={tool.id}
             toolName={tool.name}
-            onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }}
+            onTrackUsage={handleToolUsage}
           />
         )}
 
         {!isLimitReached && tool.id === "reorder-pdf" && (
-          <PDFReorderTool onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
+          <PDFReorderTool onTrackUsage={handleToolUsage} />
         )}
 
         {!isLimitReached && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
           <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}
-            onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }}
+            onTrackUsage={handleToolUsage}
           />
         )}
 
