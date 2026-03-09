@@ -18,6 +18,8 @@ import ReactMarkdown from "react-markdown";
 import ToolRating from "@/components/ToolRating";
 import { useTypingEffect } from "@/hooks/useTypingEffect";
 import { useManagedTools } from "@/hooks/useManagedTools";
+import { useUsageLimit } from "@/hooks/useUsageLimit";
+import UsageLimitBanner from "@/components/UsageLimitBanner";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
