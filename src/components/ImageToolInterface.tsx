@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from "react";
-import { Upload, Download, Loader2, ImageIcon, RotateCw, FlipHorizontal, FlipVertical, Sun, Contrast, Droplets } from "lucide-react";
+import { useState, useRef, useCallback, useMemo } from "react";
+import { Upload, Download, Loader2, ImageIcon, RotateCw, FlipHorizontal, FlipVertical, Sun, Contrast, Droplets, Undo2, Redo2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface ImageToolInterfaceProps {
