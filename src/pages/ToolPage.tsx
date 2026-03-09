@@ -68,6 +68,10 @@ const ToolPage = () => {
       abortRef.current?.abort();
       return;
     }
+    if (!consumeUsage()) {
+      toast.error("Daily limit reached! Sign up for unlimited access.");
+      return;
+    }
     setLoading(true);
     setOutput("");
     setGeneratedImage(null);
