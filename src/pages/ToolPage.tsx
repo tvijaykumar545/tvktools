@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye, ImageIcon } from "lucide-react";
 import ImageToolInterface, { isImageTool } from "@/components/ImageToolInterface";
 import QRCodeGenerator from "@/components/QRCodeGenerator";
+import PDFToolInterface, { isPdfTool } from "@/components/PDFToolInterface";
 import { getToolById as getStaticToolById, tools as staticTools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq, getToolDemoOutput } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
@@ -38,7 +39,7 @@ const ToolPage = () => {
   const abortRef = useRef<AbortController | null>(null);
   const isImageGenerator = tool?.id === "ai-image-generator";
   const isQRGenerator = tool?.id === "qr-generator";
-  const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator;
+  const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator || isPdfTool(tool?.id ?? "");
   const requiresLogin = tool?.type === "backend" && !user;
   const demoText = useMemo(() => tool ? getToolDemoOutput(tool.id) : "", [tool?.id]);
   const { displayed: typedDemo, isTyping } = useTypingEffect(requiresLogin ? demoText : "", 15);
@@ -323,6 +324,14 @@ const ToolPage = () => {
 
         {!requiresLogin && isImageTool(tool.id) && (
           <ImageToolInterface
+            toolId={tool.id}
+            toolName={tool.name}
+            onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)}
+          />
+        )}
+
+        {!requiresLogin && isPdfTool(tool.id) && (
+          <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}
             onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)}

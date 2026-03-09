@@ -1,6 +1,6 @@
-import { Brain, Search, Code, Image, Wrench, type LucideIcon } from "lucide-react";
+import { Brain, Search, Code, Image, Wrench, FileText, type LucideIcon } from "lucide-react";
 
-export type ToolCategory = "ai" | "seo" | "developer" | "image" | "utility";
+export type ToolCategory = "ai" | "seo" | "developer" | "image" | "utility" | "pdf";
 
 export interface Tool {
   id: string;
@@ -29,6 +29,7 @@ export const categories: Category[] = [
   { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 15 },
   { id: "image", name: "Image Tools", description: "Image conversion and editing", icon: Image, color: "neon-blue", toolCount: 10 },
   { id: "utility", name: "Utility Tools", description: "Everyday productivity tools", icon: Wrench, color: "neon-cyan", toolCount: 16 },
+  { id: "pdf", name: "PDF Tools", description: "Edit, convert, and manage PDF files", icon: FileText, color: "neon-magenta", toolCount: 15 },
 ];
 
 export const tools: Tool[] = [
@@ -111,6 +112,23 @@ export const tools: Tool[] = [
   { id: "emoji-picker", name: "Emoji Search", description: "Search and copy emojis by keyword", category: "utility", icon: "😀", isFree: true, type: "frontend" },
   { id: "ip-lookup", name: "IP Address Lookup", description: "Look up details for any IP address", category: "utility", icon: "🌍", isFree: true, type: "frontend" },
   { id: "unit-converter", name: "Unit Converter", description: "Convert between common measurement units", category: "utility", icon: "📏", isFree: true, type: "frontend" },
+
+  // PDF Tools
+  { id: "merge-pdf", name: "Merge PDF", description: "Combine multiple PDF files into one", category: "pdf", icon: "📑", isFree: true, isPopular: true, type: "frontend" },
+  { id: "split-pdf", name: "Split PDF", description: "Split a PDF into multiple files or extract pages", category: "pdf", icon: "✂️", isFree: true, isPopular: true, type: "frontend" },
+  { id: "compress-pdf", name: "Compress PDF", description: "Reduce PDF file size", category: "pdf", icon: "📦", isFree: true, isPopular: true, type: "frontend" },
+  { id: "pdf-to-word", name: "PDF to Word", description: "Convert PDF to editable Word document", category: "pdf", icon: "📝", isFree: true, type: "frontend" },
+  { id: "word-to-pdf", name: "Word to PDF", description: "Convert Word files into PDF", category: "pdf", icon: "📄", isFree: true, type: "frontend" },
+  { id: "pdf-to-excel", name: "PDF to Excel", description: "Convert PDF tables to Excel sheets", category: "pdf", icon: "📊", isFree: true, type: "frontend" },
+  { id: "jpg-to-pdf", name: "JPG to PDF", description: "Convert images into PDF", category: "pdf", icon: "🖼️", isFree: true, type: "frontend" },
+  { id: "pdf-to-jpg", name: "PDF to JPG", description: "Convert PDF pages to images", category: "pdf", icon: "🎞️", isFree: true, type: "frontend" },
+  { id: "rotate-pdf", name: "Rotate PDF", description: "Rotate PDF pages", category: "pdf", icon: "🔄", isFree: true, type: "frontend" },
+  { id: "delete-pdf-pages", name: "Delete PDF Pages", description: "Remove unwanted pages from PDF", category: "pdf", icon: "🗑️", isFree: true, type: "frontend" },
+  { id: "protect-pdf", name: "Protect PDF", description: "Add password protection to a PDF", category: "pdf", icon: "🔒", isFree: true, type: "frontend" },
+  { id: "unlock-pdf", name: "Unlock PDF", description: "Remove password protection", category: "pdf", icon: "🔓", isFree: true, type: "frontend" },
+  { id: "add-watermark", name: "Add Watermark", description: "Add text or image watermark to PDF", category: "pdf", icon: "💧", isFree: true, type: "frontend" },
+  { id: "sign-pdf", name: "Sign PDF", description: "Add digital or electronic signatures", category: "pdf", icon: "✍️", isFree: true, isNew: true, type: "frontend" },
+  { id: "edit-pdf", name: "Edit PDF", description: "Edit text, images, and content inside PDF", category: "pdf", icon: "✏️", isFree: false, isNew: true, type: "frontend" },
 ];
 
 export const getToolsByCategory = (category: ToolCategory) => tools.filter(t => t.category === category);
