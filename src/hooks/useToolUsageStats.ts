@@ -6,6 +6,7 @@ interface UsageStats {
   totalUses: number;
   toolBreakdown: { tool_name: string; count: number }[];
   categoryBreakdown: { category: string; count: number }[];
+  hourlyBreakdown: { hour: string; count: number }[];
   recentTools: { tool_id: string; tool_name: string; created_at: string }[];
   loading: boolean;
 }
