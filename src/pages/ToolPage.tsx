@@ -37,6 +37,8 @@ const ToolPage = () => {
   const [loading, setLoading] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const isImageGenerator = tool?.id === "ai-image-generator";
+  const isQRGenerator = tool?.id === "qr-generator";
+  const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator;
   const requiresLogin = tool?.type === "backend" && !user;
   const demoText = useMemo(() => tool ? getToolDemoOutput(tool.id) : "", [tool?.id]);
   const { displayed: typedDemo, isTyping } = useTypingEffect(requiresLogin ? demoText : "", 15);
@@ -327,7 +329,7 @@ const ToolPage = () => {
           />
         )}
 
-        {!requiresLogin && !isImageTool(tool.id) && tool.id !== "qr-generator" && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {!requiresLogin && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
             <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
