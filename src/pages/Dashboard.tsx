@@ -1,8 +1,10 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { User, Key, History, Star, BarChart3, Heart, ChevronDown } from "lucide-react";
+import { User, Key, History, Star, BarChart3, Heart, ChevronDown, Clock } from "lucide-react";
 import { useToolUsageStats } from "@/hooks/useToolUsageStats";
+import { useToolFavorites } from "@/hooks/useToolFavorites";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { useToolFavorites } from "@/hooks/useToolFavorites";
 
 const Dashboard = () => {
