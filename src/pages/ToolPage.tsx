@@ -16,7 +16,7 @@ import { useToolFavorites } from "@/hooks/useToolFavorites";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import ToolRating from "@/components/ToolRating";
-import { useTypingEffect } from "@/hooks/useTypingEffect";
+
 import { useManagedTools } from "@/hooks/useManagedTools";
 import { useUsageLimit } from "@/hooks/useUsageLimit";
 import UsageLimitBanner from "@/components/UsageLimitBanner";
