@@ -2,6 +2,7 @@ import { useState, useRef, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye, ImageIcon } from "lucide-react";
 import ImageToolInterface, { isImageTool } from "@/components/ImageToolInterface";
+import QRCodeGenerator from "@/components/QRCodeGenerator";
 import { getToolById as getStaticToolById, tools as staticTools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq, getToolDemoOutput } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
