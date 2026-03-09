@@ -37,6 +37,8 @@ const ToolPage = () => {
   const [loading, setLoading] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const isImageGenerator = tool?.id === "ai-image-generator";
+  const isQRGenerator = tool?.id === "qr-generator";
+  const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator;
   const requiresLogin = tool?.type === "backend" && !user;
   const demoText = useMemo(() => tool ? getToolDemoOutput(tool.id) : "", [tool?.id]);
   const { displayed: typedDemo, isTyping } = useTypingEffect(requiresLogin ? demoText : "", 15);
