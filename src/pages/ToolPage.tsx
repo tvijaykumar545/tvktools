@@ -327,7 +327,7 @@ const ToolPage = () => {
           />
         )}
 
-        {!requiresLogin && !isImageTool(tool.id) && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {!requiresLogin && !isImageTool(tool.id) && tool.id !== "qr-generator" && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
             <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
