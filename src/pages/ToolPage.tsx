@@ -1,12 +1,12 @@
 import { useState, useRef, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye, ImageIcon } from "lucide-react";
+import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, ImageIcon } from "lucide-react";
 import ImageToolInterface, { isImageTool } from "@/components/ImageToolInterface";
 import QRCodeGenerator from "@/components/QRCodeGenerator";
 import PDFToolInterface, { isPdfTool } from "@/components/PDFToolInterface";
 import PDFReorderTool from "@/components/PDFReorderTool";
 import { getToolById as getStaticToolById, tools as staticTools } from "@/data/tools";
-import { runFrontendTool, getToolPlaceholder, getToolFaq, getToolDemoOutput } from "@/lib/toolEngine";
+import { runFrontendTool, getToolPlaceholder, getToolFaq } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
 import SEOHead from "@/components/SEOHead";
 import ShareButtons from "@/components/ShareButtons";
@@ -16,7 +16,7 @@ import { useToolFavorites } from "@/hooks/useToolFavorites";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import ToolRating from "@/components/ToolRating";
-import { useTypingEffect } from "@/hooks/useTypingEffect";
+
 import { useManagedTools } from "@/hooks/useManagedTools";
 import { useUsageLimit } from "@/hooks/useUsageLimit";
 import UsageLimitBanner from "@/components/UsageLimitBanner";
@@ -44,9 +44,6 @@ const ToolPage = () => {
   const isImageGenerator = tool?.id === "ai-image-generator";
   const isQRGenerator = tool?.id === "qr-generator";
   const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator || isPdfTool(tool?.id ?? "");
-  const requiresLogin = tool?.type === "backend" && !user;
-  const demoText = useMemo(() => tool ? getToolDemoOutput(tool.id) : "", [tool?.id]);
-  const { displayed: typedDemo, isTyping } = useTypingEffect(requiresLogin ? demoText : "", 15);
 
   if (!tool) {
     return (
@@ -279,72 +276,17 @@ const ToolPage = () => {
           </div>
         </div>
 
-        {/* Demo Preview & Login Gate */}
-        {requiresLogin && (
-          <div className="mt-8 space-y-6">
-            {/* Demo Output Preview */}
-            <div className="relative">
-              <div className="flex items-center gap-2 mb-3">
-                <Eye className="h-4 w-4 text-primary" />
-                <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
-                  Sample Output Preview
-                </label>
-              </div>
-              <div className="relative overflow-hidden rounded border border-primary/20 bg-card">
-                <pre className="p-4 font-body text-sm text-foreground whitespace-pre-wrap min-h-[200px] max-h-[250px] overflow-hidden">
-                  {typedDemo}
-                  {isTyping && <span className="inline-block w-1.5 h-4 bg-primary animate-pulse ml-0.5 align-middle" />}
-                </pre>
-                {/* Blur overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                  <Lock className="h-8 w-8 text-secondary mb-3" />
-                  <h3 className="font-heading text-lg font-bold text-secondary neon-text-magenta">
-                    Sign Up to Unlock Full Results
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground max-w-md">
-                    Create a free account to run this tool with your own input and get complete, downloadable results.
-                  </p>
-                  <div className="mt-4 flex gap-3">
-                    <Link
-                      to="/login"
-                      className="rounded border border-primary/30 px-6 py-2 font-heading text-xs text-primary hover:bg-primary/10 transition-all"
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      to="/signup"
-                      className="rounded bg-primary px-6 py-2 font-heading text-xs text-primary-foreground neon-glow transition-all hover:bg-primary/90"
-                    >
-                      Sign Up Free
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Usage Limit Banner — shown for all tools to guests */}
+        <div className="mt-6">
+          <UsageLimitBanner remaining={remaining} dailyLimit={dailyLimit} isLimitReached={isLimitReached} isGuest={isGuest} />
+        </div>
 
-        {/* Usage Limit Banner */}
-        {!requiresLogin && (
-          <div className="mt-6">
-            <UsageLimitBanner remaining={remaining} dailyLimit={dailyLimit} isLimitReached={isLimitReached} isGuest={isGuest} />
-          </div>
-        )}
-
-        {/* Limit Reached Gate */}
-        {!requiresLogin && isLimitReached && (
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            Tool disabled until you sign up or wait until tomorrow.
-          </div>
-        )}
-
-        {/* Tool Interface */}
-        {!requiresLogin && !isLimitReached && tool.id === "qr-generator" && (
+        {/* Tool Interface — gated only by usage limit */}
+        {!isLimitReached && tool.id === "qr-generator" && (
           <QRCodeGenerator onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
         )}
 
-        {!requiresLogin && !isLimitReached && isImageTool(tool.id) && (
+        {!isLimitReached && isImageTool(tool.id) && (
           <ImageToolInterface
             toolId={tool.id}
             toolName={tool.name}
@@ -352,11 +294,11 @@ const ToolPage = () => {
           />
         )}
 
-        {!requiresLogin && !isLimitReached && tool.id === "reorder-pdf" && (
+        {!isLimitReached && tool.id === "reorder-pdf" && (
           <PDFReorderTool onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
         )}
 
-        {!requiresLogin && !isLimitReached && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
+        {!isLimitReached && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
           <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}
@@ -364,7 +306,7 @@ const ToolPage = () => {
           />
         )}
 
-        {!requiresLogin && !isLimitReached && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {!isLimitReached && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
             <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
