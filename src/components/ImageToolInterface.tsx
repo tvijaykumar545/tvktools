@@ -385,7 +385,7 @@ const ImageToolInterface = ({ toolId, toolName, onTrackUsage }: ImageToolInterfa
     const disabled = !file;
 
     return (
-      <div className="space-y-3 rounded border border-primary/10 bg-card p-4">
+      <div className={`space-y-3 rounded border border-primary/10 bg-card p-4 ${disabled ? "opacity-60 pointer-events-none" : ""}`}>
         <p className="font-heading text-[11px] font-semibold text-primary uppercase tracking-wider">⚙️ Options</p>
 
         {/* ── Converter / Format ── */}
