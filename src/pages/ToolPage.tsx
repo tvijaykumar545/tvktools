@@ -68,6 +68,39 @@ const ToolPage = () => {
       return;
     }
 
+    // Image generator - non-streaming
+    if (isImageGenerator) {
+      const userInput = input || placeholder;
+      try {
+        const resp = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-image-gen`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body: JSON.stringify({ prompt: userInput }),
+          }
+        );
+        const data = await resp.json();
+        if (!resp.ok) {
+          toast.error(data.error || "Image generation failed");
+          setOutput(data.error || "Error generating image.");
+        } else {
+          setGeneratedImage(data.imageUrl);
+          setOutput(data.description || "Image generated successfully!");
+          trackUsage(tool.id, tool.name, tool.category);
+        }
+      } catch (e: any) {
+        toast.error("Failed to generate image. Please try again.");
+        setOutput("Error: Failed to connect to AI service.");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     // Backend AI tool - stream from edge function
     const controller = new AbortController();
     abortRef.current = controller;
