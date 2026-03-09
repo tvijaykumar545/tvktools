@@ -25,8 +25,11 @@ const ToolPage = () => {
   const { isFavorite, toggleFavorite } = useToolFavorites();
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const abortRef = useRef<AbortController | null>(null);
+  const isImageGenerator = tool?.id === "ai-image-generator";
   const abortRef = useRef<AbortController | null>(null);
   const requiresLogin = tool?.type === "backend" && !user;
   const demoText = useMemo(() => tool ? getToolDemoOutput(tool.id) : "", [tool?.id]);
