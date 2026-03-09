@@ -82,7 +82,50 @@ const ImageToolInterface = ({ toolId, toolName, onTrackUsage }: ImageToolInterfa
   const [flipH, setFlipH] = useState(false);
   const [flipV, setFlipV] = useState(false);
 
-  // Compressor options
+  // Undo/Redo for Mini Studio
+  type StudioState = { studioFilter: StudioFilter; brightness: number; contrast: number; saturation: number; rotation: number; flipH: boolean; flipV: boolean };
+  const getStudioState = (): StudioState => ({ studioFilter, brightness, contrast, saturation, rotation, flipH, flipV });
+  const [history, setHistory] = useState<StudioState[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
+  const pushHistory = useCallback(() => {
+    if (toolId !== "mini-studio") return;
+    const current = getStudioState();
+    setHistory(prev => {
+      const newHistory = prev.slice(0, historyIndex + 1);
+      newHistory.push(current);
+      return newHistory;
+    });
+    setHistoryIndex(prev => prev + 1);
+  }, [toolId, studioFilter, brightness, contrast, saturation, rotation, flipH, flipV, historyIndex]);
+
+  const applyState = (s: StudioState) => {
+    setStudioFilter(s.studioFilter);
+    setBrightness(s.brightness);
+    setContrast(s.contrast);
+    setSaturation(s.saturation);
+    setRotation(s.rotation);
+    setFlipH(s.flipH);
+    setFlipV(s.flipV);
+  };
+
+  const undo = () => {
+    if (historyIndex <= 0) return;
+    const newIndex = historyIndex - 1;
+    setHistoryIndex(newIndex);
+    applyState(history[newIndex]);
+  };
+
+  const redo = () => {
+    if (historyIndex >= history.length - 1) return;
+    const newIndex = historyIndex + 1;
+    setHistoryIndex(newIndex);
+    applyState(history[newIndex]);
+  };
+
+  const canUndo = toolId === "mini-studio" && historyIndex > 0;
+  const canRedo = toolId === "mini-studio" && historyIndex < history.length - 1;
+
   const [compressFormat, setCompressFormat] = useState("jpeg");
 
   // Color picker options
