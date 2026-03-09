@@ -13,7 +13,7 @@ interface PDFToolInterfaceProps {
 const PDF_TOOL_IDS = [
   "merge-pdf", "split-pdf", "compress-pdf", "pdf-to-word", "word-to-pdf",
   "pdf-to-excel", "jpg-to-pdf", "pdf-to-jpg", "rotate-pdf", "delete-pdf-pages",
-  "protect-pdf", "unlock-pdf", "add-watermark", "sign-pdf", "edit-pdf",
+  "protect-pdf", "unlock-pdf", "add-watermark", "sign-pdf", "edit-pdf", "reorder-pdf",
 ];
 
 export const isPdfTool = (toolId: string) => PDF_TOOL_IDS.includes(toolId);
