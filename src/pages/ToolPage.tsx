@@ -330,6 +330,14 @@ const ToolPage = () => {
           />
         )}
 
+        {!requiresLogin && isPdfTool(tool.id) && (
+          <PDFToolInterface
+            toolId={tool.id}
+            toolName={tool.name}
+            onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)}
+          />
+        )}
+
         {!requiresLogin && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
