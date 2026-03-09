@@ -13,6 +13,7 @@ import ShareButtons from "@/components/ShareButtons";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTrackToolUsage } from "@/hooks/useTrackToolUsage";
 import { useToolFavorites } from "@/hooks/useToolFavorites";
+import { useToolUsageWithToast } from "@/hooks/useToolUsageWithToast";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import ToolRating from "@/components/ToolRating";
