@@ -18,6 +18,8 @@ import ReactMarkdown from "react-markdown";
 import ToolRating from "@/components/ToolRating";
 import { useTypingEffect } from "@/hooks/useTypingEffect";
 import { useManagedTools } from "@/hooks/useManagedTools";
+import { useUsageLimit } from "@/hooks/useUsageLimit";
+import UsageLimitBanner from "@/components/UsageLimitBanner";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +34,7 @@ const ToolPage = () => {
   const { user } = useAuth();
   const { trackUsage } = useTrackToolUsage();
   const { isFavorite, toggleFavorite } = useToolFavorites();
+  const { remaining, isLimitReached, consumeUsage, dailyLimit, isGuest } = useUsageLimit();
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -63,6 +66,10 @@ const ToolPage = () => {
   const handleRun = async () => {
     if (loading) {
       abortRef.current?.abort();
+      return;
+    }
+    if (!consumeUsage()) {
+      toast.error("Daily limit reached! Sign up for unlimited access.");
       return;
     }
     setLoading(true);
@@ -318,32 +325,46 @@ const ToolPage = () => {
           </div>
         )}
 
-        {/* Tool Interface */}
-        {!requiresLogin && tool.id === "qr-generator" && (
-          <QRCodeGenerator onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)} />
+        {/* Usage Limit Banner */}
+        {!requiresLogin && (
+          <div className="mt-6">
+            <UsageLimitBanner remaining={remaining} dailyLimit={dailyLimit} isLimitReached={isLimitReached} isGuest={isGuest} />
+          </div>
         )}
 
-        {!requiresLogin && isImageTool(tool.id) && (
+        {/* Limit Reached Gate */}
+        {!requiresLogin && isLimitReached && (
+          <div className="mt-4 text-center text-sm text-muted-foreground">
+            Tool disabled until you sign up or wait until tomorrow.
+          </div>
+        )}
+
+        {/* Tool Interface */}
+        {!requiresLogin && !isLimitReached && tool.id === "qr-generator" && (
+          <QRCodeGenerator onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
+        )}
+
+        {!requiresLogin && !isLimitReached && isImageTool(tool.id) && (
           <ImageToolInterface
             toolId={tool.id}
             toolName={tool.name}
-            onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)}
+            onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }}
           />
         )}
 
-        {!requiresLogin && tool.id === "reorder-pdf" && (
-          <PDFReorderTool onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)} />
+        {!requiresLogin && !isLimitReached && tool.id === "reorder-pdf" && (
+          <PDFReorderTool onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
         )}
 
-        {!requiresLogin && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
+        {!requiresLogin && !isLimitReached && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
           <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}
-            onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)}
+            onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }}
           />
         )}
 
-        {!requiresLogin && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {!requiresLogin && !isLimitReached && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
             <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
