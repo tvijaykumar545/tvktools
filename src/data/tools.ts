@@ -1,6 +1,6 @@
-import { Brain, Search, Code, Image, Wrench, type LucideIcon } from "lucide-react";
+import { Brain, Search, Code, Image, Wrench, FileText, type LucideIcon } from "lucide-react";
 
-export type ToolCategory = "ai" | "seo" | "developer" | "image" | "utility";
+export type ToolCategory = "ai" | "seo" | "developer" | "image" | "utility" | "pdf";
 
 export interface Tool {
   id: string;
