@@ -42,10 +42,18 @@ export const useToolUsageStats = (): UsageStats => {
 
       const toolCounts: Record<string, number> = {};
       const catCounts: Record<string, number> = {};
+      const hourCounts: Record<number, number> = {};
       allUsage.forEach((u) => {
         toolCounts[u.tool_name] = (toolCounts[u.tool_name] || 0) + 1;
         catCounts[u.category] = (catCounts[u.category] || 0) + 1;
+        const hour = new Date(u.created_at).getHours();
+        hourCounts[hour] = (hourCounts[hour] || 0) + 1;
       });
+
+      const hourlyBreakdown = Array.from({ length: 24 }, (_, i) => ({
+        hour: `${i.toString().padStart(2, "0")}:00`,
+        count: hourCounts[i] || 0,
+      }));
 
       setStats({
         totalUses: allUsage.length,
@@ -56,6 +64,7 @@ export const useToolUsageStats = (): UsageStats => {
         categoryBreakdown: Object.entries(catCounts)
           .map(([category, count]) => ({ category, count }))
           .sort((a, b) => b.count - a.count),
+        hourlyBreakdown,
         recentTools: allUsage,
         loading: false,
       });
