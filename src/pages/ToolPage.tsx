@@ -315,6 +315,10 @@ const ToolPage = () => {
         )}
 
         {/* Tool Interface */}
+        {!requiresLogin && tool.id === "qr-generator" && (
+          <QRCodeGenerator onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)} />
+        )}
+
         {!requiresLogin && isImageTool(tool.id) && (
           <ImageToolInterface
             toolId={tool.id}
