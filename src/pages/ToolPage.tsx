@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye, ImageIcon } from "lucide-react";
+import ImageToolInterface, { isImageTool } from "@/components/ImageToolInterface";
 import { getToolById as getStaticToolById, tools as staticTools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq, getToolDemoOutput } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
@@ -313,7 +314,15 @@ const ToolPage = () => {
         )}
 
         {/* Tool Interface */}
-        {!requiresLogin && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {!requiresLogin && isImageTool(tool.id) && (
+          <ImageToolInterface
+            toolId={tool.id}
+            toolName={tool.name}
+            onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)}
+          />
+        )}
+
+        {!requiresLogin && !isImageTool(tool.id) && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
             <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
