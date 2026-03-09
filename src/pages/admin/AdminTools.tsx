@@ -195,6 +195,7 @@ const AdminTools = () => {
     { value: "developer", label: "Developer" },
     { value: "image", label: "Image" },
     { value: "utility", label: "Utility" },
+    { value: "pdf", label: "PDF" },
   ];
 
   return (
@@ -395,6 +396,7 @@ const AdminTools = () => {
                   <option value="developer">Developer</option>
                   <option value="image">Image</option>
                   <option value="utility">Utility</option>
+                  <option value="pdf">PDF</option>
                 </select>
               </div>
               <div>
