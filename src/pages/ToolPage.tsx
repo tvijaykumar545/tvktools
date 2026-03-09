@@ -56,6 +56,7 @@ const ToolPage = () => {
     }
     setLoading(true);
     setOutput("");
+    setGeneratedImage(null);
 
     if (tool.type === "frontend") {
       setTimeout(() => {
