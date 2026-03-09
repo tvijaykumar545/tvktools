@@ -325,28 +325,42 @@ const ToolPage = () => {
           </div>
         )}
 
-        {/* Tool Interface */}
-        {!requiresLogin && tool.id === "qr-generator" && (
-          <QRCodeGenerator onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)} />
+        {/* Usage Limit Banner */}
+        {!requiresLogin && (
+          <div className="mt-6">
+            <UsageLimitBanner remaining={remaining} dailyLimit={dailyLimit} isLimitReached={isLimitReached} isGuest={isGuest} />
+          </div>
         )}
 
-        {!requiresLogin && isImageTool(tool.id) && (
+        {/* Limit Reached Gate */}
+        {!requiresLogin && isLimitReached && (
+          <div className="mt-4 text-center text-sm text-muted-foreground">
+            Tool disabled until you sign up or wait until tomorrow.
+          </div>
+        )}
+
+        {/* Tool Interface */}
+        {!requiresLogin && !isLimitReached && tool.id === "qr-generator" && (
+          <QRCodeGenerator onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
+        )}
+
+        {!requiresLogin && !isLimitReached && isImageTool(tool.id) && (
           <ImageToolInterface
             toolId={tool.id}
             toolName={tool.name}
-            onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)}
+            onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }}
           />
         )}
 
-        {!requiresLogin && tool.id === "reorder-pdf" && (
-          <PDFReorderTool onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)} />
+        {!requiresLogin && !isLimitReached && tool.id === "reorder-pdf" && (
+          <PDFReorderTool onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
         )}
 
-        {!requiresLogin && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
+        {!requiresLogin && !isLimitReached && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
           <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}
-            onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)}
+            onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }}
           />
         )}
 
