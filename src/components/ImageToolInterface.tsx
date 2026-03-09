@@ -539,10 +539,23 @@ const ImageToolInterface = ({ toolId, toolName, onTrackUsage }: ImageToolInterfa
         {/* ── Mini Studio ── */}
         {toolId === "mini-studio" && (
           <>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] text-muted-foreground">History</span>
+              <div className="flex gap-1">
+                <button onClick={undo} disabled={!canUndo} title="Undo"
+                  className="flex items-center gap-1 px-2 py-1 rounded text-[10px] border border-primary/20 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all disabled:opacity-30 disabled:pointer-events-none">
+                  <Undo2 className="h-3 w-3" /> Undo
+                </button>
+                <button onClick={redo} disabled={!canRedo} title="Redo"
+                  className="flex items-center gap-1 px-2 py-1 rounded text-[10px] border border-primary/20 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all disabled:opacity-30 disabled:pointer-events-none">
+                  <Redo2 className="h-3 w-3" /> Redo
+                </button>
+              </div>
+            </div>
             <SettingRow label="Filters">
               <div className="grid grid-cols-3 gap-1.5">
                 {STUDIO_FILTERS.map(f => (
-                  <button key={f.id} onClick={() => setStudioFilter(f.id)}
+                  <button key={f.id} onClick={() => { pushHistory(); setStudioFilter(f.id); }}
                     className={`px-2 py-1.5 rounded text-[10px] border transition-all ${studioFilter === f.id ? "bg-primary text-primary-foreground border-primary" : "border-primary/20 text-muted-foreground hover:border-primary/50"}`}>
                     {f.label}
                   </button>
@@ -550,31 +563,31 @@ const ImageToolInterface = ({ toolId, toolName, onTrackUsage }: ImageToolInterfa
               </div>
             </SettingRow>
             <SettingRow label={`Brightness: ${brightness}%`}>
-              <input type="range" min={20} max={200} value={brightness} onChange={e => setBrightness(Number(e.target.value))} className="w-full accent-primary" />
+              <input type="range" min={20} max={200} value={brightness} onMouseDown={pushHistory} onTouchStart={pushHistory} onChange={e => setBrightness(Number(e.target.value))} className="w-full accent-primary" />
             </SettingRow>
             <SettingRow label={`Contrast: ${contrast}%`}>
-              <input type="range" min={20} max={200} value={contrast} onChange={e => setContrast(Number(e.target.value))} className="w-full accent-primary" />
+              <input type="range" min={20} max={200} value={contrast} onMouseDown={pushHistory} onTouchStart={pushHistory} onChange={e => setContrast(Number(e.target.value))} className="w-full accent-primary" />
             </SettingRow>
             <SettingRow label={`Saturation: ${saturation}%`}>
-              <input type="range" min={0} max={300} value={saturation} onChange={e => setSaturation(Number(e.target.value))} className="w-full accent-primary" />
+              <input type="range" min={0} max={300} value={saturation} onMouseDown={pushHistory} onTouchStart={pushHistory} onChange={e => setSaturation(Number(e.target.value))} className="w-full accent-primary" />
             </SettingRow>
             <SettingRow label="Transform">
               <div className="flex gap-2">
-                <button onClick={() => setRotation((rotation + 90) % 360)} title="Rotate 90°"
+                <button onClick={() => { pushHistory(); setRotation((rotation + 90) % 360); }} title="Rotate 90°"
                   className="flex items-center gap-1 px-2 py-1 rounded text-[10px] border border-primary/20 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all">
                   <RotateCw className="h-3 w-3" /> {rotation}°
                 </button>
-                <button onClick={() => setFlipH(!flipH)} title="Flip Horizontal"
+                <button onClick={() => { pushHistory(); setFlipH(!flipH); }} title="Flip Horizontal"
                   className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] border transition-all ${flipH ? "bg-primary text-primary-foreground border-primary" : "border-primary/20 text-muted-foreground hover:border-primary/50"}`}>
                   <FlipHorizontal className="h-3 w-3" /> H
                 </button>
-                <button onClick={() => setFlipV(!flipV)} title="Flip Vertical"
+                <button onClick={() => { pushHistory(); setFlipV(!flipV); }} title="Flip Vertical"
                   className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] border transition-all ${flipV ? "bg-primary text-primary-foreground border-primary" : "border-primary/20 text-muted-foreground hover:border-primary/50"}`}>
                   <FlipVertical className="h-3 w-3" /> V
                 </button>
               </div>
             </SettingRow>
-            <button onClick={() => { setBrightness(100); setContrast(100); setSaturation(100); setRotation(0); setFlipH(false); setFlipV(false); setStudioFilter("none"); }}
+            <button onClick={() => { pushHistory(); setBrightness(100); setContrast(100); setSaturation(100); setRotation(0); setFlipH(false); setFlipV(false); setStudioFilter("none"); }}
               className="text-[10px] text-muted-foreground hover:text-primary transition-colors">↺ Reset All</button>
           </>
         )}
