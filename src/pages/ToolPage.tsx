@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye } from "lucide-react";
+import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye, ImageIcon } from "lucide-react";
 import { getToolById as getStaticToolById, tools as staticTools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq, getToolDemoOutput } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
@@ -25,9 +25,11 @@ const ToolPage = () => {
   const { isFavorite, toggleFavorite } = useToolFavorites();
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
+  const isImageGenerator = tool?.id === "ai-image-generator";
   const requiresLogin = tool?.type === "backend" && !user;
   const demoText = useMemo(() => tool ? getToolDemoOutput(tool.id) : "", [tool?.id]);
   const { displayed: typedDemo, isTyping } = useTypingEffect(requiresLogin ? demoText : "", 15);
@@ -54,6 +56,7 @@ const ToolPage = () => {
     }
     setLoading(true);
     setOutput("");
+    setGeneratedImage(null);
 
     if (tool.type === "frontend") {
       setTimeout(() => {
@@ -62,6 +65,39 @@ const ToolPage = () => {
         setLoading(false);
         trackUsage(tool.id, tool.name, tool.category);
       }, 300);
+      return;
+    }
+
+    // Image generator - non-streaming
+    if (isImageGenerator) {
+      const userInput = input || placeholder;
+      try {
+        const resp = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-image-gen`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body: JSON.stringify({ prompt: userInput }),
+          }
+        );
+        const data = await resp.json();
+        if (!resp.ok) {
+          toast.error(data.error || "Image generation failed");
+          setOutput(data.error || "Error generating image.");
+        } else {
+          setGeneratedImage(data.imageUrl);
+          setOutput(data.description || "Image generated successfully!");
+          trackUsage(tool.id, tool.name, tool.category);
+        }
+      } catch (e: any) {
+        toast.error("Failed to generate image. Please try again.");
+        setOutput("Error: Failed to connect to AI service.");
+      } finally {
+        setLoading(false);
+      }
       return;
     }
 
@@ -292,11 +328,11 @@ const ToolPage = () => {
             >
             {loading ? (
                 <>
-                  <Loader2 className="h-4 w-4 animate-spin" /> {tool.type === "backend" ? "Generating..." : "Processing..."}
+                  <Loader2 className="h-4 w-4 animate-spin" /> {isImageGenerator ? "Generating Image..." : tool.type === "backend" ? "Generating..." : "Processing..."}
                 </>
               ) : (
                 <>
-                  <Play className="h-4 w-4" /> Run Tool
+                  {isImageGenerator ? <ImageIcon className="h-4 w-4" /> : <Play className="h-4 w-4" />} {isImageGenerator ? "Generate Image" : "Run Tool"}
                 </>
               )}
             </button>
@@ -308,25 +344,59 @@ const ToolPage = () => {
               <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
                 Output
               </label>
-              {output && (
+              {(output || generatedImage) && (
                 <div className="flex gap-2">
-                  <button
-                    onClick={handleCopy}
-                    className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
-                  >
-                    {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                    {copied ? "Copied!" : "Copy"}
-                  </button>
-                  <button
-                    onClick={handleDownload}
-                    className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
-                  >
-                    <Download className="h-3 w-3" /> Download
-                  </button>
+                  {!isImageGenerator && (
+                    <button
+                      onClick={handleCopy}
+                      className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
+                    >
+                      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                      {copied ? "Copied!" : "Copy"}
+                    </button>
+                  )}
+                  {generatedImage && (
+                    <a
+                      href={generatedImage}
+                      download="ai-generated-image.png"
+                      className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
+                    >
+                      <Download className="h-3 w-3" /> Download Image
+                    </a>
+                  )}
+                  {!isImageGenerator && (
+                    <button
+                      onClick={handleDownload}
+                      className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
+                    >
+                      <Download className="h-3 w-3" /> Download
+                    </button>
+                  )}
                 </div>
               )}
             </div>
-            {output && tool.type === "backend" ? (
+            {/* Image Generator Output */}
+            {isImageGenerator ? (
+              <div className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4">
+                {generatedImage ? (
+                  <div className="flex flex-col items-center gap-4">
+                    <img
+                      src={generatedImage}
+                      alt="AI Generated Image"
+                      className="max-w-full rounded-lg border border-primary/10 shadow-lg"
+                    />
+                    {output && (
+                      <p className="text-xs text-muted-foreground text-center">{output}</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full min-h-[250px] text-muted-foreground">
+                    <ImageIcon className="h-12 w-12 mb-3 opacity-30" />
+                    <p className="text-sm">Your generated image will appear here...</p>
+                  </div>
+                )}
+              </div>
+            ) : output && tool.type === "backend" ? (
               <div className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4 text-sm text-foreground prose prose-invert prose-sm max-w-none prose-headings:text-primary prose-strong:text-foreground prose-li:text-foreground prose-p:text-foreground">
                 <ReactMarkdown>{output}</ReactMarkdown>
               </div>
