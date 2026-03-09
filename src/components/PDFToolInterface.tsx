@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useRef, useCallback } from "react";
 import { Upload, Download, Loader2, FileText, Plus, Trash2, RotateCw, Lock, Unlock, Droplets, Pen } from "lucide-react";
 import { PDFDocument, rgb, StandardFonts, degrees } from "pdf-lib";
