@@ -18,8 +18,13 @@ import { useManagedTools } from "@/hooks/useManagedTools";
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: dbTools } = useManagedTools();
-  const tools = dbTools && dbTools.length > 0 ? dbTools : staticTools;
-  const tool = id ? tools.find(t => t.id === id) : undefined;
+  const mergedTools = useMemo(() => {
+    if (!dbTools || dbTools.length === 0) return staticTools;
+    const dbIds = new Set(dbTools.map(t => t.id));
+    const missingStatic = staticTools.filter(t => !dbIds.has(t.id));
+    return [...dbTools, ...missingStatic];
+  }, [dbTools]);
+  const tool = id ? mergedTools.find(t => t.id === id) : undefined;
   const { user } = useAuth();
   const { trackUsage } = useTrackToolUsage();
   const { isFavorite, toggleFavorite } = useToolFavorites();
@@ -47,7 +52,7 @@ const ToolPage = () => {
 
   const placeholder = getToolPlaceholder(tool.id);
   const faqs = getToolFaq(tool.id);
-  const relatedTools = tools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, 4);
+  const relatedTools = mergedTools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, 4);
 
   const handleRun = async () => {
     if (loading) {
