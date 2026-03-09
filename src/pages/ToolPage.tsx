@@ -4,6 +4,7 @@ import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, Eye, Imag
 import ImageToolInterface, { isImageTool } from "@/components/ImageToolInterface";
 import QRCodeGenerator from "@/components/QRCodeGenerator";
 import PDFToolInterface, { isPdfTool } from "@/components/PDFToolInterface";
+import PDFReorderTool from "@/components/PDFReorderTool";
 import { getToolById as getStaticToolById, tools as staticTools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq, getToolDemoOutput } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
@@ -330,7 +331,11 @@ const ToolPage = () => {
           />
         )}
 
-        {!requiresLogin && isPdfTool(tool.id) && (
+        {!requiresLogin && tool.id === "reorder-pdf" && (
+          <PDFReorderTool onTrackUsage={() => trackUsage(tool.id, tool.name, tool.category)} />
+        )}
+
+        {!requiresLogin && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
           <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}

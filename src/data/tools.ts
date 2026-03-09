@@ -129,6 +129,7 @@ export const tools: Tool[] = [
   { id: "add-watermark", name: "Add Watermark", description: "Add text or image watermark to PDF", category: "pdf", icon: "💧", isFree: true, type: "frontend" },
   { id: "sign-pdf", name: "Sign PDF", description: "Add digital or electronic signatures", category: "pdf", icon: "✍️", isFree: true, isNew: true, type: "frontend" },
   { id: "edit-pdf", name: "Edit PDF", description: "Edit text, images, and content inside PDF", category: "pdf", icon: "✏️", isFree: false, isNew: true, type: "frontend" },
+  { id: "reorder-pdf", name: "Reorder PDF Pages", description: "Drag and drop to rearrange PDF pages", category: "pdf", icon: "🔀", isFree: true, isNew: true, type: "frontend" },
 ];
 
 export const getToolsByCategory = (category: ToolCategory) => tools.filter(t => t.category === category);
