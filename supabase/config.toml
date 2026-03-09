@@ -2,3 +2,6 @@ project_id = "xavthzgizngnmautbhmx"
 
 [functions.ai-tool]
 verify_jwt = false
+
+[functions.ai-image-gen]
+verify_jwt = false
