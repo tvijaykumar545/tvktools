@@ -44,8 +44,6 @@ const ToolPage = () => {
   const isImageGenerator = tool?.id === "ai-image-generator";
   const isQRGenerator = tool?.id === "qr-generator";
   const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator || isPdfTool(tool?.id ?? "");
-  const demoText = useMemo(() => tool ? getToolDemoOutput(tool.id) : "", [tool?.id]);
-  const { displayed: typedDemo, isTyping } = useTypingEffect(requiresLogin ? demoText : "", 15);
 
   if (!tool) {
     return (
