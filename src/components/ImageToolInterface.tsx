@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from "react";
-import { Upload, Download, Loader2, ImageIcon, RotateCw, FlipHorizontal, FlipVertical, Sun, Contrast, Droplets } from "lucide-react";
+import { useState, useRef, useCallback, useMemo } from "react";
+import { Upload, Download, Loader2, ImageIcon, RotateCw, FlipHorizontal, FlipVertical, Sun, Contrast, Droplets, Undo2, Redo2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface ImageToolInterfaceProps {
@@ -82,7 +82,50 @@ const ImageToolInterface = ({ toolId, toolName, onTrackUsage }: ImageToolInterfa
   const [flipH, setFlipH] = useState(false);
   const [flipV, setFlipV] = useState(false);
 
-  // Compressor options
+  // Undo/Redo for Mini Studio
+  type StudioState = { studioFilter: StudioFilter; brightness: number; contrast: number; saturation: number; rotation: number; flipH: boolean; flipV: boolean };
+  const getStudioState = (): StudioState => ({ studioFilter, brightness, contrast, saturation, rotation, flipH, flipV });
+  const [history, setHistory] = useState<StudioState[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
+  const pushHistory = useCallback(() => {
+    if (toolId !== "mini-studio") return;
+    const current = getStudioState();
+    setHistory(prev => {
+      const newHistory = prev.slice(0, historyIndex + 1);
+      newHistory.push(current);
+      return newHistory;
+    });
+    setHistoryIndex(prev => prev + 1);
+  }, [toolId, studioFilter, brightness, contrast, saturation, rotation, flipH, flipV, historyIndex]);
+
+  const applyState = (s: StudioState) => {
+    setStudioFilter(s.studioFilter);
+    setBrightness(s.brightness);
+    setContrast(s.contrast);
+    setSaturation(s.saturation);
+    setRotation(s.rotation);
+    setFlipH(s.flipH);
+    setFlipV(s.flipV);
+  };
+
+  const undo = () => {
+    if (historyIndex <= 0) return;
+    const newIndex = historyIndex - 1;
+    setHistoryIndex(newIndex);
+    applyState(history[newIndex]);
+  };
+
+  const redo = () => {
+    if (historyIndex >= history.length - 1) return;
+    const newIndex = historyIndex + 1;
+    setHistoryIndex(newIndex);
+    applyState(history[newIndex]);
+  };
+
+  const canUndo = toolId === "mini-studio" && historyIndex > 0;
+  const canRedo = toolId === "mini-studio" && historyIndex < history.length - 1;
+
   const [compressFormat, setCompressFormat] = useState("jpeg");
 
   // Color picker options
@@ -496,10 +539,23 @@ const ImageToolInterface = ({ toolId, toolName, onTrackUsage }: ImageToolInterfa
         {/* ── Mini Studio ── */}
         {toolId === "mini-studio" && (
           <>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] text-muted-foreground">History</span>
+              <div className="flex gap-1">
+                <button onClick={undo} disabled={!canUndo} title="Undo"
+                  className="flex items-center gap-1 px-2 py-1 rounded text-[10px] border border-primary/20 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all disabled:opacity-30 disabled:pointer-events-none">
+                  <Undo2 className="h-3 w-3" /> Undo
+                </button>
+                <button onClick={redo} disabled={!canRedo} title="Redo"
+                  className="flex items-center gap-1 px-2 py-1 rounded text-[10px] border border-primary/20 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all disabled:opacity-30 disabled:pointer-events-none">
+                  <Redo2 className="h-3 w-3" /> Redo
+                </button>
+              </div>
+            </div>
             <SettingRow label="Filters">
               <div className="grid grid-cols-3 gap-1.5">
                 {STUDIO_FILTERS.map(f => (
-                  <button key={f.id} onClick={() => setStudioFilter(f.id)}
+                  <button key={f.id} onClick={() => { pushHistory(); setStudioFilter(f.id); }}
                     className={`px-2 py-1.5 rounded text-[10px] border transition-all ${studioFilter === f.id ? "bg-primary text-primary-foreground border-primary" : "border-primary/20 text-muted-foreground hover:border-primary/50"}`}>
                     {f.label}
                   </button>
@@ -507,31 +563,31 @@ const ImageToolInterface = ({ toolId, toolName, onTrackUsage }: ImageToolInterfa
               </div>
             </SettingRow>
             <SettingRow label={`Brightness: ${brightness}%`}>
-              <input type="range" min={20} max={200} value={brightness} onChange={e => setBrightness(Number(e.target.value))} className="w-full accent-primary" />
+              <input type="range" min={20} max={200} value={brightness} onMouseDown={pushHistory} onTouchStart={pushHistory} onChange={e => setBrightness(Number(e.target.value))} className="w-full accent-primary" />
             </SettingRow>
             <SettingRow label={`Contrast: ${contrast}%`}>
-              <input type="range" min={20} max={200} value={contrast} onChange={e => setContrast(Number(e.target.value))} className="w-full accent-primary" />
+              <input type="range" min={20} max={200} value={contrast} onMouseDown={pushHistory} onTouchStart={pushHistory} onChange={e => setContrast(Number(e.target.value))} className="w-full accent-primary" />
             </SettingRow>
             <SettingRow label={`Saturation: ${saturation}%`}>
-              <input type="range" min={0} max={300} value={saturation} onChange={e => setSaturation(Number(e.target.value))} className="w-full accent-primary" />
+              <input type="range" min={0} max={300} value={saturation} onMouseDown={pushHistory} onTouchStart={pushHistory} onChange={e => setSaturation(Number(e.target.value))} className="w-full accent-primary" />
             </SettingRow>
             <SettingRow label="Transform">
               <div className="flex gap-2">
-                <button onClick={() => setRotation((rotation + 90) % 360)} title="Rotate 90°"
+                <button onClick={() => { pushHistory(); setRotation((rotation + 90) % 360); }} title="Rotate 90°"
                   className="flex items-center gap-1 px-2 py-1 rounded text-[10px] border border-primary/20 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all">
                   <RotateCw className="h-3 w-3" /> {rotation}°
                 </button>
-                <button onClick={() => setFlipH(!flipH)} title="Flip Horizontal"
+                <button onClick={() => { pushHistory(); setFlipH(!flipH); }} title="Flip Horizontal"
                   className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] border transition-all ${flipH ? "bg-primary text-primary-foreground border-primary" : "border-primary/20 text-muted-foreground hover:border-primary/50"}`}>
                   <FlipHorizontal className="h-3 w-3" /> H
                 </button>
-                <button onClick={() => setFlipV(!flipV)} title="Flip Vertical"
+                <button onClick={() => { pushHistory(); setFlipV(!flipV); }} title="Flip Vertical"
                   className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] border transition-all ${flipV ? "bg-primary text-primary-foreground border-primary" : "border-primary/20 text-muted-foreground hover:border-primary/50"}`}>
                   <FlipVertical className="h-3 w-3" /> V
                 </button>
               </div>
             </SettingRow>
-            <button onClick={() => { setBrightness(100); setContrast(100); setSaturation(100); setRotation(0); setFlipH(false); setFlipV(false); setStudioFilter("none"); }}
+            <button onClick={() => { pushHistory(); setBrightness(100); setContrast(100); setSaturation(100); setRotation(0); setFlipH(false); setFlipV(false); setStudioFilter("none"); }}
               className="text-[10px] text-muted-foreground hover:text-primary transition-colors">↺ Reset All</button>
           </>
         )}
