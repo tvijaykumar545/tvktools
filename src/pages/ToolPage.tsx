@@ -290,26 +290,26 @@ const ToolPage = () => {
 
         {/* Tool Interface — gated only by usage limit */}
         {!isLimitReached && tool.id === "qr-generator" && (
-          <QRCodeGenerator onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
+          <QRCodeGenerator onTrackUsage={handleToolUsage} />
         )}
 
         {!isLimitReached && isImageTool(tool.id) && (
           <ImageToolInterface
             toolId={tool.id}
             toolName={tool.name}
-            onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }}
+            onTrackUsage={handleToolUsage}
           />
         )}
 
         {!isLimitReached && tool.id === "reorder-pdf" && (
-          <PDFReorderTool onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }} />
+          <PDFReorderTool onTrackUsage={handleToolUsage} />
         )}
 
         {!isLimitReached && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
           <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}
-            onTrackUsage={() => { consumeUsage(); trackUsage(tool.id, tool.name, tool.category); }}
+            onTrackUsage={handleToolUsage}
           />
         )}
 
