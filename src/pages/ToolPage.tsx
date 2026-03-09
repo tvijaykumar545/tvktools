@@ -344,25 +344,59 @@ const ToolPage = () => {
               <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
                 Output
               </label>
-              {output && (
+              {(output || generatedImage) && (
                 <div className="flex gap-2">
-                  <button
-                    onClick={handleCopy}
-                    className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
-                  >
-                    {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                    {copied ? "Copied!" : "Copy"}
-                  </button>
-                  <button
-                    onClick={handleDownload}
-                    className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
-                  >
-                    <Download className="h-3 w-3" /> Download
-                  </button>
+                  {!isImageGenerator && (
+                    <button
+                      onClick={handleCopy}
+                      className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
+                    >
+                      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                      {copied ? "Copied!" : "Copy"}
+                    </button>
+                  )}
+                  {generatedImage && (
+                    <a
+                      href={generatedImage}
+                      download="ai-generated-image.png"
+                      className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
+                    >
+                      <Download className="h-3 w-3" /> Download Image
+                    </a>
+                  )}
+                  {!isImageGenerator && (
+                    <button
+                      onClick={handleDownload}
+                      className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-muted-foreground transition-all hover:text-primary"
+                    >
+                      <Download className="h-3 w-3" /> Download
+                    </button>
+                  )}
                 </div>
               )}
             </div>
-            {output && tool.type === "backend" ? (
+            {/* Image Generator Output */}
+            {isImageGenerator ? (
+              <div className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4">
+                {generatedImage ? (
+                  <div className="flex flex-col items-center gap-4">
+                    <img
+                      src={generatedImage}
+                      alt="AI Generated Image"
+                      className="max-w-full rounded-lg border border-primary/10 shadow-lg"
+                    />
+                    {output && (
+                      <p className="text-xs text-muted-foreground text-center">{output}</p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full min-h-[250px] text-muted-foreground">
+                    <ImageIcon className="h-12 w-12 mb-3 opacity-30" />
+                    <p className="text-sm">Your generated image will appear here...</p>
+                  </div>
+                )}
+              </div>
+            ) : output && tool.type === "backend" ? (
               <div className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4 text-sm text-foreground prose prose-invert prose-sm max-w-none prose-headings:text-primary prose-strong:text-foreground prose-li:text-foreground prose-p:text-foreground">
                 <ReactMarkdown>{output}</ReactMarkdown>
               </div>
