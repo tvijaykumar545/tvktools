@@ -1,4 +1,5 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useParams, Link } from "react-router-dom";
 import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, ImageIcon } from "lucide-react";
 import ImageToolInterface, { isImageTool } from "@/components/ImageToolInterface";
