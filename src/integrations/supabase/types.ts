@@ -259,6 +259,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_most_used_tools: {
+        Args: { limit_count?: number }
+        Returns: {
+          category: string
+          tool_id: string
+          tool_name: string
+          usage_count: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

@@ -5,6 +5,7 @@ import { tools as staticTools, categories } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
 import SEOHead from "@/components/SEOHead";
 import { useManagedTools } from "@/hooks/useManagedTools";
+import MostUsedTools from "@/components/MostUsedTools";
 
 const Index = () => {
   const [search, setSearch] = useState("");
@@ -159,6 +160,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Most Used Tools */}
+      <MostUsedTools />
 
       {/* Popular Tools */}
       <section className="py-16">
