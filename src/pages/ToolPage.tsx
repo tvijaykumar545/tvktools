@@ -95,13 +95,19 @@ const ToolPage = () => {
     if (isImageGenerator) {
       const userInput = input || placeholder;
       try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+          toast.error("Please log in to use AI tools.");
+          setLoading(false);
+          return;
+        }
         const resp = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-image-gen`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              Authorization: `Bearer ${session.access_token}`,
             },
             body: JSON.stringify({ prompt: userInput }),
           }
