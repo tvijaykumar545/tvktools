@@ -187,7 +187,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* New Tools */}
+      {/* Most Used Tools */}
+      <MostUsedTools />
+
+
       {newTools.length > 0 && (
         <section className="py-16">
           <div className="container mx-auto px-4">

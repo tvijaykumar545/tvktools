@@ -16,7 +16,12 @@ const ToolCard = ({ tool, usageCount }: ToolCardProps) => {
     >
       <div className="flex items-start justify-between">
         <span className="text-2xl">{tool.icon}</span>
-        <div className="flex gap-1.5">
+        <div className="flex items-center gap-1.5">
+          {usageCount !== undefined && (
+            <Badge className="border-emerald-500/50 bg-emerald-500/10 text-emerald-400 text-[10px] font-heading">
+              🔥 {usageCount} uses
+            </Badge>
+          )}
           {tool.isNew && (
             <Badge className="border-accent/50 bg-accent/10 text-accent text-[10px] font-heading">
               NEW
