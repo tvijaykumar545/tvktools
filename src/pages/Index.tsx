@@ -5,6 +5,7 @@ import { tools as staticTools, categories } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
 import SEOHead from "@/components/SEOHead";
 import { useManagedTools } from "@/hooks/useManagedTools";
+import MostUsedTools from "@/components/MostUsedTools";
 
 const Index = () => {
   const [search, setSearch] = useState("");
