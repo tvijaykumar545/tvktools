@@ -1,4 +1,5 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useCallback } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { useParams, Link } from "react-router-dom";
 import { Copy, Check, ArrowLeft, Download, Play, Lock, Loader2, Heart, ImageIcon } from "lucide-react";
 import ImageToolInterface, { isImageTool } from "@/components/ImageToolInterface";
@@ -94,13 +95,19 @@ const ToolPage = () => {
     if (isImageGenerator) {
       const userInput = input || placeholder;
       try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+          toast.error("Please log in to use AI tools.");
+          setLoading(false);
+          return;
+        }
         const resp = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-image-gen`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              Authorization: `Bearer ${session.access_token}`,
             },
             body: JSON.stringify({ prompt: userInput }),
           }
@@ -129,13 +136,19 @@ const ToolPage = () => {
     const userInput = input || placeholder;
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        toast.error("Please log in to use AI tools.");
+        setLoading(false);
+        return;
+      }
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-tool`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({ toolId: tool.id, input: userInput }),
           signal: controller.signal,
