@@ -8,7 +8,7 @@ interface ToolCardProps {
   usageCount?: number;
 }
 
-const ToolCard = ({ tool }: ToolCardProps) => {
+const ToolCard = ({ tool, usageCount }: ToolCardProps) => {
   return (
     <Link
       to={`/tool/${tool.id}`}
