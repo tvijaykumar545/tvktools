@@ -161,8 +161,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Most Used Tools */}
-      <MostUsedTools />
 
       {/* Popular Tools */}
       <section className="py-16">
