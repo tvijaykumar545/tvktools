@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 
 interface ToolCardProps {
   tool: Tool;
+  usageCount?: number;
 }
 
 const ToolCard = ({ tool }: ToolCardProps) => {
