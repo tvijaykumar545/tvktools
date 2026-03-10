@@ -6,7 +6,7 @@ import ToolCard from "./ToolCard";
 import { Skeleton } from "./ui/skeleton";
 
 const MostUsedTools = () => {
-  const { data: mostUsed, isLoading } = useMostUsedTools(8);
+  const { data: mostUsed, isLoading } = useMostUsedTools(15);
 
   if (isLoading) {
     return (
@@ -31,7 +31,8 @@ const MostUsedTools = () => {
 
   if (!mostUsed || mostUsed.length === 0) return null;
 
-  // Map usage data to full tool objects for ToolCard
+  // Build map of usage counts and match to full tool objects
+  const usageMap = new Map(mostUsed.map((u) => [u.tool_id, u.usage_count]));
   const toolsToShow = mostUsed
     .map((u) => staticTools.find((t) => t.id === u.tool_id))
     .filter(Boolean) as typeof staticTools;
@@ -62,7 +63,11 @@ const MostUsedTools = () => {
         </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {toolsToShow.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} />
+            <ToolCard
+              key={tool.id}
+              tool={tool}
+              usageCount={usageMap.get(tool.id) ?? 0}
+            />
           ))}
         </div>
       </div>

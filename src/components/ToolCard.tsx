@@ -5,9 +5,10 @@ import { Badge } from "@/components/ui/badge";
 
 interface ToolCardProps {
   tool: Tool;
+  usageCount?: number;
 }
 
-const ToolCard = ({ tool }: ToolCardProps) => {
+const ToolCard = ({ tool, usageCount }: ToolCardProps) => {
   return (
     <Link
       to={`/tool/${tool.id}`}
@@ -15,7 +16,12 @@ const ToolCard = ({ tool }: ToolCardProps) => {
     >
       <div className="flex items-start justify-between">
         <span className="text-2xl">{tool.icon}</span>
-        <div className="flex gap-1.5">
+        <div className="flex items-center gap-1.5">
+          {usageCount !== undefined && (
+            <Badge className="border-accent/50 bg-accent/10 text-accent text-[10px] font-heading">
+              🔥 {usageCount} uses
+            </Badge>
+          )}
           {tool.isNew && (
             <Badge className="border-accent/50 bg-accent/10 text-accent text-[10px] font-heading">
               NEW
