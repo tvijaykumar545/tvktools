@@ -51,8 +51,11 @@ const MostUsedTools = () => {
                 Most Used Tools
               </h2>
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
               Based on real usage analytics
+              <span className="inline-flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-0.5 text-[10px] font-semibold text-accent">
+                📊 {totalUsage.toLocaleString()} total uses
+              </span>
             </p>
           </div>
           <Link
