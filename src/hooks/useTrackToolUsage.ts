@@ -1,24 +1,21 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 
-const DEBOUNCE_MS = 3000;
+const COOLDOWN_MS = 5000;
+const lastInsertedAt = new Map<string, number>();
 
 export const useTrackToolUsage = () => {
   const { user } = useAuth();
-  const lastTracked = useRef<{ toolId: string; timestamp: number } | null>(null);
 
   const trackUsage = useCallback(
     async (toolId: string, toolName: string, category: string) => {
       const now = Date.now();
-      if (
-        lastTracked.current &&
-        lastTracked.current.toolId === toolId &&
-        now - lastTracked.current.timestamp < DEBOUNCE_MS
-      ) {
-        return;
+      const last = lastInsertedAt.get(toolId) ?? 0;
+      if (now - last < COOLDOWN_MS) {
+        return; // Skip — already tracked recently
       }
-      lastTracked.current = { toolId, timestamp: now };
+      lastInsertedAt.set(toolId, now);
 
       await supabase.from("tool_usage").insert({
         user_id: user?.id ?? null,
