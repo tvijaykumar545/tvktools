@@ -38,8 +38,16 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    if (!prompt || prompt.trim().length === 0) {
+    if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
       return new Response(JSON.stringify({ error: "Please provide a prompt" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const MAX_PROMPT = 1000;
+    if (prompt.length > MAX_PROMPT) {
+      return new Response(JSON.stringify({ error: `Prompt too long. Max ${MAX_PROMPT} characters.` }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

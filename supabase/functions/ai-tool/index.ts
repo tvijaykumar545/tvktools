@@ -56,10 +56,28 @@ serve(async (req) => {
     }
 
     const { toolId, input } = await req.json();
+
+    // Validate toolId
+    if (!toolId || typeof toolId !== 'string' || !toolPrompts[toolId]) {
+      return new Response(JSON.stringify({ error: "Invalid or unsupported tool." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Validate input length
+    const MAX_INPUT = 4000;
+    if (typeof input !== 'string' || input.trim().length === 0 || input.length > MAX_INPUT) {
+      return new Response(JSON.stringify({ error: `Input must be between 1 and ${MAX_INPUT} characters.` }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = toolPrompts[toolId] || "You are a helpful assistant. Provide a clear and useful response.";
+    const systemPrompt = toolPrompts[toolId];
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
