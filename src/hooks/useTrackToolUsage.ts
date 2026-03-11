@@ -2,32 +2,27 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCallback } from "react";
 
-const DEBOUNCE_MS = 5000;
-const pendingTimers = new Map<string, ReturnType<typeof setTimeout>>();
+const COOLDOWN_MS = 5000;
+const lastInsertedAt = new Map<string, number>();
 
 export const useTrackToolUsage = () => {
   const { user } = useAuth();
 
   const trackUsage = useCallback(
-    (toolId: string, toolName: string, category: string) => {
-      // Clear any existing pending timer for this tool
-      const existing = pendingTimers.get(toolId);
-      if (existing) {
-        clearTimeout(existing);
+    async (toolId: string, toolName: string, category: string) => {
+      const now = Date.now();
+      const last = lastInsertedAt.get(toolId) ?? 0;
+      if (now - last < COOLDOWN_MS) {
+        return; // Skip — already tracked recently
       }
+      lastInsertedAt.set(toolId, now);
 
-      // Set a new debounced timer — only fires once after rapid clicks settle
-      const timer = setTimeout(async () => {
-        pendingTimers.delete(toolId);
-        await supabase.from("tool_usage").insert({
-          user_id: user?.id ?? null,
-          tool_id: toolId,
-          tool_name: toolName,
-          category,
-        });
-      }, 500);
-
-      pendingTimers.set(toolId, timer);
+      await supabase.from("tool_usage").insert({
+        user_id: user?.id ?? null,
+        tool_id: toolId,
+        tool_name: toolName,
+        category,
+      });
     },
     [user]
   );
