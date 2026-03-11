@@ -33,6 +33,7 @@ const MostUsedTools = () => {
 
   // Build map of usage counts and match to full tool objects
   const usageMap = new Map(mostUsed.map((u) => [u.tool_id, u.usage_count]));
+  const totalUsage = mostUsed.reduce((sum, u) => sum + u.usage_count, 0);
   const toolsToShow = mostUsed
     .map((u) => staticTools.find((t) => t.id === u.tool_id))
     .filter(Boolean) as typeof staticTools;
