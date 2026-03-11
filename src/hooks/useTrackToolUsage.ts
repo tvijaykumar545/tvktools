@@ -2,7 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCallback } from "react";
 
-const DEBOUNCE_MS = 3000;
+const DEBOUNCE_MS = 10000;
 const lastTrackedMap = new Map<string, number>();
 
 export const useTrackToolUsage = () => {
