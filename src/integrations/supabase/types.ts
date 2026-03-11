@@ -213,7 +213,7 @@ export type Database = {
           id: string
           tool_id: string
           tool_name: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           category: string
@@ -221,7 +221,7 @@ export type Database = {
           id?: string
           tool_id: string
           tool_name: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           category?: string
@@ -229,7 +229,7 @@ export type Database = {
           id?: string
           tool_id?: string
           tool_name?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }

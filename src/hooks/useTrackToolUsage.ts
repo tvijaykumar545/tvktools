@@ -7,9 +7,8 @@ export const useTrackToolUsage = () => {
 
   const trackUsage = useCallback(
     async (toolId: string, toolName: string, category: string) => {
-      if (!user) return;
       await supabase.from("tool_usage").insert({
-        user_id: user.id,
+        user_id: user?.id ?? null,
         tool_id: toolId,
         tool_name: toolName,
         category,
