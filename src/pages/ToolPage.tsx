@@ -65,7 +65,7 @@ const ToolPage = () => {
   }
 
   const placeholder = getToolPlaceholder(tool.id);
-  const faqs = getToolFaq(tool.id);
+  const faqs = getToolFaq(tool.id, tool.name, tool.description, tool.category, tool.type, tool.isFree);
   const relatedTools = mergedTools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, 4);
 
   const handleRun = async () => {

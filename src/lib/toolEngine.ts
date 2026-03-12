@@ -520,13 +520,317 @@ export const getToolPlaceholder = (toolId: string): string => {
   return placeholders[toolId] || "Enter your input here...";
 };
 
-export const getToolFaq = (toolId: string): { q: string; a: string }[] => {
-  const defaultFaq = [
-    { q: "Is this tool free?", a: "Basic usage is free. Pro features require a subscription." },
-    { q: "Is my data safe?", a: "We don't store any data you input. All processing is done securely." },
-    { q: "Can I use this via API?", a: "Yes! Check our API documentation for programmatic access." },
+export const getToolFaq = (toolId: string, toolName?: string, toolDescription?: string, toolCategory?: string, toolType?: string, isFree?: boolean): { q: string; a: string }[] => {
+  const name = toolName || toolId;
+  const desc = toolDescription || "a powerful online tool";
+  const category = toolCategory || "utility";
+  const type = toolType || "frontend";
+  const free = isFree ?? true;
+
+  // Tool-specific detailed how-to and explanation FAQs
+  const toolSpecificFaqs: Record<string, { q: string; a: string }[]> = {
+    // AI Tools
+    "ai-prompt-generator": [
+      { q: "How do I use the AI Prompt Generator?", a: "Enter a topic or idea in the input box and click 'Run Tool'. The AI will generate optimized, detailed prompts you can use with ChatGPT, Midjourney, DALL·E, and other AI models." },
+      { q: "What makes a good AI prompt?", a: "A good prompt is specific, includes context, tone, format instructions, and constraints. This tool automatically adds those elements so you get better AI outputs every time." },
+    ],
+    "ai-blog-title": [
+      { q: "How do I use the AI Blog Title Generator?", a: "Type your blog topic or a brief description of your article into the input field and click 'Run Tool'. The AI will generate multiple catchy, SEO-friendly title options." },
+      { q: "Can I customize the tone of the titles?", a: "Yes! Include tone instructions like 'professional', 'casual', or 'clickbait' in your input to influence the style of generated titles." },
+    ],
+    "ai-image-prompt": [
+      { q: "How do I use the AI Image Prompt Generator?", a: "Describe what kind of image you want (e.g., 'a futuristic city at sunset') and click 'Run Tool'. The AI generates detailed, optimized prompts for image generation tools like Midjourney or DALL·E." },
+      { q: "What details should I include?", a: "Include the subject, setting, mood, art style, and lighting preferences. The AI will expand on your input with professional modifiers for best results." },
+    ],
+    "ai-tweet-generator": [
+      { q: "How do I use the AI Tweet Generator?", a: "Enter your topic or key message and click 'Run Tool'. The AI creates multiple tweet variations optimized for engagement, including hashtags and emojis." },
+      { q: "Will the tweets fit Twitter's character limit?", a: "Yes! All generated tweets are crafted to stay within the 280-character limit while maximizing impact." },
+    ],
+    "ai-hashtag-generator": [
+      { q: "How do I use the AI Hashtag Generator?", a: "Enter your content topic, niche, or a description of your post and click 'Run Tool'. The AI generates trending and relevant hashtags organized by reach and relevance." },
+      { q: "How many hashtags should I use?", a: "For Instagram, use 20-30 hashtags. For Twitter/X, use 2-3. For LinkedIn, use 3-5. The tool provides enough options for any platform." },
+    ],
+    "ai-bio-generator": [
+      { q: "How do I use the AI Bio Generator?", a: "Enter details about yourself or your brand (name, role, skills, interests) and click 'Run Tool'. The AI creates professional bios tailored for different platforms." },
+      { q: "What platforms are supported?", a: "The tool generates bios optimized for LinkedIn, Twitter/X, Instagram, personal websites, and professional portfolios." },
+    ],
+    "ai-product-desc": [
+      { q: "How do I use the AI Product Description Generator?", a: "Enter your product name, features, and target audience, then click 'Run Tool'. The AI creates compelling, conversion-focused product descriptions." },
+      { q: "Can I specify the tone?", a: "Yes! Add tone preferences like 'luxury', 'casual', 'technical', or 'playful' in your input for customized descriptions." },
+    ],
+    "ai-email-generator": [
+      { q: "How do I use the AI Email Generator?", a: "Describe the purpose of your email (e.g., 'follow-up after meeting', 'cold outreach') and click 'Run Tool'. The AI drafts a professional, ready-to-send email." },
+      { q: "Can I generate different types of emails?", a: "Yes — business emails, follow-ups, cold outreach, thank-you notes, apology emails, and more. Just specify the type in your input." },
+    ],
+    "ai-code-generator": [
+      { q: "How do I use the AI Code Generator?", a: "Describe what you want to build (e.g., 'a React countdown timer component') and click 'Run Tool'. The AI generates clean, well-commented code." },
+      { q: "What programming languages are supported?", a: "The AI can generate code in JavaScript, TypeScript, Python, HTML/CSS, SQL, React, and many more languages and frameworks." },
+    ],
+    "ai-chat": [
+      { q: "How do I use the AI Chat Assistant?", a: "Type any question or request in the input field and click 'Run Tool'. The AI provides detailed, helpful responses on any topic." },
+      { q: "What can I ask the AI Chat?", a: "Anything! From coding questions, writing help, brainstorming ideas, explaining concepts, to general knowledge queries." },
+    ],
+    "ai-summarizer": [
+      { q: "How do I use the AI Text Summarizer?", a: "Paste the full article, document, or long text into the input field and click 'Run Tool'. The AI generates a concise summary highlighting key points." },
+      { q: "How long can the input text be?", a: "You can paste texts of several thousand words. The AI will distill the main ideas into a brief, easy-to-read summary." },
+    ],
+    "ai-paraphraser": [
+      { q: "How do I use the AI Paraphraser?", a: "Paste the text you want to rewrite and click 'Run Tool'. The AI generates multiple paraphrased versions in different tones — formal, casual, and creative." },
+      { q: "Will the meaning be preserved?", a: "Yes! The AI rewrites the text while maintaining the original meaning, just with different wording and style." },
+    ],
+    "ai-story-generator": [
+      { q: "How do I use the AI Story Generator?", a: "Enter a story premise, genre, or characters (e.g., 'a detective in a space station') and click 'Run Tool'. The AI creates an engaging narrative." },
+      { q: "What genres are supported?", a: "Sci-fi, fantasy, mystery, romance, horror, thriller, comedy, and more. Specify the genre in your prompt for best results." },
+    ],
+    "ai-slogan-generator": [
+      { q: "How do I use the AI Slogan Generator?", a: "Enter your brand name, product, or business description and click 'Run Tool'. The AI generates catchy, memorable slogans." },
+      { q: "How many slogans are generated?", a: "The tool typically generates 5-7 slogan options so you can pick the one that best fits your brand." },
+    ],
+    "ai-grammar-checker": [
+      { q: "How do I use the AI Grammar Checker?", a: "Paste your text into the input field and click 'Run Tool'. The AI identifies grammar, spelling, and punctuation errors and provides corrected text." },
+      { q: "Does it explain the corrections?", a: "Yes! Each error is highlighted with the original mistake and the suggested correction, so you can learn as you write." },
+    ],
+    "ai-image-generator": [
+      { q: "How do I use the AI Image Generator?", a: "Type a detailed description of the image you want (e.g., 'a magical forest with glowing mushrooms at night') and click 'Generate Image'. The AI creates a unique image from your prompt." },
+      { q: "What resolution are the generated images?", a: "Images are generated at 1024×1024 resolution and can be downloaded directly from the output panel." },
+    ],
+
+    // SEO Tools
+    "keyword-suggestions": [
+      { q: "How do I use the Keyword Suggestions tool?", a: "Enter a seed keyword or topic and click 'Run Tool'. The AI analyzes search trends and returns high-value keyword suggestions with estimated search volumes." },
+      { q: "How are keywords ranked?", a: "Keywords are organized by search volume, competition level, and relevance to your input, making it easy to prioritize your SEO strategy." },
+    ],
+    "meta-tag-generator": [
+      { q: "How do I use the Meta Tag Generator?", a: "Enter your page title, description, and URL in the input field (one per line) and click 'Run Tool'. The tool generates HTML meta tags ready to paste into your website." },
+      { q: "What meta tags are generated?", a: "Title tag, meta description, Open Graph tags (og:title, og:description), and Twitter Card tags for complete SEO and social media coverage." },
+    ],
+    "keyword-density": [
+      { q: "How do I use the Keyword Density Checker?", a: "Paste your content text into the input field and click 'Run Tool'. The tool analyzes word frequency and displays keyword density percentages." },
+      { q: "What is ideal keyword density?", a: "Most SEO experts recommend 1-2% keyword density for primary keywords. The tool helps you identify over-optimized or under-used keywords." },
+    ],
+    "serp-preview": [
+      { q: "How do I use the SERP Preview Tool?", a: "Enter your page title, URL, and meta description (one per line) and click 'Run Tool'. You'll see exactly how your page will appear in Google search results." },
+      { q: "Why is SERP preview important?", a: "It helps you optimize your title and description length to avoid truncation in search results, improving click-through rates." },
+    ],
+    "seo-title-generator": [
+      { q: "How do I use the SEO Title Generator?", a: "Enter your topic or target keyword and click 'Run Tool'. The AI generates multiple SEO-optimized title suggestions with proper length and keyword placement." },
+    ],
+    "readability-checker": [
+      { q: "How do I use the Readability Checker?", a: "Paste your content and click 'Run Tool'. The tool calculates Flesch Reading Ease score, grade level, and provides detailed readability metrics." },
+      { q: "What reading level should I target?", a: "For general web content, aim for grade level 6-8 (Flesch score 60-70). This ensures your content is accessible to the widest audience." },
+    ],
+    "slug-generator": [
+      { q: "How do I use the URL Slug Generator?", a: "Enter your page title or heading and click 'Run Tool'. The tool generates a clean, SEO-friendly URL slug with proper formatting." },
+      { q: "What makes a good URL slug?", a: "A good slug is short, descriptive, uses hyphens instead of spaces, and includes your target keyword. This tool handles all of that automatically." },
+    ],
+    "open-graph-generator": [
+      { q: "How do I use the Open Graph Generator?", a: "Enter your page title, description, and URL (one per line) and click 'Run Tool'. The tool generates Open Graph meta tags for optimal social media sharing." },
+    ],
+
+    // Developer Tools
+    "json-formatter": [
+      { q: "How do I use the JSON Formatter?", a: "Paste your minified or unformatted JSON into the input field and click 'Run Tool'. The tool instantly formats it with proper indentation and syntax highlighting." },
+      { q: "Can it handle large JSON files?", a: "Yes! The formatter can handle JSON data of significant size. For very large files, processing may take a moment." },
+    ],
+    "json-validator": [
+      { q: "How do I use the JSON Validator?", a: "Paste your JSON data and click 'Run Tool'. The tool checks for syntax errors and tells you exactly where the issue is if the JSON is invalid." },
+    ],
+    "base64-encoder": [
+      { q: "How do I use the Base64 Encoder?", a: "Enter any text in the input field and click 'Run Tool'. The tool converts your text to Base64 encoded format instantly." },
+      { q: "When would I need Base64 encoding?", a: "Base64 is commonly used for embedding images in HTML/CSS, sending binary data in APIs, and encoding email attachments." },
+    ],
+    "base64-decoder": [
+      { q: "How do I use the Base64 Decoder?", a: "Paste your Base64 encoded string and click 'Run Tool'. The tool decodes it back to readable plain text." },
+    ],
+    "jwt-decoder": [
+      { q: "How do I use the JWT Decoder?", a: "Paste a JWT token and click 'Run Tool'. The tool decodes and displays the header, payload, and signature sections separately." },
+      { q: "Is it safe to decode JWTs here?", a: "Yes — all processing happens in your browser. No data is sent to any server. However, never share JWTs containing sensitive information publicly." },
+    ],
+    "timestamp-converter": [
+      { q: "How do I use the Timestamp Converter?", a: "Enter a Unix timestamp (seconds or milliseconds) and click 'Run Tool'. The tool converts it to human-readable date formats including ISO 8601, UTC, and local time." },
+    ],
+    "html-minifier": [
+      { q: "How do I use the HTML Minifier?", a: "Paste your HTML code and click 'Run Tool'. The tool removes whitespace, comments, and unnecessary characters to reduce file size." },
+    ],
+    "css-minifier": [
+      { q: "How do I use the CSS Minifier?", a: "Paste your CSS code and click 'Run Tool'. The tool compresses it by removing spaces, line breaks, and comments." },
+    ],
+    "js-minifier": [
+      { q: "How do I use the JavaScript Minifier?", a: "Paste your JavaScript code and click 'Run Tool'. The tool minifies it by removing whitespace and shortening the code." },
+    ],
+    "regex-tester": [
+      { q: "How do I use the Regex Tester?", a: "Enter your regex pattern on the first line and your test string on the following lines. Click 'Run Tool' to see all matches highlighted." },
+      { q: "What regex flavors are supported?", a: "The tool uses JavaScript regex syntax, which supports most common patterns including lookahead, lookbehind, and named groups." },
+    ],
+    "json-to-csv": [
+      { q: "How do I use the JSON to CSV Converter?", a: "Paste your JSON array of objects and click 'Run Tool'. The tool extracts keys as headers and values as rows in CSV format." },
+    ],
+    "csv-to-json": [
+      { q: "How do I use the CSV to JSON Converter?", a: "Paste your CSV data (with headers in the first row) and click 'Run Tool'. The tool converts each row into a JSON object." },
+    ],
+    "color-converter": [
+      { q: "How do I use the Color Converter?", a: "Enter a color in any format — HEX (#FF5733), RGB (rgb(255,87,51)), or HSL — and click 'Run Tool'. The tool converts it to all other formats." },
+    ],
+    "markdown-preview": [
+      { q: "How do I use the Markdown Preview?", a: "Type or paste your Markdown content and click 'Run Tool'. The tool renders a formatted preview of your Markdown document." },
+    ],
+    "sql-formatter": [
+      { q: "How do I use the SQL Formatter?", a: "Paste your SQL query and click 'Run Tool'. The tool formats it with proper indentation, keyword capitalization, and line breaks." },
+    ],
+
+    // Image Tools
+    "image-converter": [
+      { q: "How do I use the Image Converter?", a: "Upload an image file using the file picker, select the target format (PNG, JPG, WebP), and click the convert button. The converted image will be available for download." },
+    ],
+    "image-compressor": [
+      { q: "How do I use the Image Compressor?", a: "Upload your image and adjust the quality slider to set your desired compression level. Click compress and download the optimized image." },
+      { q: "Will compression reduce image quality?", a: "The tool uses smart compression that significantly reduces file size while maintaining visual quality. You can adjust the quality level to find the perfect balance." },
+    ],
+    "image-resizer": [
+      { q: "How do I use the Image Resizer?", a: "Upload an image, enter the desired width and height in pixels, and click resize. You can maintain aspect ratio or set custom dimensions." },
+    ],
+    "image-cropper": [
+      { q: "How do I use the Image Cropper?", a: "Upload an image, drag to select the crop area, and click the crop button. You can adjust the selection before confirming." },
+    ],
+    "mini-studio": [
+      { q: "How do I use the Mini Image Studio?", a: "Upload an image to start editing. Apply filters (brightness, contrast, saturation), rotate, flip, and crop. Use undo/redo to manage changes, then export your edited image." },
+      { q: "What editing features are available?", a: "Brightness, contrast, saturation, blur, grayscale, sepia, rotation, flipping, cropping, and more. All changes can be undone with the undo/redo system." },
+    ],
+    "color-picker": [
+      { q: "How do I use the Color Picker?", a: "Upload any image and click on it to extract colors. The tool displays the selected color in HEX, RGB, and HSL formats for easy use in your designs." },
+    ],
+    "svg-to-png": [
+      { q: "How do I use the SVG to PNG Converter?", a: "Upload your SVG file and select the desired output resolution. Click convert and download the PNG version of your SVG." },
+    ],
+    "image-base64": [
+      { q: "How do I use the Image Base64 Converter?", a: "Upload an image to convert it to a Base64 string, or paste a Base64 string to convert it back to an image. Useful for embedding images in code." },
+    ],
+    "image-metadata": [
+      { q: "How do I use the Image Metadata Viewer?", a: "Upload an image and the tool automatically extracts and displays all EXIF metadata including camera info, GPS data, dimensions, and file details." },
+    ],
+    "image-format": [
+      { q: "How do I use the Image Format Converter?", a: "Upload your image and choose the output format (PNG, JPG, WebP, BMP). Click convert to download in the new format." },
+    ],
+
+    // Utility Tools
+    "qr-generator": [
+      { q: "How do I use the QR Code Generator?", a: "Enter any URL, text, or data in the input field. The tool instantly generates a QR code that you can customize (colors, size) and download as an image." },
+      { q: "Can I customize the QR code?", a: "Yes! You can change the foreground and background colors, adjust the size, and add error correction levels for better scanning reliability." },
+    ],
+    "password-generator": [
+      { q: "How do I use the Password Generator?", a: "Enter the desired password length (or use the default) and click 'Run Tool'. The tool generates multiple secure, random passwords with special characters, numbers, and mixed case." },
+    ],
+    "word-counter": [
+      { q: "How do I use the Word Counter?", a: "Paste or type your text into the input field and click 'Run Tool'. The tool instantly counts words, characters, sentences, paragraphs, and estimates reading time." },
+    ],
+    "text-case": [
+      { q: "How do I use the Text Case Converter?", a: "Enter your text and click 'Run Tool'. The tool converts it to UPPERCASE, lowercase, Title Case, camelCase, and other formats simultaneously." },
+    ],
+    "uuid-generator": [
+      { q: "How do I use the UUID Generator?", a: "Simply click 'Run Tool' to generate unique UUIDs (v4). Each click produces fresh, cryptographically random UUIDs ready to copy." },
+    ],
+    "hash-generator": [
+      { q: "How do I use the Hash Generator?", a: "Enter any text and click 'Run Tool'. The tool generates MD5, SHA-1, and SHA-256 hashes of your input simultaneously." },
+    ],
+    "url-encoder": [
+      { q: "How do I use the URL Encoder?", a: "Paste any URL or text with special characters and click 'Run Tool'. The tool encodes it for safe use in URLs and query parameters." },
+    ],
+    "url-decoder": [
+      { q: "How do I use the URL Decoder?", a: "Paste an encoded URL string and click 'Run Tool'. The tool decodes all percent-encoded characters back to readable text." },
+    ],
+    "lorem-ipsum": [
+      { q: "How do I use the Lorem Ipsum Generator?", a: "Enter the number of paragraphs you want (or use default) and click 'Run Tool'. The tool generates placeholder text for your designs and mockups." },
+    ],
+    "diff-checker": [
+      { q: "How do I use the Text Diff Checker?", a: "Enter two texts separated by '---' on its own line, then click 'Run Tool'. The tool highlights additions, deletions, and unchanged lines between the two texts." },
+    ],
+    "emoji-picker": [
+      { q: "How do I use the Emoji Search?", a: "Type a keyword (e.g., 'happy', 'food', 'animal') and click 'Run Tool'. The tool displays matching emojis that you can copy with a single click." },
+    ],
+    "ip-lookup": [
+      { q: "How do I use the IP Address Lookup?", a: "Enter an IP address and click 'Run Tool'. The tool displays network class, type (public/private), binary representation, and other technical details." },
+    ],
+    "unit-converter": [
+      { q: "How do I use the Unit Converter?", a: "Enter a number and click 'Run Tool'. The tool converts it across temperature, length, weight, and data storage units simultaneously." },
+    ],
+    "random-number": [
+      { q: "How do I use the Random Number Generator?", a: "Enter a range (e.g., '1-100') and click 'Run Tool'. The tool generates random numbers within your specified range." },
+    ],
+    "secret-keys": [
+      { q: "How do I use the Secret Keys Generator?", a: "Enter the desired key length (or use default) and click 'Run Tool'. The tool generates secure keys in Hex, Base64, alphanumeric, and URL-safe formats." },
+    ],
+
+    // PDF Tools
+    "merge-pdf": [
+      { q: "How do I use the Merge PDF tool?", a: "Upload multiple PDF files using the file picker. Arrange them in the desired order, then click 'Merge'. The combined PDF will be available for download." },
+    ],
+    "split-pdf": [
+      { q: "How do I use the Split PDF tool?", a: "Upload a PDF file, then specify which pages to extract (e.g., '1-3, 5, 7-10'). Click 'Split' to download the selected pages as separate files." },
+    ],
+    "compress-pdf": [
+      { q: "How do I use the Compress PDF tool?", a: "Upload your PDF file and select a compression level. Click 'Compress' to reduce the file size while maintaining readability." },
+    ],
+    "rotate-pdf": [
+      { q: "How do I use the Rotate PDF tool?", a: "Upload a PDF, select which pages to rotate and the rotation angle (90°, 180°, 270°). Click 'Rotate' to apply and download." },
+    ],
+    "delete-pdf-pages": [
+      { q: "How do I use the Delete PDF Pages tool?", a: "Upload a PDF, select the pages you want to remove, and click 'Delete'. The tool creates a new PDF without the selected pages." },
+    ],
+    "protect-pdf": [
+      { q: "How do I use the Protect PDF tool?", a: "Upload a PDF and enter a password. Click 'Protect' to encrypt the file. Anyone opening the PDF will need the password." },
+    ],
+    "unlock-pdf": [
+      { q: "How do I use the Unlock PDF tool?", a: "Upload a password-protected PDF and enter the password. Click 'Unlock' to remove the protection and download the unprotected version." },
+    ],
+    "add-watermark": [
+      { q: "How do I use the Add Watermark tool?", a: "Upload a PDF, enter your watermark text, and adjust position, opacity, and rotation. Click 'Add Watermark' to apply it across all pages." },
+    ],
+    "reorder-pdf": [
+      { q: "How do I use the Reorder PDF Pages tool?", a: "Upload a PDF and see thumbnail previews of each page. Drag and drop pages to rearrange them in your preferred order, then download the reordered PDF." },
+    ],
+    "sign-pdf": [
+      { q: "How do I use the Sign PDF tool?", a: "Upload a PDF, then draw or type your signature. Position it on the desired page and click 'Apply' to add your signature to the document." },
+    ],
+    "edit-pdf": [
+      { q: "How do I use the Edit PDF tool?", a: "Upload a PDF to open it in the editor. You can add text, annotations, and modify content. Save and download your edited PDF when finished." },
+    ],
+    "pdf-to-word": [
+      { q: "How do I use the PDF to Word converter?", a: "Upload your PDF file and click 'Convert'. The tool extracts text content and generates a downloadable Word-compatible document." },
+    ],
+    "word-to-pdf": [
+      { q: "How do I use the Word to PDF converter?", a: "Upload your Word document and click 'Convert'. The tool transforms it into a PDF file ready for download." },
+    ],
+    "pdf-to-excel": [
+      { q: "How do I use the PDF to Excel converter?", a: "Upload a PDF containing tables and click 'Convert'. The tool extracts table data and creates a downloadable Excel-compatible file." },
+    ],
+    "jpg-to-pdf": [
+      { q: "How do I use the JPG to PDF converter?", a: "Upload one or more images and click 'Convert'. The tool combines them into a single PDF document." },
+    ],
+    "pdf-to-jpg": [
+      { q: "How do I use the PDF to JPG converter?", a: "Upload a PDF and click 'Convert'. Each page is rendered as a high-quality JPG image available for download." },
+    ],
+  };
+
+  const specificFaqs = toolSpecificFaqs[toolId] || [
+    { q: `How do I use ${name}?`, a: `Enter your input in the text field and click 'Run Tool'. The tool processes your data ${type === "backend" ? "using AI" : "instantly in your browser"} and displays the results in the output panel.` },
   ];
-  return defaultFaq;
+
+  const aboutFaq = { 
+    q: `What is ${name}?`, 
+    a: `${name} is ${desc}. It belongs to the ${category} category and runs ${type === "backend" ? "on our AI-powered backend for intelligent processing" : "entirely in your browser for instant results with zero server calls"}.` 
+  };
+
+  const commonFaqs = [
+    { q: `Is ${name} free to use?`, a: free 
+      ? "Yes! This tool is completely free to use. Guest users get 3 free uses per day, while signed-in users enjoy unlimited access." 
+      : "This tool requires a Pro subscription. Sign up to unlock full access along with all other premium tools." },
+    { q: "Is my data safe and private?", a: type === "frontend" 
+      ? "Absolutely. This tool processes everything directly in your browser — no data is ever uploaded to our servers." 
+      : "Yes. Your input is sent securely to our AI backend for processing and is not stored after the response is generated." },
+    { q: "Do I need to create an account?", a: "You can use the tool as a guest with limited daily uses. Creating a free account removes this limit and unlocks features like favorites and usage history." },
+  ];
+
+  return [aboutFaq, ...specificFaqs, ...commonFaqs];
 };
 
 export const getToolDemoOutput = (toolId: string): string => {
