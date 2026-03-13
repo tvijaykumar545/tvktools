@@ -328,6 +328,10 @@ const ToolPage = () => {
           />
         )}
 
+        {!isLimitReached && isCodeConverter && (
+          <CodeConverterTool onTrackUsage={handleToolUsage} />
+        )}
+
         {!isLimitReached && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
