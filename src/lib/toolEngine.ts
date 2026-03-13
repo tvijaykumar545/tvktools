@@ -516,6 +516,10 @@ export const getToolPlaceholder = (toolId: string): string => {
     "emoji-picker": "happy",
     "ip-lookup": "192.168.1.1",
     "unit-converter": "100",
+    "ai-code-reviewer": "function fetchData(url) {\n  var data = fetch(url)\n  data.then(res => {\n    console.log(res.json())\n  })\n  return data\n}",
+    "ai-regex-generator": "Match all email addresses in a text",
+    "ai-sql-generator": "Get all users who signed up in the last 30 days and have made at least 2 orders, sorted by total order value",
+    "ai-code-explainer": "const debounce = (fn, delay) => {\n  let timer;\n  return (...args) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n};",
   };
   return placeholders[toolId] || "Enter your input here...";
 };
@@ -815,6 +819,26 @@ export const getToolFaq = (toolId: string, toolName?: string, toolDescription?: 
       { q: "Does it detect and fix errors in my code?", a: "Yes! The AI analyzes your source code for syntax errors and bugs before converting. If issues are found, a summary of detected errors and applied fixes is displayed above the code panels." },
       { q: "Can I swap source and target languages?", a: "Absolutely. Click the arrow button between the language dropdowns to instantly swap source and target languages. Your converted output becomes the new source code." },
     ],
+    "ai-code-reviewer": [
+      { q: "How do I use the AI Code Reviewer?", a: "Paste your code into the input field and click 'Run Tool'. The AI performs a thorough review covering bugs, performance, security, code style, and best practices — then provides actionable suggestions with a quality score." },
+      { q: "What does the code review cover?", a: "The review analyzes 5 key areas: bugs and potential errors, performance issues, security vulnerabilities, code style and best practices, and readability/maintainability." },
+      { q: "Which languages does it support?", a: "The AI can review code in any popular programming language including JavaScript, TypeScript, Python, Java, C++, Go, Rust, and many more." },
+    ],
+    "ai-regex-generator": [
+      { q: "How do I use the AI Regex Generator?", a: "Describe what you want to match in plain English (e.g., 'Match all email addresses') and click 'Run Tool'. The AI generates the regex pattern with a detailed breakdown and test examples." },
+      { q: "Can it generate regex for different languages?", a: "Yes! The tool generates patterns compatible with JavaScript, Python, and other regex flavors. It notes any syntax differences between implementations." },
+      { q: "Does it explain the regex pattern?", a: "Absolutely. Every generated pattern comes with a part-by-part explanation, example matches, non-matches, and recommended flags." },
+    ],
+    "ai-sql-generator": [
+      { q: "How do I use the AI SQL Generator?", a: "Describe your data query in plain English (e.g., 'Get all users who signed up this month') and click 'Run Tool'. The AI generates a properly formatted SQL query with explanations." },
+      { q: "Which SQL dialect does it use?", a: "It defaults to PostgreSQL syntax but can generate queries for MySQL, SQLite, SQL Server, and other dialects when specified in your description." },
+      { q: "Does it optimize the queries?", a: "Yes, the AI generates efficient queries and includes performance tips like proper indexing suggestions and alternative approaches when relevant." },
+    ],
+    "ai-code-explainer": [
+      { q: "How do I use the AI Code Explainer?", a: "Paste any code snippet into the input field and click 'Run Tool'. The AI provides a clear, line-by-line explanation of what the code does, including design patterns and edge cases." },
+      { q: "Is it suitable for beginners?", a: "Yes! The explanations use simple, accessible language. It breaks down complex concepts and explains algorithms, patterns, and programming constructs in an easy-to-understand way." },
+      { q: "Which languages can it explain?", a: "The AI can explain code in virtually any programming language — from JavaScript and Python to Rust, Haskell, and assembly." },
+    ],
   };
 
   const specificFaqs = toolSpecificFaqs[toolId] || [
@@ -869,6 +893,10 @@ export const getToolDemoOutput = (toolId: string): string => {
     "markdown-preview": "═ Hello World ═\n\n══ Subtitle ══\n\n[Bold text] and _italic text_\n\n  • List item 1\n  • List item 2",
     "sql-formatter": "SELECT\n  u.name,\n  u.email\nFROM\n  users u\nLEFT JOIN\n  orders o ON u.id = o.user_id\nWHERE\n  u.active = true\nORDER BY\n  u.name\nLIMIT 10",
     "code-converter": "// Converted from Python to JavaScript\nfunction fibonacci(n) {\n  // Base case: return n if it's 0 or 1\n  if (n <= 1) return n;\n  // Recursive case: sum of two preceding numbers\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}\n\nconsole.log(fibonacci(10));",
+    "ai-code-reviewer": "🔍 Code Review Report\n\n📊 Quality Score: 4/10\n\n❌ Bug: fetch() returns a Promise but the return value isn't awaited\n❌ Bug: res.json() also returns a Promise — you're logging the Promise object, not the data\n⚠️ Style: Using 'var' instead of 'const/let'\n⚠️ Performance: No error handling for failed requests\n\n✅ Suggested Fix:\nasync function fetchData(url) {\n  try {\n    const response = await fetch(url);\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Fetch failed:', error);\n    throw error;\n  }\n}",
+    "ai-regex-generator": "🧩 Regex Pattern:\n\n/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}/g\n\n📖 Breakdown:\n• [a-zA-Z0-9._%+-]+ → Username (letters, digits, dots, etc.)\n• @ → Literal @ symbol\n• [a-zA-Z0-9.-]+ → Domain name\n• \\. → Literal dot\n• [a-zA-Z]{2,} → TLD (2+ letters)\n\n✅ Matches: user@example.com, test.name@domain.co.uk\n❌ Won't match: @no-user.com, user@.com\n\n🏷️ Flags: g (global), i (case-insensitive)",
+    "ai-sql-generator": "🗄️ SQL Query:\n\nSELECT\n  u.id,\n  u.email,\n  u.created_at,\n  COUNT(o.id) AS order_count,\n  SUM(o.total) AS total_value\nFROM users u\nINNER JOIN orders o ON o.user_id = u.id\nWHERE u.created_at >= NOW() - INTERVAL '30 days'\nGROUP BY u.id, u.email, u.created_at\nHAVING COUNT(o.id) >= 2\nORDER BY total_value DESC;\n\n📖 Explanation:\n• INNER JOIN ensures only users with orders\n• WHERE filters to last 30 days\n• HAVING filters to 2+ orders\n• ORDER BY sorts by highest spenders\n\n💡 Tip: Add an index on users(created_at) and orders(user_id) for performance.",
+    "ai-code-explainer": "📚 Code Explanation\n\n🎯 Purpose: This is a **debounce** utility function — it delays executing a function until a specified time has passed since the last call.\n\n📝 Line-by-line:\n\n1. `const debounce = (fn, delay) =>` — Takes a function and delay in ms\n2. `let timer;` — Stores the timeout reference\n3. `return (...args) =>` — Returns a new wrapper function\n4. `clearTimeout(timer);` — Cancels any pending execution\n5. `timer = setTimeout(...)` — Schedules new execution after delay\n6. `fn(...args)` — Calls original function with all arguments\n\n🧠 Pattern: Closure + Higher-Order Function\n📌 Common use: Search inputs, window resize handlers, API calls",
     "lorem-ipsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore...",
     "diff-checker": "📝 Text Diff\n\n  1: Hello World\n- 2: Foo Bar\n+ 2: Foo Baz\n- 3: Test Line\n+ 3: New Line\n\n2 difference(s) found across 3 line(s)",
     "emoji-picker": "happy:\n😀  😃  😄  😁  😆  😊  🥰  😍",

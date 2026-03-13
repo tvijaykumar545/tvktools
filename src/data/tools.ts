@@ -26,7 +26,7 @@ export interface Category {
 export const categories: Category[] = [
   { id: "ai", name: "AI Tools", description: "AI-powered generation and analysis", icon: Brain, color: "neon-cyan", toolCount: 16 },
   { id: "seo", name: "SEO Tools", description: "Optimize your search rankings", icon: Search, color: "neon-magenta", toolCount: 13 },
-  { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 16 },
+  { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 20 },
   { id: "image", name: "Image Tools", description: "Image conversion and editing", icon: Image, color: "neon-blue", toolCount: 10 },
   { id: "utility", name: "Utility Tools", description: "Everyday productivity tools", icon: Wrench, color: "neon-cyan", toolCount: 16 },
   { id: "pdf", name: "PDF Tools", description: "Edit, convert, and manage PDF files", icon: FileText, color: "neon-magenta", toolCount: 15 },
@@ -83,6 +83,10 @@ export const tools: Tool[] = [
   { id: "markdown-preview", name: "Markdown Preview", description: "Preview markdown with live rendering", category: "developer", icon: "📝", isFree: true, type: "frontend" },
   { id: "sql-formatter", name: "SQL Formatter", description: "Format and beautify SQL queries", category: "developer", icon: "🗃️", isFree: true, isNew: true, type: "frontend" },
   { id: "code-converter", name: "Code Converter", description: "Convert code between 25+ programming languages with AI-powered error detection", category: "developer", icon: "🔄", isFree: false, isNew: true, isPopular: true, type: "backend" },
+  { id: "ai-code-reviewer", name: "AI Code Reviewer", description: "Get AI-powered code reviews with best practice suggestions", category: "developer", icon: "🔍", isFree: false, isNew: true, type: "backend" },
+  { id: "ai-regex-generator", name: "AI Regex Generator", description: "Generate regex patterns from plain English descriptions", category: "developer", icon: "🧩", isFree: true, isNew: true, type: "backend" },
+  { id: "ai-sql-generator", name: "AI SQL Generator", description: "Generate SQL queries from natural language descriptions", category: "developer", icon: "🗄️", isFree: true, isNew: true, type: "backend" },
+  { id: "ai-code-explainer", name: "AI Code Explainer", description: "Get line-by-line explanations of any code snippet", category: "developer", icon: "📚", isFree: true, isNew: true, type: "backend" },
 
   // Image Tools
   { id: "image-converter", name: "Image Converter", description: "Convert images between formats", category: "image", icon: "🖼️", isFree: true, type: "frontend" },
