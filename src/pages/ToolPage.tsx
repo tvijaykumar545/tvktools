@@ -6,6 +6,7 @@ import ImageToolInterface, { isImageTool } from "@/components/ImageToolInterface
 import QRCodeGenerator from "@/components/QRCodeGenerator";
 import PDFToolInterface, { isPdfTool } from "@/components/PDFToolInterface";
 import PDFReorderTool from "@/components/PDFReorderTool";
+import CodeConverterTool from "@/components/CodeConverterTool";
 import { getToolById as getStaticToolById, tools as staticTools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
