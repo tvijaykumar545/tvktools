@@ -52,7 +52,8 @@ const ToolPage = () => {
   const abortRef = useRef<AbortController | null>(null);
   const isImageGenerator = tool?.id === "ai-image-generator";
   const isQRGenerator = tool?.id === "qr-generator";
-  const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator || isPdfTool(tool?.id ?? "");
+  const isCodeConverter = tool?.id === "code-converter";
+  const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator || isPdfTool(tool?.id ?? "") || isCodeConverter;
 
   if (!tool) {
     return (
