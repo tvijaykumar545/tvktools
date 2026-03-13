@@ -25,6 +25,7 @@ const toolPrompts: Record<string, string> = {
   "domain-authority": "You are an SEO metrics expert. Given a domain, provide a comprehensive domain analysis including: estimated domain authority score, page authority, trust flow, citation flow, spam score, and recommendations for improvement.",
   "competitor-ranking": "You are a competitive SEO analyst. Given a domain or niche, provide analysis of the top 10 keywords competitors are likely ranking for, with estimated positions, traffic potential, and content gap opportunities.",
   "smtp-tester": "You are a server administration expert. Given SMTP server details, explain how to test the connection and common issues to look for. Provide a diagnostic checklist and troubleshooting steps.",
+  "code-converter": "You are an expert code converter and debugger. Given source code in one programming language, analyze it for errors, fix any issues, and convert it to the target language. Add inline comments explaining key parts of the converted code. Follow the exact output format the user requests.",
 };
 
 serve(async (req) => {

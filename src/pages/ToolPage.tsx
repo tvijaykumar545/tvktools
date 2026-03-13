@@ -6,6 +6,7 @@ import ImageToolInterface, { isImageTool } from "@/components/ImageToolInterface
 import QRCodeGenerator from "@/components/QRCodeGenerator";
 import PDFToolInterface, { isPdfTool } from "@/components/PDFToolInterface";
 import PDFReorderTool from "@/components/PDFReorderTool";
+import CodeConverterTool from "@/components/CodeConverterTool";
 import { getToolById as getStaticToolById, tools as staticTools } from "@/data/tools";
 import { runFrontendTool, getToolPlaceholder, getToolFaq } from "@/lib/toolEngine";
 import ToolCard from "@/components/ToolCard";
@@ -51,7 +52,8 @@ const ToolPage = () => {
   const abortRef = useRef<AbortController | null>(null);
   const isImageGenerator = tool?.id === "ai-image-generator";
   const isQRGenerator = tool?.id === "qr-generator";
-  const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator || isPdfTool(tool?.id ?? "");
+  const isCodeConverter = tool?.id === "code-converter";
+  const hasCustomUI = isImageTool(tool?.id ?? "") || isQRGenerator || isPdfTool(tool?.id ?? "") || isCodeConverter;
 
   if (!tool) {
     return (
@@ -324,6 +326,10 @@ const ToolPage = () => {
             toolName={tool.name}
             onTrackUsage={handleToolUsage}
           />
+        )}
+
+        {!isLimitReached && isCodeConverter && (
+          <CodeConverterTool onTrackUsage={handleToolUsage} />
         )}
 
         {!isLimitReached && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">

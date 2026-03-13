@@ -809,6 +809,12 @@ export const getToolFaq = (toolId: string, toolName?: string, toolDescription?: 
     "pdf-to-jpg": [
       { q: "How do I use the PDF to JPG converter?", a: "Upload a PDF and click 'Convert'. Each page is rendered as a high-quality JPG image available for download." },
     ],
+    "code-converter": [
+      { q: "How do I use the Code Converter?", a: "Select a source language (e.g. Python) and a target language (e.g. JavaScript). Paste your code in the left panel and click 'Convert Code'. The AI will analyze, fix any bugs, and convert your code with helpful inline comments." },
+      { q: "Which programming languages are supported?", a: "The Code Converter supports 25+ languages including Python, JavaScript, TypeScript, Java, C++, C#, Go, Rust, Swift, Kotlin, PHP, Ruby, Scala, Dart, Haskell, Lua, and more." },
+      { q: "Does it detect and fix errors in my code?", a: "Yes! The AI analyzes your source code for syntax errors and bugs before converting. If issues are found, a summary of detected errors and applied fixes is displayed above the code panels." },
+      { q: "Can I swap source and target languages?", a: "Absolutely. Click the arrow button between the language dropdowns to instantly swap source and target languages. Your converted output becomes the new source code." },
+    ],
   };
 
   const specificFaqs = toolSpecificFaqs[toolId] || [
@@ -862,6 +868,7 @@ export const getToolDemoOutput = (toolId: string): string => {
     "csv-to-json": '[\n  {\n    "name": "Alice",\n    "age": "30",\n    "city": "NYC"\n  }\n]',
     "markdown-preview": "═ Hello World ═\n\n══ Subtitle ══\n\n[Bold text] and _italic text_\n\n  • List item 1\n  • List item 2",
     "sql-formatter": "SELECT\n  u.name,\n  u.email\nFROM\n  users u\nLEFT JOIN\n  orders o ON u.id = o.user_id\nWHERE\n  u.active = true\nORDER BY\n  u.name\nLIMIT 10",
+    "code-converter": "// Converted from Python to JavaScript\nfunction fibonacci(n) {\n  // Base case: return n if it's 0 or 1\n  if (n <= 1) return n;\n  // Recursive case: sum of two preceding numbers\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}\n\nconsole.log(fibonacci(10));",
     "lorem-ipsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore...",
     "diff-checker": "📝 Text Diff\n\n  1: Hello World\n- 2: Foo Bar\n+ 2: Foo Baz\n- 3: Test Line\n+ 3: New Line\n\n2 difference(s) found across 3 line(s)",
     "emoji-picker": "happy:\n😀  😃  😄  😁  😆  😊  🥰  😍",
