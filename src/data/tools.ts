@@ -26,7 +26,7 @@ export interface Category {
 export const categories: Category[] = [
   { id: "ai", name: "AI Tools", description: "AI-powered generation and analysis", icon: Brain, color: "neon-cyan", toolCount: 16 },
   { id: "seo", name: "SEO Tools", description: "Optimize your search rankings", icon: Search, color: "neon-magenta", toolCount: 13 },
-  { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 15 },
+  { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 16 },
   { id: "image", name: "Image Tools", description: "Image conversion and editing", icon: Image, color: "neon-blue", toolCount: 10 },
   { id: "utility", name: "Utility Tools", description: "Everyday productivity tools", icon: Wrench, color: "neon-cyan", toolCount: 16 },
   { id: "pdf", name: "PDF Tools", description: "Edit, convert, and manage PDF files", icon: FileText, color: "neon-magenta", toolCount: 15 },
