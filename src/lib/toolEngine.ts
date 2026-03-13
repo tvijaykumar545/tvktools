@@ -868,6 +868,7 @@ export const getToolDemoOutput = (toolId: string): string => {
     "csv-to-json": '[\n  {\n    "name": "Alice",\n    "age": "30",\n    "city": "NYC"\n  }\n]',
     "markdown-preview": "═ Hello World ═\n\n══ Subtitle ══\n\n[Bold text] and _italic text_\n\n  • List item 1\n  • List item 2",
     "sql-formatter": "SELECT\n  u.name,\n  u.email\nFROM\n  users u\nLEFT JOIN\n  orders o ON u.id = o.user_id\nWHERE\n  u.active = true\nORDER BY\n  u.name\nLIMIT 10",
+    "code-converter": "// Converted from Python to JavaScript\nfunction fibonacci(n) {\n  // Base case: return n if it's 0 or 1\n  if (n <= 1) return n;\n  // Recursive case: sum of two preceding numbers\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}\n\nconsole.log(fibonacci(10));",
     "lorem-ipsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore...",
     "diff-checker": "📝 Text Diff\n\n  1: Hello World\n- 2: Foo Bar\n+ 2: Foo Baz\n- 3: Test Line\n+ 3: New Line\n\n2 difference(s) found across 3 line(s)",
     "emoji-picker": "happy:\n😀  😃  😄  😁  😆  😊  🥰  😍",
