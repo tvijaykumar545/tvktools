@@ -516,6 +516,10 @@ export const getToolPlaceholder = (toolId: string): string => {
     "emoji-picker": "happy",
     "ip-lookup": "192.168.1.1",
     "unit-converter": "100",
+    "ai-code-reviewer": "function fetchData(url) {\n  var data = fetch(url)\n  data.then(res => {\n    console.log(res.json())\n  })\n  return data\n}",
+    "ai-regex-generator": "Match all email addresses in a text",
+    "ai-sql-generator": "Get all users who signed up in the last 30 days and have made at least 2 orders, sorted by total order value",
+    "ai-code-explainer": "const debounce = (fn, delay) => {\n  let timer;\n  return (...args) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n};",
   };
   return placeholders[toolId] || "Enter your input here...";
 };
