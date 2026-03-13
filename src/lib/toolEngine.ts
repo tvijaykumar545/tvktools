@@ -809,6 +809,12 @@ export const getToolFaq = (toolId: string, toolName?: string, toolDescription?: 
     "pdf-to-jpg": [
       { q: "How do I use the PDF to JPG converter?", a: "Upload a PDF and click 'Convert'. Each page is rendered as a high-quality JPG image available for download." },
     ],
+    "code-converter": [
+      { q: "How do I use the Code Converter?", a: "Select a source language (e.g. Python) and a target language (e.g. JavaScript). Paste your code in the left panel and click 'Convert Code'. The AI will analyze, fix any bugs, and convert your code with helpful inline comments." },
+      { q: "Which programming languages are supported?", a: "The Code Converter supports 25+ languages including Python, JavaScript, TypeScript, Java, C++, C#, Go, Rust, Swift, Kotlin, PHP, Ruby, Scala, Dart, Haskell, Lua, and more." },
+      { q: "Does it detect and fix errors in my code?", a: "Yes! The AI analyzes your source code for syntax errors and bugs before converting. If issues are found, a summary of detected errors and applied fixes is displayed above the code panels." },
+      { q: "Can I swap source and target languages?", a: "Absolutely. Click the arrow button between the language dropdowns to instantly swap source and target languages. Your converted output becomes the new source code." },
+    ],
   };
 
   const specificFaqs = toolSpecificFaqs[toolId] || [
