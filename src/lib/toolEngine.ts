@@ -819,6 +819,26 @@ export const getToolFaq = (toolId: string, toolName?: string, toolDescription?: 
       { q: "Does it detect and fix errors in my code?", a: "Yes! The AI analyzes your source code for syntax errors and bugs before converting. If issues are found, a summary of detected errors and applied fixes is displayed above the code panels." },
       { q: "Can I swap source and target languages?", a: "Absolutely. Click the arrow button between the language dropdowns to instantly swap source and target languages. Your converted output becomes the new source code." },
     ],
+    "ai-code-reviewer": [
+      { q: "How do I use the AI Code Reviewer?", a: "Paste your code into the input field and click 'Run Tool'. The AI performs a thorough review covering bugs, performance, security, code style, and best practices — then provides actionable suggestions with a quality score." },
+      { q: "What does the code review cover?", a: "The review analyzes 5 key areas: bugs and potential errors, performance issues, security vulnerabilities, code style and best practices, and readability/maintainability." },
+      { q: "Which languages does it support?", a: "The AI can review code in any popular programming language including JavaScript, TypeScript, Python, Java, C++, Go, Rust, and many more." },
+    ],
+    "ai-regex-generator": [
+      { q: "How do I use the AI Regex Generator?", a: "Describe what you want to match in plain English (e.g., 'Match all email addresses') and click 'Run Tool'. The AI generates the regex pattern with a detailed breakdown and test examples." },
+      { q: "Can it generate regex for different languages?", a: "Yes! The tool generates patterns compatible with JavaScript, Python, and other regex flavors. It notes any syntax differences between implementations." },
+      { q: "Does it explain the regex pattern?", a: "Absolutely. Every generated pattern comes with a part-by-part explanation, example matches, non-matches, and recommended flags." },
+    ],
+    "ai-sql-generator": [
+      { q: "How do I use the AI SQL Generator?", a: "Describe your data query in plain English (e.g., 'Get all users who signed up this month') and click 'Run Tool'. The AI generates a properly formatted SQL query with explanations." },
+      { q: "Which SQL dialect does it use?", a: "It defaults to PostgreSQL syntax but can generate queries for MySQL, SQLite, SQL Server, and other dialects when specified in your description." },
+      { q: "Does it optimize the queries?", a: "Yes, the AI generates efficient queries and includes performance tips like proper indexing suggestions and alternative approaches when relevant." },
+    ],
+    "ai-code-explainer": [
+      { q: "How do I use the AI Code Explainer?", a: "Paste any code snippet into the input field and click 'Run Tool'. The AI provides a clear, line-by-line explanation of what the code does, including design patterns and edge cases." },
+      { q: "Is it suitable for beginners?", a: "Yes! The explanations use simple, accessible language. It breaks down complex concepts and explains algorithms, patterns, and programming constructs in an easy-to-understand way." },
+      { q: "Which languages can it explain?", a: "The AI can explain code in virtually any programming language — from JavaScript and Python to Rust, Haskell, and assembly." },
+    ],
   };
 
   const specificFaqs = toolSpecificFaqs[toolId] || [
