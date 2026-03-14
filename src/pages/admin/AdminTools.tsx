@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
-import { ArrowLeft, Shield, Star, Zap, Sparkles, Plus, Pencil, Trash2, Eye, EyeOff, X } from "lucide-react";
+import { ArrowLeft, Shield, Star, Zap, Sparkles, Plus, Pencil, Trash2, Eye, EyeOff, X, Download, Upload, FileJson } from "lucide-react";
 import type { ToolCategory } from "@/data/tools";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -59,6 +59,12 @@ const AdminTools = () => {
   const [editingTool, setEditingTool] = useState<ManagedTool | null>(null);
   const [deletingTool, setDeletingTool] = useState<ManagedTool | null>(null);
   const [form, setForm] = useState<ToolFormData>(emptyForm);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importData, setImportData] = useState<string>("");
+  const [importPreview, setImportPreview] = useState<ToolFormData[]>([]);
+  const [importError, setImportError] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: toolList = [], isLoading } = useAdminManagedTools();
   const createTool = useCreateTool();
@@ -178,6 +184,97 @@ const AdminTools = () => {
     }
   };
 
+  // ---- Bulk Export ----
+  const handleExport = () => {
+    const exportData = toolList.map(({ created_at, updated_at, ...rest }) => rest);
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tools-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: `Exported ${exportData.length} tools` });
+  };
+
+  // ---- Bulk Import ----
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result as string;
+      setImportData(text);
+      parseImportData(text);
+      setImportDialogOpen(true);
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  const parseImportData = (text: string) => {
+    try {
+      const parsed = JSON.parse(text);
+      const arr = Array.isArray(parsed) ? parsed : [parsed];
+      const tools: ToolFormData[] = arr.map((t: any, i: number) => ({
+        id: t.id || "",
+        name: t.name || "",
+        description: t.description || "",
+        category: t.category || "utility",
+        icon: t.icon || "🔧",
+        is_free: t.is_free ?? true,
+        is_popular: t.is_popular ?? false,
+        is_new: t.is_new ?? false,
+        type: t.type || "frontend",
+        sort_order: t.sort_order ?? (toolList.length + i + 1),
+        is_active: t.is_active ?? true,
+      }));
+      const invalid = tools.filter((t) => !t.id || !t.name);
+      if (invalid.length > 0) {
+        setImportError(`${invalid.length} tool(s) missing required id or name`);
+        setImportPreview(tools.filter((t) => t.id && t.name));
+      } else {
+        setImportError("");
+        setImportPreview(tools);
+      }
+    } catch {
+      setImportError("Invalid JSON format");
+      setImportPreview([]);
+    }
+  };
+
+  const handleImport = async () => {
+    if (importPreview.length === 0) return;
+    setIsImporting(true);
+    let success = 0;
+    let updated = 0;
+    let failed = 0;
+    const existingIds = new Set(toolList.map((t) => t.id));
+
+    for (const tool of importPreview) {
+      try {
+        if (existingIds.has(tool.id)) {
+          await updateTool.mutateAsync({ id: tool.id, ...tool });
+          updated++;
+        } else {
+          await createTool.mutateAsync(tool);
+          success++;
+        }
+      } catch {
+        failed++;
+      }
+    }
+    setIsImporting(false);
+    setImportDialogOpen(false);
+    setImportPreview([]);
+    setImportData("");
+    toast({
+      title: "Import complete",
+      description: `${success} created, ${updated} updated${failed ? `, ${failed} failed` : ""}`,
+    });
+  };
+
   if (authLoading || adminLoading || isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -212,12 +309,33 @@ const AdminTools = () => {
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">{toolList.length} tools configured</p>
           </div>
-          <button
-            onClick={openAddDialog}
-            className="flex items-center gap-2 rounded bg-primary px-4 py-2 font-heading text-xs font-bold text-primary-foreground transition-all hover:bg-primary/90 neon-glow"
-          >
-            <Plus className="h-4 w-4" /> Add Tool
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-2 rounded border border-primary/20 px-3 py-2 font-heading text-xs font-semibold text-muted-foreground transition-all hover:text-primary hover:border-primary/40"
+            >
+              <Download className="h-4 w-4" /> Export
+            </button>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-2 rounded border border-primary/20 px-3 py-2 font-heading text-xs font-semibold text-muted-foreground transition-all hover:text-primary hover:border-primary/40"
+            >
+              <Upload className="h-4 w-4" /> Import
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+            <button
+              onClick={openAddDialog}
+              className="flex items-center gap-2 rounded bg-primary px-4 py-2 font-heading text-xs font-bold text-primary-foreground transition-all hover:bg-primary/90 neon-glow"
+            >
+              <Plus className="h-4 w-4" /> Add Tool
+            </button>
+          </div>
         </div>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -480,6 +598,88 @@ const AdminTools = () => {
             >
               {deleteTool.isPending ? "Deleting..." : "Delete"}
             </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Import Dialog */}
+      <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+        <DialogContent className="max-w-2xl border-primary/20 bg-card">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-primary flex items-center gap-2">
+              <FileJson className="h-5 w-5" /> Import Tools from JSON
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {importError && (
+              <div className="rounded border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                {importError}
+              </div>
+            )}
+
+            {importPreview.length > 0 && (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-heading font-bold text-foreground">{importPreview.length}</span> tool(s) ready to import.
+                  Existing tools will be updated, new ones will be created.
+                </p>
+                <div className="max-h-64 overflow-y-auto rounded border border-primary/10 bg-muted/50">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-primary/10 text-left font-heading uppercase text-muted-foreground">
+                        <th className="px-3 py-2">ID</th>
+                        <th className="px-3 py-2">Name</th>
+                        <th className="px-3 py-2">Category</th>
+                        <th className="px-3 py-2">Type</th>
+                        <th className="px-3 py-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {importPreview.map((t) => {
+                        const exists = toolList.some((e) => e.id === t.id);
+                        return (
+                          <tr key={t.id} className="border-b border-primary/5">
+                            <td className="px-3 py-1.5 font-mono text-foreground">{t.id}</td>
+                            <td className="px-3 py-1.5 text-foreground">{t.name}</td>
+                            <td className="px-3 py-1.5 text-muted-foreground">{t.category}</td>
+                            <td className="px-3 py-1.5 text-muted-foreground">{t.type}</td>
+                            <td className="px-3 py-1.5">
+                              <span className={`rounded px-1.5 py-0.5 font-heading text-[9px] uppercase ${
+                                exists ? "bg-accent/20 text-accent-foreground" : "bg-primary/20 text-primary"
+                              }`}>
+                                {exists ? "Update" : "New"}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {importPreview.length === 0 && !importError && (
+              <p className="text-sm text-muted-foreground">
+                Select a JSON file to preview tools for import. Use the exported format as reference.
+              </p>
+            )}
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => { setImportDialogOpen(false); setImportPreview([]); setImportData(""); setImportError(""); }}
+                className="rounded border border-primary/20 px-4 py-2 font-heading text-xs text-muted-foreground hover:text-primary"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleImport}
+                disabled={importPreview.length === 0 || isImporting}
+                className="rounded bg-primary px-4 py-2 font-heading text-xs font-bold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+              >
+                {isImporting ? "Importing..." : `Import ${importPreview.length} Tool(s)`}
+              </button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
