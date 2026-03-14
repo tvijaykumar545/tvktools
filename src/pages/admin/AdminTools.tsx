@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
-import { ArrowLeft, Shield, Star, Zap, Sparkles, Plus, Pencil, Trash2, Eye, EyeOff, X } from "lucide-react";
+import { ArrowLeft, Shield, Star, Zap, Sparkles, Plus, Pencil, Trash2, Eye, EyeOff, X, Download, Upload, FileJson } from "lucide-react";
 import type { ToolCategory } from "@/data/tools";
 import { useToast } from "@/hooks/use-toast";
 import {
