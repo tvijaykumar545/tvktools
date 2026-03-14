@@ -184,6 +184,97 @@ const AdminTools = () => {
     }
   };
 
+  // ---- Bulk Export ----
+  const handleExport = () => {
+    const exportData = toolList.map(({ created_at, updated_at, ...rest }) => rest);
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tools-export-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: `Exported ${exportData.length} tools` });
+  };
+
+  // ---- Bulk Import ----
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result as string;
+      setImportData(text);
+      parseImportData(text);
+      setImportDialogOpen(true);
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  const parseImportData = (text: string) => {
+    try {
+      const parsed = JSON.parse(text);
+      const arr = Array.isArray(parsed) ? parsed : [parsed];
+      const tools: ToolFormData[] = arr.map((t: any, i: number) => ({
+        id: t.id || "",
+        name: t.name || "",
+        description: t.description || "",
+        category: t.category || "utility",
+        icon: t.icon || "🔧",
+        is_free: t.is_free ?? true,
+        is_popular: t.is_popular ?? false,
+        is_new: t.is_new ?? false,
+        type: t.type || "frontend",
+        sort_order: t.sort_order ?? (toolList.length + i + 1),
+        is_active: t.is_active ?? true,
+      }));
+      const invalid = tools.filter((t) => !t.id || !t.name);
+      if (invalid.length > 0) {
+        setImportError(`${invalid.length} tool(s) missing required id or name`);
+        setImportPreview(tools.filter((t) => t.id && t.name));
+      } else {
+        setImportError("");
+        setImportPreview(tools);
+      }
+    } catch {
+      setImportError("Invalid JSON format");
+      setImportPreview([]);
+    }
+  };
+
+  const handleImport = async () => {
+    if (importPreview.length === 0) return;
+    setIsImporting(true);
+    let success = 0;
+    let updated = 0;
+    let failed = 0;
+    const existingIds = new Set(toolList.map((t) => t.id));
+
+    for (const tool of importPreview) {
+      try {
+        if (existingIds.has(tool.id)) {
+          await updateTool.mutateAsync({ id: tool.id, ...tool });
+          updated++;
+        } else {
+          await createTool.mutateAsync(tool);
+          success++;
+        }
+      } catch {
+        failed++;
+      }
+    }
+    setIsImporting(false);
+    setImportDialogOpen(false);
+    setImportPreview([]);
+    setImportData("");
+    toast({
+      title: "Import complete",
+      description: `${success} created, ${updated} updated${failed ? `, ${failed} failed` : ""}`,
+    });
+  };
+
   if (authLoading || adminLoading || isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
