@@ -309,12 +309,33 @@ const AdminTools = () => {
             </h1>
             <p className="mt-1 text-sm text-muted-foreground">{toolList.length} tools configured</p>
           </div>
-          <button
-            onClick={openAddDialog}
-            className="flex items-center gap-2 rounded bg-primary px-4 py-2 font-heading text-xs font-bold text-primary-foreground transition-all hover:bg-primary/90 neon-glow"
-          >
-            <Plus className="h-4 w-4" /> Add Tool
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-2 rounded border border-primary/20 px-3 py-2 font-heading text-xs font-semibold text-muted-foreground transition-all hover:text-primary hover:border-primary/40"
+            >
+              <Download className="h-4 w-4" /> Export
+            </button>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-2 rounded border border-primary/20 px-3 py-2 font-heading text-xs font-semibold text-muted-foreground transition-all hover:text-primary hover:border-primary/40"
+            >
+              <Upload className="h-4 w-4" /> Import
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              onChange={handleFileSelect}
+              className="hidden"
+            />
+            <button
+              onClick={openAddDialog}
+              className="flex items-center gap-2 rounded bg-primary px-4 py-2 font-heading text-xs font-bold text-primary-foreground transition-all hover:bg-primary/90 neon-glow"
+            >
+              <Plus className="h-4 w-4" /> Add Tool
+            </button>
+          </div>
         </div>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
