@@ -601,6 +601,88 @@ const AdminTools = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Import Dialog */}
+      <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+        <DialogContent className="max-w-2xl border-primary/20 bg-card">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-primary flex items-center gap-2">
+              <FileJson className="h-5 w-5" /> Import Tools from JSON
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {importError && (
+              <div className="rounded border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                {importError}
+              </div>
+            )}
+
+            {importPreview.length > 0 && (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-heading font-bold text-foreground">{importPreview.length}</span> tool(s) ready to import.
+                  Existing tools will be updated, new ones will be created.
+                </p>
+                <div className="max-h-64 overflow-y-auto rounded border border-primary/10 bg-muted/50">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="border-b border-primary/10 text-left font-heading uppercase text-muted-foreground">
+                        <th className="px-3 py-2">ID</th>
+                        <th className="px-3 py-2">Name</th>
+                        <th className="px-3 py-2">Category</th>
+                        <th className="px-3 py-2">Type</th>
+                        <th className="px-3 py-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {importPreview.map((t) => {
+                        const exists = toolList.some((e) => e.id === t.id);
+                        return (
+                          <tr key={t.id} className="border-b border-primary/5">
+                            <td className="px-3 py-1.5 font-mono text-foreground">{t.id}</td>
+                            <td className="px-3 py-1.5 text-foreground">{t.name}</td>
+                            <td className="px-3 py-1.5 text-muted-foreground">{t.category}</td>
+                            <td className="px-3 py-1.5 text-muted-foreground">{t.type}</td>
+                            <td className="px-3 py-1.5">
+                              <span className={`rounded px-1.5 py-0.5 font-heading text-[9px] uppercase ${
+                                exists ? "bg-accent/20 text-accent-foreground" : "bg-primary/20 text-primary"
+                              }`}>
+                                {exists ? "Update" : "New"}
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {importPreview.length === 0 && !importError && (
+              <p className="text-sm text-muted-foreground">
+                Select a JSON file to preview tools for import. Use the exported format as reference.
+              </p>
+            )}
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => { setImportDialogOpen(false); setImportPreview([]); setImportData(""); setImportError(""); }}
+                className="rounded border border-primary/20 px-4 py-2 font-heading text-xs text-muted-foreground hover:text-primary"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleImport}
+                disabled={importPreview.length === 0 || isImporting}
+                className="rounded bg-primary px-4 py-2 font-heading text-xs font-bold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+              >
+                {isImporting ? "Importing..." : `Import ${importPreview.length} Tool(s)`}
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
