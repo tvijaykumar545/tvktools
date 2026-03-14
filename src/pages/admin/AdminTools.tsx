@@ -59,6 +59,12 @@ const AdminTools = () => {
   const [editingTool, setEditingTool] = useState<ManagedTool | null>(null);
   const [deletingTool, setDeletingTool] = useState<ManagedTool | null>(null);
   const [form, setForm] = useState<ToolFormData>(emptyForm);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importData, setImportData] = useState<string>("");
+  const [importPreview, setImportPreview] = useState<ToolFormData[]>([]);
+  const [importError, setImportError] = useState("");
+  const [isImporting, setIsImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: toolList = [], isLoading } = useAdminManagedTools();
   const createTool = useCreateTool();
