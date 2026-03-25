@@ -23,6 +23,8 @@ import ToolRating from "@/components/ToolRating";
 import { useManagedTools } from "@/hooks/useManagedTools";
 import { useUsageLimit } from "@/hooks/useUsageLimit";
 import UsageLimitBanner from "@/components/UsageLimitBanner";
+import { usePointsBalance, useToolPointsCost, useDeductPoints } from "@/hooks/usePoints";
+import PointsBalanceBanner from "@/components/PointsBalanceBanner";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +40,9 @@ const ToolPage = () => {
   const { trackUsage } = useTrackToolUsage();
   const { isFavorite, toggleFavorite } = useToolFavorites();
   const { remaining, isLimitReached, consumeUsage, dailyLimit, isGuest } = useUsageLimit();
+  const { data: pointsBalance = 0 } = usePointsBalance();
+  const { data: toolPointsCost = 0 } = useToolPointsCost(tool?.id);
+  const deductPoints = useDeductPoints();
   const trackUsageWithToast = useToolUsageWithToast();
   
   const handleToolUsage = () => {
@@ -70,14 +75,29 @@ const ToolPage = () => {
   const faqs = getToolFaq(tool.id, tool.name, tool.description, tool.category, tool.type, tool.isFree);
   const relatedTools = mergedTools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, 4);
 
+  const canUseTool = isGuest ? !isLimitReached : (toolPointsCost === 0 || pointsBalance >= toolPointsCost);
+
   const handleRun = async () => {
     if (loading) {
       abortRef.current?.abort();
       return;
     }
-    if (!consumeUsage()) {
-      toast.error("Daily limit reached! Sign up for unlimited access.");
-      return;
+    if (isGuest) {
+      if (!consumeUsage()) {
+        toast.error("Daily limit reached! Sign up for unlimited access.");
+        return;
+      }
+    } else if (toolPointsCost > 0) {
+      try {
+        await deductPoints.mutateAsync({
+          toolId: tool.id,
+          toolName: tool.name,
+          pointsCost: toolPointsCost,
+        });
+      } catch (err: any) {
+        toast.error(err.message || "Insufficient points");
+        return;
+      }
     }
     setLoading(true);
     setOutput("");
