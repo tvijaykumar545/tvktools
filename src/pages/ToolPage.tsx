@@ -329,7 +329,7 @@ const ToolPage = () => {
           <QRCodeGenerator onTrackUsage={handleToolUsage} />
         )}
 
-        {!isLimitReached && isImageTool(tool.id) && (
+        {canUseTool && isImageTool(tool.id) && (
           <ImageToolInterface
             toolId={tool.id}
             toolName={tool.name}
@@ -337,11 +337,11 @@ const ToolPage = () => {
           />
         )}
 
-        {!isLimitReached && tool.id === "reorder-pdf" && (
+        {canUseTool && tool.id === "reorder-pdf" && (
           <PDFReorderTool onTrackUsage={handleToolUsage} />
         )}
 
-        {!isLimitReached && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
+        {canUseTool && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
           <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}
@@ -349,11 +349,11 @@ const ToolPage = () => {
           />
         )}
 
-        {!isLimitReached && isCodeConverter && (
+        {canUseTool && isCodeConverter && (
           <CodeConverterTool onTrackUsage={handleToolUsage} />
         )}
 
-        {!isLimitReached && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {canUseTool && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
             <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
