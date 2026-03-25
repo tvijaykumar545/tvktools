@@ -135,6 +135,7 @@ const AdminTools = () => {
           type: form.type,
           sort_order: form.sort_order,
           is_active: form.is_active,
+          points_cost: form.points_cost,
         });
         toast({ title: "Tool updated!" });
       } else {
