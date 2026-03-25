@@ -31,6 +31,7 @@ type ToolFormData = {
   type: string;
   sort_order: number;
   is_active: boolean;
+  points_cost: number;
 };
 
 const emptyForm: ToolFormData = {
@@ -45,6 +46,7 @@ const emptyForm: ToolFormData = {
   type: "frontend",
   sort_order: 100,
   is_active: true,
+  points_cost: 0,
 };
 
 const AdminTools = () => {
@@ -104,6 +106,7 @@ const AdminTools = () => {
       type: tool.type,
       sort_order: tool.sort_order,
       is_active: tool.is_active,
+      points_cost: tool.points_cost ?? 0,
     });
     setDialogOpen(true);
   };
@@ -381,6 +384,9 @@ const AdminTools = () => {
                     <span className="rounded bg-muted px-1.5 py-0.5 font-heading text-[9px] uppercase text-muted-foreground">
                       {tool.category}
                     </span>
+                    <span className="rounded bg-accent/20 px-1.5 py-0.5 font-heading text-[9px] text-accent-foreground">
+                      {(tool as any).points_cost || 0} pts
+                    </span>
                     {!tool.is_active && (
                       <span className="rounded bg-destructive/20 px-1.5 py-0.5 font-heading text-[9px] uppercase text-destructive">
                         Inactive
@@ -537,6 +543,17 @@ const AdminTools = () => {
                   className="mt-1 h-9 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground outline-none focus:border-primary/50"
                 />
               </div>
+            </div>
+            <div>
+              <label className="font-heading text-[10px] uppercase text-muted-foreground">Points Cost</label>
+              <input
+                type="number"
+                min={0}
+                value={form.points_cost}
+                onChange={(e) => setForm({ ...form, points_cost: parseInt(e.target.value) || 0 })}
+                placeholder="0 = free"
+                className="mt-1 h-9 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground outline-none focus:border-primary/50"
+              />
             </div>
             <div className="flex flex-wrap gap-4">
               {([
