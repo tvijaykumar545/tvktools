@@ -108,7 +108,6 @@ const BuyPoints = () => {
 
   const handleReset = () => {
     setSelectedPkg(null);
-    setQrDataUrl(null);
     setConfirmed(false);
   };
 
