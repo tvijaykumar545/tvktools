@@ -1,10 +1,11 @@
 project_id = "xavthzgizngnmautbhmx"
 
-[functions.ai-tool]
-verify_jwt = false
-
-[functions.ai-image-gen]
-verify_jwt = false
-
-[functions.process-email-queue]
-verify_jwt = true
+[functions]
+  [functions.ai-image-gen]
+    verify_jwt = false
+  [functions.ai-tool]
+    verify_jwt = false
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.process-email-queue]
+    verify_jwt = true
