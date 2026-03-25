@@ -68,6 +68,7 @@ export type Database = {
           is_new: boolean
           is_popular: boolean
           name: string
+          points_cost: number
           sort_order: number
           type: string
           updated_at: string
@@ -83,6 +84,7 @@ export type Database = {
           is_new?: boolean
           is_popular?: boolean
           name: string
+          points_cost?: number
           sort_order?: number
           type?: string
           updated_at?: string
@@ -98,9 +100,49 @@ export type Database = {
           is_new?: boolean
           is_popular?: boolean
           name?: string
+          points_cost?: number
           sort_order?: number
           type?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      points_transactions: {
+        Row: {
+          action_type: string
+          admin_id: string | null
+          balance_after: number
+          created_at: string
+          description: string | null
+          id: string
+          points_used: number
+          tool_id: string | null
+          tool_name: string | null
+          user_id: string
+        }
+        Insert: {
+          action_type: string
+          admin_id?: string | null
+          balance_after: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          points_used: number
+          tool_id?: string | null
+          tool_name?: string | null
+          user_id: string
+        }
+        Update: {
+          action_type?: string
+          admin_id?: string | null
+          balance_after?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          points_used?: number
+          tool_id?: string | null
+          tool_name?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -115,6 +157,7 @@ export type Database = {
           language: string
           notifications_enabled: boolean
           plan: string
+          points_balance: number
           theme: string
           updated_at: string
           user_id: string
@@ -129,6 +172,7 @@ export type Database = {
           language?: string
           notifications_enabled?: boolean
           plan?: string
+          points_balance?: number
           theme?: string
           updated_at?: string
           user_id: string
@@ -143,6 +187,7 @@ export type Database = {
           language?: string
           notifications_enabled?: boolean
           plan?: string
+          points_balance?: number
           theme?: string
           updated_at?: string
           user_id?: string
@@ -259,6 +304,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_adjust_points: {
+        Args: {
+          p_action: string
+          p_admin_id: string
+          p_description?: string
+          p_points: number
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      deduct_tool_points: {
+        Args: {
+          p_points_cost: number
+          p_tool_id: string
+          p_tool_name: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
       get_most_used_tools: {
         Args: { limit_count?: number }
         Returns: {
