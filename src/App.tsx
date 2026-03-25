@@ -33,6 +33,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminTools from "./pages/admin/AdminTools";
+import BuyPoints from "./pages/BuyPoints";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
