@@ -33,6 +33,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminTools from "./pages/admin/AdminTools";
+import BuyPoints from "./pages/BuyPoints";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -64,6 +65,7 @@ const App = () => (
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/settings" element={<Settings />} />
+                  <Route path="/buy-points" element={<BuyPoints />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />

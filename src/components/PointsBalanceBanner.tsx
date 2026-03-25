@@ -41,12 +41,20 @@ const PointsBalanceBanner = ({ balance, toolCost, isGuest }: PointsBalanceBanner
               This tool requires <strong className="text-foreground">{toolCost} points</strong> but you only have{" "}
               <strong className="text-foreground">{balance} points</strong>. Contact an admin or check your dashboard for more details.
             </p>
-            <Link
-              to="/dashboard"
-              className="mt-2 inline-block rounded border border-primary/30 px-3 py-1.5 font-heading text-xs text-primary hover:bg-primary/10 transition-all"
-            >
-              View Dashboard
-            </Link>
+            <div className="mt-2 flex gap-2">
+              <Link
+                to="/buy-points"
+                className="inline-block rounded bg-primary px-3 py-1.5 font-heading text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-all"
+              >
+                Buy Points
+              </Link>
+              <Link
+                to="/dashboard"
+                className="inline-block rounded border border-primary/30 px-3 py-1.5 font-heading text-xs text-primary hover:bg-primary/10 transition-all"
+              >
+                View Dashboard
+              </Link>
+            </div>
           </div>
         </div>
       </div>
