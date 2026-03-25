@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  profile: { display_name: string | null; avatar_url: string | null; plan: string } | null;
+  profile: { display_name: string | null; avatar_url: string | null; plan: string; points_balance: number } | null;
   signOut: () => Promise<void>;
 }
 
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from("profiles")
-      .select("display_name, avatar_url, plan")
+      .select("display_name, avatar_url, plan, points_balance")
       .eq("user_id", userId)
       .single();
     if (data) setProfile(data);
