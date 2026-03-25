@@ -151,6 +151,7 @@ const AdminTools = () => {
           type: form.type,
           sort_order: form.sort_order,
           is_active: form.is_active,
+          points_cost: form.points_cost,
         });
         toast({ title: "Tool created!" });
       }
@@ -233,6 +234,7 @@ const AdminTools = () => {
         type: t.type || "frontend",
         sort_order: t.sort_order ?? (toolList.length + i + 1),
         is_active: t.is_active ?? true,
+        points_cost: t.points_cost ?? 0,
       }));
       const invalid = tools.filter((t) => !t.id || !t.name);
       if (invalid.length > 0) {
