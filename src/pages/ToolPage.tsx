@@ -321,10 +321,11 @@ const ToolPage = () => {
         {/* Usage Limit Banner — shown for all tools to guests */}
         <div className="mt-6">
           <UsageLimitBanner remaining={remaining} dailyLimit={dailyLimit} isLimitReached={isLimitReached} isGuest={isGuest} />
+          {!isGuest && <PointsBalanceBanner balance={pointsBalance} toolCost={toolPointsCost} isGuest={isGuest} />}
         </div>
 
-        {/* Tool Interface — gated only by usage limit */}
-        {!isLimitReached && tool.id === "qr-generator" && (
+        {/* Tool Interface — gated by usage limit (guests) or points (users) */}
+        {canUseTool && tool.id === "qr-generator" && (
           <QRCodeGenerator onTrackUsage={handleToolUsage} />
         )}
 
