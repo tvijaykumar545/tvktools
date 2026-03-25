@@ -6,25 +6,34 @@ import { supabase } from "@/integrations/supabase/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Coins, Check, QrCode, ArrowLeft, Sparkles, Zap, Crown } from "lucide-react";
 import { toast } from "sonner";
-import QRCode from "qrcode";
 import { useEffect } from "react";
+import upiQrImage from "@/assets/upi-qr.png";
 import SEOHead from "@/components/SEOHead";
 
 const PACKAGES = [
   {
     id: "starter",
     name: "Starter Pack",
-    points: 50,
-    price: 49,
-    icon: Zap,
-    popular: false,
-    description: "Great for trying out premium tools",
-  },
-  {
-    id: "popular",
-    name: "Value Pack",
     points: 100,
     price: 99,
+    icon: Zap,
+    popular: false,
+    description: "Entry level — great for trying out premium tools",
+  },
+  {
+    id: "basic",
+    name: "Basic Pack",
+    points: 300,
+    price: 249,
+    icon: Sparkles,
+    popular: false,
+    description: "Small discount for casual users",
+  },
+  {
+    id: "standard",
+    name: "Standard Pack",
+    points: 700,
+    price: 499,
     icon: Sparkles,
     popular: true,
     description: "Most popular — best value for regular users",
@@ -32,16 +41,24 @@ const PACKAGES = [
   {
     id: "pro",
     name: "Pro Pack",
-    points: 500,
-    price: 399,
+    points: 1500,
+    price: 899,
     icon: Crown,
     popular: false,
-    description: "For power users who need maximum points",
+    description: "Best value for power users",
+  },
+  {
+    id: "power",
+    name: "Power Pack",
+    points: 5000,
+    price: 2499,
+    icon: Crown,
+    popular: false,
+    description: "Maximum points for bulk users",
   },
 ];
 
-// Replace with your actual UPI ID
-const UPI_ID = "yourname@upi";
+const UPI_ID = "tirupathi.vijaykumar@ybl";
 const MERCHANT_NAME = "TVK Tools";
 
 const BuyPoints = () => {
@@ -51,27 +68,13 @@ const BuyPoints = () => {
   const qc = useQueryClient();
 
   const [selectedPkg, setSelectedPkg] = useState<typeof PACKAGES[0] | null>(null);
-  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  
   const [confirmed, setConfirmed] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
   }, [user, loading, navigate]);
 
-  // Generate UPI QR when package selected
-  useEffect(() => {
-    if (!selectedPkg) {
-      setQrDataUrl(null);
-      return;
-    }
-    const upiUrl = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(MERCHANT_NAME)}&am=${selectedPkg.price}&cu=INR&tn=${encodeURIComponent(`Buy ${selectedPkg.points} points - ${selectedPkg.name}`)}`;
-    QRCode.toDataURL(upiUrl, {
-      width: 300,
-      margin: 2,
-      color: { dark: "#000000", light: "#ffffff" },
-      errorCorrectionLevel: "H",
-    }).then(setQrDataUrl);
-  }, [selectedPkg]);
 
   const creditMutation = useMutation({
     mutationFn: async (pkg: typeof PACKAGES[0]) => {
@@ -105,7 +108,6 @@ const BuyPoints = () => {
 
   const handleReset = () => {
     setSelectedPkg(null);
-    setQrDataUrl(null);
     setConfirmed(false);
   };
 
@@ -159,7 +161,7 @@ const BuyPoints = () => {
             </div>
           ) : !selectedPkg ? (
             /* Package Selection */
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               {PACKAGES.map((pkg) => {
                 const Icon = pkg.icon;
                 return (
@@ -206,15 +208,9 @@ const BuyPoints = () => {
                 Scan the QR code below with any UPI app to complete payment
               </p>
 
-              {qrDataUrl ? (
-                <div className="rounded-xl border border-primary/10 bg-white p-4 shadow-lg">
-                  <img src={qrDataUrl} alt="UPI Payment QR Code" className="h-[250px] w-[250px]" />
-                </div>
-              ) : (
-                <div className="flex h-[250px] w-[250px] items-center justify-center">
-                  <QrCode className="h-12 w-12 animate-pulse text-muted-foreground" />
-                </div>
-              )}
+              <div className="rounded-xl border border-primary/10 bg-white p-4 shadow-lg">
+                <img src={upiQrImage} alt="UPI Payment QR Code" className="h-[250px] w-[250px] object-contain" />
+              </div>
 
               <p className="mt-4 text-[11px] text-muted-foreground">
                 UPI ID: <span className="font-mono font-semibold text-foreground">{UPI_ID}</span>

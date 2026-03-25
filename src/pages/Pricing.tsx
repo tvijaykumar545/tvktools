@@ -1,60 +1,75 @@
 import { Link } from "react-router-dom";
-import { Check, X } from "lucide-react";
+import { Check, Zap, Sparkles, Crown, Rocket, BatteryCharging } from "lucide-react";
 
 const plans = [
   {
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    description: "Perfect for getting started",
+    name: "Starter",
+    points: 100,
+    price: "₹99",
+    description: "Entry level — try out premium tools",
+    icon: Zap,
     features: [
-      { text: "20+ free tools", included: true },
-      { text: "Basic tool access", included: true },
-      { text: "5 uses per day", included: true },
-      { text: "Community support", included: true },
-      { text: "Advanced AI tools", included: false },
-      { text: "API access", included: false },
-      { text: "Priority processing", included: false },
+      "100 points credited instantly",
+      "Access all tools",
+      "Basic support",
     ],
-    cta: "Get Started",
     popular: false,
-    color: "primary",
+  },
+  {
+    name: "Basic",
+    points: 300,
+    price: "₹249",
+    description: "Small discount for casual users",
+    icon: Sparkles,
+    features: [
+      "300 points credited instantly",
+      "Access all tools",
+      "Save ₹48 vs Starter",
+    ],
+    popular: false,
+  },
+  {
+    name: "Standard",
+    points: 700,
+    price: "₹499",
+    description: "Best value for regular users",
+    icon: Sparkles,
+    features: [
+      "700 points credited instantly",
+      "Access all tools",
+      "Save ₹194 vs Starter",
+      "Priority support",
+    ],
+    popular: true,
   },
   {
     name: "Pro",
-    price: "$19",
-    period: "/month",
-    description: "For power users and professionals",
+    points: 1500,
+    price: "₹899",
+    description: "Power users' favourite",
+    icon: Crown,
     features: [
-      { text: "All 50+ tools", included: true },
-      { text: "Unlimited usage", included: true },
-      { text: "AI-powered tools", included: true },
-      { text: "API access", included: true },
-      { text: "Priority processing", included: true },
-      { text: "Save results history", included: true },
-      { text: "Email support", included: true },
+      "1500 points credited instantly",
+      "Access all tools",
+      "Save ₹586 vs Starter",
+      "Priority support",
     ],
-    cta: "Start Pro Trial",
-    popular: true,
-    color: "secondary",
+    popular: false,
   },
   {
-    name: "Enterprise",
-    price: "Custom",
-    period: "",
-    description: "For teams and organizations",
+    name: "Power",
+    points: 5000,
+    price: "₹2,499",
+    description: "Maximum points for bulk usage",
+    icon: BatteryCharging,
     features: [
-      { text: "Everything in Pro", included: true },
-      { text: "Custom integrations", included: true },
-      { text: "Dedicated support", included: true },
-      { text: "SLA guarantee", included: true },
-      { text: "Custom workflows", included: true },
-      { text: "White-label options", included: true },
-      { text: "Bulk API access", included: true },
+      "5000 points credited instantly",
+      "Access all tools",
+      "Save ₹2,451 vs Starter",
+      "Priority support",
+      "Best per-point price",
     ],
-    cta: "Contact Sales",
     popular: false,
-    color: "accent",
   },
 ];
 
@@ -67,61 +82,61 @@ const Pricing = () => {
             Simple, Transparent Pricing
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Start free. Upgrade when you need more power.
+            Buy points and use them across all premium tools. Pay via UPI.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative flex flex-col rounded border bg-card p-6 transition-all ${
-                plan.popular
-                  ? "border-secondary/50 neon-glow-magenta scale-105"
-                  : "border-primary/20 border-glow"
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded bg-secondary px-3 py-0.5 font-heading text-[10px] font-bold text-secondary-foreground">
-                  MOST POPULAR
-                </div>
-              )}
-              <div>
-                <h3 className="font-heading text-lg font-bold text-foreground">{plan.name}</h3>
-                <div className="mt-2 flex items-baseline gap-1">
-                  <span className="font-heading text-3xl font-black text-primary">{plan.price}</span>
-                  <span className="text-sm text-muted-foreground">{plan.period}</span>
-                </div>
-                <p className="mt-2 text-xs text-muted-foreground">{plan.description}</p>
-              </div>
-
-              <div className="mt-6 flex-1 space-y-3">
-                {plan.features.map((f) => (
-                  <div key={f.text} className="flex items-center gap-2 text-sm">
-                    {f.included ? (
-                      <Check className="h-4 w-4 text-primary" />
-                    ) : (
-                      <X className="h-4 w-4 text-muted-foreground/30" />
-                    )}
-                    <span className={f.included ? "text-foreground" : "text-muted-foreground/50"}>
-                      {f.text}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              <Link
-                to="/signup"
-                className={`mt-6 block rounded py-3 text-center font-heading text-xs font-bold transition-all ${
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 max-w-6xl mx-auto">
+          {plans.map((plan) => {
+            const Icon = plan.icon;
+            return (
+              <div
+                key={plan.name}
+                className={`relative flex flex-col rounded border bg-card p-6 transition-all ${
                   plan.popular
-                    ? "bg-secondary text-secondary-foreground neon-glow-magenta hover:bg-secondary/90"
-                    : "border border-primary/30 text-primary hover:bg-primary/10"
+                    ? "border-secondary/50 neon-glow-magenta scale-105"
+                    : "border-primary/20 border-glow"
                 }`}
               >
-                {plan.cta}
-              </Link>
-            </div>
-          ))}
+                {plan.popular && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded bg-secondary px-3 py-0.5 font-heading text-[10px] font-bold text-secondary-foreground">
+                    MOST POPULAR
+                  </div>
+                )}
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon className="h-5 w-5 text-primary" />
+                  <h3 className="font-heading text-lg font-bold text-foreground">{plan.name}</h3>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="font-heading text-3xl font-black text-primary">{plan.price}</span>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">{plan.description}</p>
+                <div className="mt-2 text-sm font-semibold text-foreground">
+                  {plan.points.toLocaleString()} points
+                </div>
+
+                <div className="mt-4 flex-1 space-y-2">
+                  {plan.features.map((f) => (
+                    <div key={f} className="flex items-center gap-2 text-sm">
+                      <Check className="h-4 w-4 text-primary shrink-0" />
+                      <span className="text-foreground">{f}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <Link
+                  to="/buy-points"
+                  className={`mt-6 block rounded py-3 text-center font-heading text-xs font-bold transition-all ${
+                    plan.popular
+                      ? "bg-secondary text-secondary-foreground neon-glow-magenta hover:bg-secondary/90"
+                      : "border border-primary/30 text-primary hover:bg-primary/10"
+                  }`}
+                >
+                  Buy Points
+                </Link>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
