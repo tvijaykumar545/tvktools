@@ -3,7 +3,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
-const SESSION_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
+const DEFAULT_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
+const REMEMBER_ME_TIMEOUT = 7 * 24 * 60 * 60 * 1000; // 7 days
 const WARNING_BEFORE = 5 * 60 * 1000; // 5 min warning
 
 const ACTIVITY_EVENTS = ["mousedown", "keydown", "scroll", "touchstart", "mousemove"];
@@ -27,6 +28,9 @@ export const useSessionTimeout = () => {
 
   const resetTimers = useCallback(() => {
     if (!user) return;
+
+    const isRemembered = localStorage.getItem("tvk_remember_me") === "true";
+    const SESSION_TIMEOUT = isRemembered ? REMEMBER_ME_TIMEOUT : DEFAULT_TIMEOUT;
 
     clearTimeout(timeoutRef.current);
     clearTimeout(warningRef.current);
