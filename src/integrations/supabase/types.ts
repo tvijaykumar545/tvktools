@@ -107,6 +107,36 @@ export type Database = {
         }
         Relationships: []
       }
+      points_purchases: {
+        Row: {
+          created_at: string
+          id: string
+          package_name: string
+          points_amount: number
+          price_inr: number
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          package_name: string
+          points_amount: number
+          price_inr: number
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          package_name?: string
+          points_amount?: number
+          price_inr?: number
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       points_transactions: {
         Row: {
           action_type: string
@@ -310,6 +340,15 @@ export type Database = {
           p_admin_id: string
           p_description?: string
           p_points: number
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      credit_points_purchase: {
+        Args: {
+          p_package_name: string
+          p_points_amount: number
+          p_price_inr: number
           p_user_id: string
         }
         Returns: Json
