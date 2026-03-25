@@ -33,6 +33,7 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminTools from "./pages/admin/AdminTools";
+import AdminPurchases from "./pages/admin/AdminPurchases";
 import BuyPoints from "./pages/BuyPoints";
 import NotFound from "./pages/NotFound";
 
@@ -78,6 +79,7 @@ const App = () => (
                   <Route path="/admin/analytics" element={<AdminAnalytics />} />
                   <Route path="/admin/blog" element={<AdminBlog />} />
                   <Route path="/admin/tools" element={<AdminTools />} />
+                  <Route path="/admin/purchases" element={<AdminPurchases />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
