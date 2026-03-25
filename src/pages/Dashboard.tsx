@@ -241,6 +241,22 @@ const Dashboard = () => {
           )}
         </div>
 
+        {/* Points Transaction History */}
+        <div className="mt-6 rounded border border-primary/10 bg-card p-5 border-glow">
+          <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+            <Coins className="h-4 w-4 text-primary" />
+            Points History
+            {transactions.length > 0 && (
+              <span className="ml-auto text-[10px] text-muted-foreground font-normal">
+                {transactions.length} transactions
+              </span>
+            )}
+          </h2>
+          <div className="mt-4">
+            <PointsTransactionList transactions={transactions} />
+          </div>
+        </div>
+
         {/* Full Usage History */}
         <div className="mt-6 rounded border border-primary/10 bg-card p-5 border-glow">
           <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
