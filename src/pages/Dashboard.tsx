@@ -97,6 +97,23 @@ const Dashboard = () => {
           ))}
         </div>
 
+        {/* Buy Points CTA */}
+        <div className="mt-4 flex items-center justify-between rounded-lg border border-primary/20 bg-primary/5 p-4">
+          <div className="flex items-center gap-3">
+            <Coins className="h-5 w-5 text-primary" />
+            <div>
+              <p className="font-heading text-sm font-bold text-foreground">Need more points?</p>
+              <p className="text-xs text-muted-foreground">Purchase points instantly via UPI</p>
+            </div>
+          </div>
+          <Link
+            to="/buy-points"
+            className="rounded bg-primary px-4 py-2 font-heading text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-all neon-glow"
+          >
+            Buy Points
+          </Link>
+        </div>
+
         {/* Favorites */}
         <div className="mt-8 rounded border border-primary/10 bg-card p-5 border-glow">
           <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
