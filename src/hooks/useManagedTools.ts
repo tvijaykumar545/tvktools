@@ -14,6 +14,7 @@ export interface ManagedTool {
   type: string;
   sort_order: number;
   is_active: boolean;
+  points_cost: number;
   created_at: string;
   updated_at: string;
 }

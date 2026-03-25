@@ -3,8 +3,15 @@ import { useNavigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Shield, User, Crown } from "lucide-react";
+import { ArrowLeft, Shield, User, Crown, Coins, Plus, Minus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAdminAdjustPoints } from "@/hooks/usePoints";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface UserProfile {
   id: string;
@@ -12,6 +19,7 @@ interface UserProfile {
   display_name: string | null;
   avatar_url: string | null;
   plan: string;
+  points_balance: number;
   created_at: string;
 }
 
@@ -23,6 +31,14 @@ const AdminUsers = () => {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [roles, setRoles] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(true);
+  const adjustPoints = useAdminAdjustPoints();
+
+  // Points dialog state
+  const [pointsDialogOpen, setPointsDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [pointsAmount, setPointsAmount] = useState(0);
+  const [pointsAction, setPointsAction] = useState<"add" | "deduct">("add");
+  const [pointsDescription, setPointsDescription] = useState("");
 
   useEffect(() => {
     if (!authLoading && !adminLoading) {
@@ -43,7 +59,7 @@ const AdminUsers = () => {
         roleMap[r.user_id].push(r.role);
       });
 
-      setUsers(profiles || []);
+      setUsers((profiles as any) || []);
       setRoles(roleMap);
       setLoading(false);
     };
@@ -74,6 +90,37 @@ const AdminUsers = () => {
         setRoles((prev) => ({ ...prev, [userId]: [...(prev[userId] || []), "admin"] }));
         toast({ title: "Admin role granted" });
       }
+    }
+  };
+
+  const openPointsDialog = (u: UserProfile, action: "add" | "deduct") => {
+    setSelectedUser(u);
+    setPointsAction(action);
+    setPointsAmount(0);
+    setPointsDescription("");
+    setPointsDialogOpen(true);
+  };
+
+  const handleAdjustPoints = async () => {
+    if (!selectedUser || pointsAmount <= 0) return;
+    try {
+      const result = await adjustPoints.mutateAsync({
+        targetUserId: selectedUser.user_id,
+        points: pointsAmount,
+        action: pointsAction,
+        description: pointsDescription,
+      });
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.user_id === selectedUser.user_id
+            ? { ...u, points_balance: result.balance }
+            : u
+        )
+      );
+      toast({ title: `${pointsAction === "add" ? "Added" : "Deducted"} ${pointsAmount} points` });
+      setPointsDialogOpen(false);
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message, variant: "destructive" });
     }
   };
 
@@ -116,12 +163,30 @@ const AdminUsers = () => {
                       <Crown className="h-3.5 w-3.5 text-accent" />
                     )}
                   </div>
-                  <div className="text-[10px] text-muted-foreground">
-                    Joined {new Date(u.created_at).toLocaleDateString()}
+                  <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                    <span>Joined {new Date(u.created_at).toLocaleDateString()}</span>
+                    <span className="flex items-center gap-1">
+                      <Coins className="h-3 w-3 text-primary" />
+                      <span className="font-heading font-bold text-foreground">{u.points_balance ?? 0}</span> pts
+                    </span>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  onClick={() => openPointsDialog(u, "add")}
+                  className="flex items-center gap-1 rounded border border-primary/30 px-2 py-1 font-heading text-[10px] font-bold text-primary hover:bg-primary/10 transition-all"
+                  title="Add points"
+                >
+                  <Plus className="h-3 w-3" /> Points
+                </button>
+                <button
+                  onClick={() => openPointsDialog(u, "deduct")}
+                  className="flex items-center gap-1 rounded border border-destructive/30 px-2 py-1 font-heading text-[10px] font-bold text-destructive hover:bg-destructive/10 transition-all"
+                  title="Deduct points"
+                >
+                  <Minus className="h-3 w-3" /> Points
+                </button>
                 <select
                   value={u.plan}
                   onChange={(e) => updatePlan(u.user_id, e.target.value)}
@@ -146,6 +211,71 @@ const AdminUsers = () => {
           ))}
         </div>
       </div>
+
+      {/* Points Adjustment Dialog */}
+      <Dialog open={pointsDialogOpen} onOpenChange={setPointsDialogOpen}>
+        <DialogContent className="max-w-sm border-primary/20 bg-card">
+          <DialogHeader>
+            <DialogTitle className="font-heading text-primary flex items-center gap-2">
+              <Coins className="h-5 w-5" />
+              {pointsAction === "add" ? "Add Points" : "Deduct Points"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                User: <strong className="text-foreground">{selectedUser?.display_name || "Unnamed"}</strong>
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Current balance: <strong className="text-foreground">{selectedUser?.points_balance ?? 0}</strong> points
+              </p>
+            </div>
+            <div>
+              <label className="font-heading text-[10px] uppercase text-muted-foreground">Points</label>
+              <input
+                type="number"
+                min={1}
+                value={pointsAmount || ""}
+                onChange={(e) => setPointsAmount(parseInt(e.target.value) || 0)}
+                placeholder="Enter amount"
+                className="mt-1 h-9 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground outline-none focus:border-primary/50"
+              />
+            </div>
+            <div>
+              <label className="font-heading text-[10px] uppercase text-muted-foreground">Reason (optional)</label>
+              <input
+                value={pointsDescription}
+                onChange={(e) => setPointsDescription(e.target.value)}
+                placeholder="e.g. Monthly bonus"
+                className="mt-1 h-9 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground outline-none focus:border-primary/50"
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                onClick={() => setPointsDialogOpen(false)}
+                className="rounded border border-primary/20 px-4 py-2 font-heading text-xs text-muted-foreground hover:text-primary"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAdjustPoints}
+                disabled={pointsAmount <= 0 || adjustPoints.isPending}
+                className={`rounded px-4 py-2 font-heading text-xs font-bold disabled:opacity-50 ${
+                  pointsAction === "add"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                    : "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                }`}
+              >
+                {adjustPoints.isPending
+                  ? "Processing..."
+                  : pointsAction === "add"
+                  ? `Add ${pointsAmount} Points`
+                  : `Deduct ${pointsAmount} Points`}
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

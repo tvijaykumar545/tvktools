@@ -1,16 +1,20 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { User, Key, History, Star, BarChart3, Heart, ChevronDown, Clock } from "lucide-react";
+import { User, Key, History, Star, BarChart3, Heart, ChevronDown, Clock, Coins } from "lucide-react";
 import { useToolUsageStats } from "@/hooks/useToolUsageStats";
 import { useToolFavorites } from "@/hooks/useToolFavorites";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { usePointsBalance, usePointsTransactions } from "@/hooks/usePoints";
+import PointsTransactionList from "@/components/PointsTransactionList";
 
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const stats = useToolUsageStats();
   const { favorites, loading: favLoading } = useToolFavorites();
+  const { data: pointsBalance = 0 } = usePointsBalance();
+  const { data: transactions = [] } = usePointsTransactions();
   const [showAllHistory, setShowAllHistory] = useState(false);
 
   useEffect(() => {
@@ -27,11 +31,15 @@ const Dashboard = () => {
 
   if (!user) return null;
 
+  const pointsUsed = transactions
+    .filter((t) => t.action_type === "use")
+    .reduce((sum, t) => sum + t.points_used, 0);
+
   const statCards = [
-    { label: "Total Tool Runs", value: stats.totalUses.toString(), icon: Star },
+    { label: "Points Balance", value: pointsBalance.toString(), icon: Coins },
+    { label: "Points Used", value: pointsUsed.toString(), icon: Star },
     { label: "Tools Used", value: stats.toolBreakdown.length.toString(), icon: BarChart3 },
     { label: "Favorites", value: favorites.length.toString(), icon: Heart },
-    { label: "Categories", value: stats.categoryBreakdown.length.toString(), icon: Key },
   ];
 
   const displayedHistory = showAllHistory ? stats.recentTools : stats.recentTools.slice(0, 10);
@@ -231,6 +239,22 @@ const Dashboard = () => {
               </ResponsiveContainer>
             </div>
           )}
+        </div>
+
+        {/* Points Transaction History */}
+        <div className="mt-6 rounded border border-primary/10 bg-card p-5 border-glow">
+          <h2 className="font-heading text-sm font-bold text-foreground flex items-center gap-2">
+            <Coins className="h-4 w-4 text-primary" />
+            Points History
+            {transactions.length > 0 && (
+              <span className="ml-auto text-[10px] text-muted-foreground font-normal">
+                {transactions.length} transactions
+              </span>
+            )}
+          </h2>
+          <div className="mt-4">
+            <PointsTransactionList transactions={transactions} />
+          </div>
         </div>
 
         {/* Full Usage History */}

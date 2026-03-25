@@ -23,6 +23,8 @@ import ToolRating from "@/components/ToolRating";
 import { useManagedTools } from "@/hooks/useManagedTools";
 import { useUsageLimit } from "@/hooks/useUsageLimit";
 import UsageLimitBanner from "@/components/UsageLimitBanner";
+import { usePointsBalance, useToolPointsCost, useDeductPoints } from "@/hooks/usePoints";
+import PointsBalanceBanner from "@/components/PointsBalanceBanner";
 
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +40,9 @@ const ToolPage = () => {
   const { trackUsage } = useTrackToolUsage();
   const { isFavorite, toggleFavorite } = useToolFavorites();
   const { remaining, isLimitReached, consumeUsage, dailyLimit, isGuest } = useUsageLimit();
+  const { data: pointsBalance = 0 } = usePointsBalance();
+  const { data: toolPointsCost = 0 } = useToolPointsCost(tool?.id);
+  const deductPoints = useDeductPoints();
   const trackUsageWithToast = useToolUsageWithToast();
   
   const handleToolUsage = () => {
@@ -70,14 +75,29 @@ const ToolPage = () => {
   const faqs = getToolFaq(tool.id, tool.name, tool.description, tool.category, tool.type, tool.isFree);
   const relatedTools = mergedTools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, 4);
 
+  const canUseTool = isGuest ? !isLimitReached : (toolPointsCost === 0 || pointsBalance >= toolPointsCost);
+
   const handleRun = async () => {
     if (loading) {
       abortRef.current?.abort();
       return;
     }
-    if (!consumeUsage()) {
-      toast.error("Daily limit reached! Sign up for unlimited access.");
-      return;
+    if (isGuest) {
+      if (!consumeUsage()) {
+        toast.error("Daily limit reached! Sign up for unlimited access.");
+        return;
+      }
+    } else if (toolPointsCost > 0) {
+      try {
+        await deductPoints.mutateAsync({
+          toolId: tool.id,
+          toolName: tool.name,
+          pointsCost: toolPointsCost,
+        });
+      } catch (err: any) {
+        toast.error(err.message || "Insufficient points");
+        return;
+      }
     }
     setLoading(true);
     setOutput("");
@@ -301,14 +321,15 @@ const ToolPage = () => {
         {/* Usage Limit Banner — shown for all tools to guests */}
         <div className="mt-6">
           <UsageLimitBanner remaining={remaining} dailyLimit={dailyLimit} isLimitReached={isLimitReached} isGuest={isGuest} />
+          {!isGuest && <PointsBalanceBanner balance={pointsBalance} toolCost={toolPointsCost} isGuest={isGuest} />}
         </div>
 
-        {/* Tool Interface — gated only by usage limit */}
-        {!isLimitReached && tool.id === "qr-generator" && (
+        {/* Tool Interface — gated by usage limit (guests) or points (users) */}
+        {canUseTool && tool.id === "qr-generator" && (
           <QRCodeGenerator onTrackUsage={handleToolUsage} />
         )}
 
-        {!isLimitReached && isImageTool(tool.id) && (
+        {canUseTool && isImageTool(tool.id) && (
           <ImageToolInterface
             toolId={tool.id}
             toolName={tool.name}
@@ -316,11 +337,11 @@ const ToolPage = () => {
           />
         )}
 
-        {!isLimitReached && tool.id === "reorder-pdf" && (
+        {canUseTool && tool.id === "reorder-pdf" && (
           <PDFReorderTool onTrackUsage={handleToolUsage} />
         )}
 
-        {!isLimitReached && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
+        {canUseTool && isPdfTool(tool.id) && tool.id !== "reorder-pdf" && (
           <PDFToolInterface
             toolId={tool.id}
             toolName={tool.name}
@@ -328,11 +349,11 @@ const ToolPage = () => {
           />
         )}
 
-        {!isLimitReached && isCodeConverter && (
+        {canUseTool && isCodeConverter && (
           <CodeConverterTool onTrackUsage={handleToolUsage} />
         )}
 
-        {!isLimitReached && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {canUseTool && !hasCustomUI && (<div className="mt-8 grid gap-6 lg:grid-cols-2">
           {/* Input */}
           <div className="flex flex-col gap-3">
             <label className="font-heading text-xs font-semibold text-foreground uppercase tracking-wider">
