@@ -13,6 +13,7 @@ const Login = () => {
   const [needsVerification, setNeedsVerification] = useState(false);
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -33,6 +34,7 @@ const Login = () => {
       await supabase.auth.signOut();
       setNeedsVerification(true);
     } else {
+      localStorage.setItem("tvk_remember_me", rememberMe ? "true" : "false");
       navigate("/dashboard");
     }
     setLoading(false);
@@ -108,6 +110,18 @@ const Login = () => {
               required
               className="mt-1 h-10 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground outline-none focus:border-primary/50"
             />
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="h-4 w-4 rounded border-primary/30 bg-muted accent-primary cursor-pointer"
+            />
+            <label htmlFor="rememberMe" className="text-xs text-muted-foreground cursor-pointer select-none">
+              Remember me
+            </label>
           </div>
           <button
             type="submit"
