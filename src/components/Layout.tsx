@@ -1,8 +1,10 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { useSessionTimeout } from "@/hooks/useSessionTimeout";
 
 const Layout = () => {
+  useSessionTimeout();
   return (
     <div className="flex min-h-screen flex-col scanline">
       <Navbar />
