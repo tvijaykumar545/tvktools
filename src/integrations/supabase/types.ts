@@ -109,30 +109,45 @@ export type Database = {
       }
       points_purchases: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           created_at: string
           id: string
           package_name: string
           points_amount: number
           price_inr: number
+          rejection_reason: string | null
+          screenshot_url: string | null
           status: string
+          user_email: string | null
           user_id: string
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           id?: string
           package_name: string
           points_amount: number
           price_inr: number
+          rejection_reason?: string | null
+          screenshot_url?: string | null
           status?: string
+          user_email?: string | null
           user_id: string
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           created_at?: string
           id?: string
           package_name?: string
           points_amount?: number
           price_inr?: number
+          rejection_reason?: string | null
+          screenshot_url?: string | null
           status?: string
+          user_email?: string | null
           user_id?: string
         }
         Relationships: []
@@ -344,6 +359,14 @@ export type Database = {
         }
         Returns: Json
       }
+      admin_approve_purchase: {
+        Args: { p_admin_id: string; p_purchase_id: string }
+        Returns: Json
+      }
+      admin_reject_purchase: {
+        Args: { p_admin_id: string; p_purchase_id: string; p_reason?: string }
+        Returns: Json
+      }
       credit_points_purchase: {
         Args: {
           p_package_name: string
@@ -377,6 +400,17 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      submit_purchase_request: {
+        Args: {
+          p_package_name: string
+          p_points_amount: number
+          p_price_inr: number
+          p_screenshot_url?: string
+          p_user_email?: string
+          p_user_id: string
+        }
+        Returns: Json
       }
     }
     Enums: {
