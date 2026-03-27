@@ -115,8 +115,12 @@ const AdminEmails = () => {
     let successCount = 0;
     let failCount = 0;
 
-    for (const userId of selectedUsers) {
-      const email = await getEmail(userId);
+    // Fetch all emails in bulk first
+    const allUserIds = Array.from(selectedUsers);
+    const emailMap = await fetchEmailsForUsers(allUserIds);
+
+    for (const userId of allUserIds) {
+      const email = emailMap[userId];
       if (!email) {
         failCount++;
         continue;
