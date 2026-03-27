@@ -22,6 +22,8 @@ interface SavedTemplate {
   button_url: string;
   footer_text: string;
   accent_color: string;
+  html_content?: string;
+  editor_mode?: string;
 }
 
 const PREDEFINED_TEMPLATES = [
@@ -144,6 +146,7 @@ const AdminEmails = () => {
 
       const userProfile = users.find((u) => u.user_id === userId);
       const savedTpl = savedTemplates.find((t) => t.id === selectedTemplate);
+      const useCustomHtml = savedTpl?.html_content?.trim() && (savedTpl.editor_mode === "html" || savedTpl.editor_mode === "both");
       try {
         await supabase.functions.invoke("send-transactional-email", {
           body: {
@@ -160,6 +163,7 @@ const AdminEmails = () => {
               footerText: savedTpl?.footer_text || undefined,
               accentColor: savedTpl?.accent_color || "#00ffff",
             },
+            ...(useCustomHtml ? { customHtml: savedTpl!.html_content!.replace(/\{\{name\}\}/g, userProfile?.display_name || "there").replace(/\{\{subject\}\}/g, subject) } : {}),
           },
         });
         successCount++;

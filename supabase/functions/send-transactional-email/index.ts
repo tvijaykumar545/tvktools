@@ -60,6 +60,7 @@ Deno.serve(async (req) => {
   let idempotencyKey: string
   let messageId: string
   let templateData: Record<string, any> = {}
+  let customHtml: string | null = null
   try {
     const body = await req.json()
     templateName = body.templateName || body.template_name
@@ -68,6 +69,9 @@ Deno.serve(async (req) => {
     idempotencyKey = body.idempotencyKey || body.idempotency_key || messageId
     if (body.templateData && typeof body.templateData === 'object') {
       templateData = body.templateData
+    }
+    if (body.customHtml && typeof body.customHtml === 'string') {
+      customHtml = body.customHtml
     }
   } catch {
     return new Response(
@@ -282,14 +286,23 @@ Deno.serve(async (req) => {
     )
   }
 
-  // 4. Render React Email template to HTML and plain text
-  const html = await renderAsync(
-    React.createElement(template.component, templateData)
-  )
-  const plainText = await renderAsync(
-    React.createElement(template.component, templateData),
-    { plainText: true }
-  )
+  // 4. Render email — use customHtml if provided, otherwise render React template
+  let html: string
+  let plainText: string
+
+  if (customHtml) {
+    html = customHtml
+    // Strip HTML tags for plain text fallback
+    plainText = customHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+  } else {
+    html = await renderAsync(
+      React.createElement(template.component, templateData)
+    )
+    plainText = await renderAsync(
+      React.createElement(template.component, templateData),
+      { plainText: true }
+    )
+  }
 
   // Resolve subject — supports static string or dynamic function
   const resolvedSubject =
