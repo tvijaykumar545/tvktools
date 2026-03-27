@@ -3,10 +3,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Plus, Save, Trash2, Edit2, Eye, Palette, Code, Settings2, Copy } from "lucide-react";
+import { ArrowLeft, Plus, Save, Trash2, Edit2, Eye, Palette, Code, Settings2, Copy, LayoutGrid } from "lucide-react";
+import EmailBlockEditor, { type EmailBlock, blocksToHtml } from "@/components/EmailBlockEditor";
 import { toast } from "sonner";
 
-type EditorMode = "variables" | "html" | "both";
+type EditorMode = "variables" | "html" | "both" | "blocks";
 
 interface EmailTemplate {
   id: string;
@@ -83,6 +84,7 @@ const AdminEmailTemplates = () => {
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const [editorMode, setEditorMode] = useState<EditorMode>("variables");
   const [saving, setSaving] = useState(false);
+  const [blocks, setBlocks] = useState<EmailBlock[]>([]);
 
   useEffect(() => {
     if (!authLoading && !adminLoading) {
@@ -108,12 +110,24 @@ const AdminEmailTemplates = () => {
     setEditing({ ...DEFAULT_TEMPLATE });
     setEditorMode("variables");
     setActiveTab("edit");
+    setBlocks([]);
   };
 
   const handleEdit = (tpl: EmailTemplate) => {
     setEditing({ ...tpl });
-    setEditorMode((tpl.editor_mode as EditorMode) || "variables");
+    const mode = (tpl.editor_mode as EditorMode) || "variables";
+    setEditorMode(mode);
     setActiveTab("edit");
+    // Try to restore blocks from html_content metadata comment
+    if (mode === "blocks" && tpl.html_content) {
+      try {
+        const match = tpl.html_content.match(/<!--BLOCKS:(.*?)-->/);
+        if (match) setBlocks(JSON.parse(match[1]));
+        else setBlocks([]);
+      } catch { setBlocks([]); }
+    } else {
+      setBlocks([]);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -129,8 +143,15 @@ const AdminEmailTemplates = () => {
     if (!editing.name.trim()) return toast.error("Template name is required");
     if (!editing.subject.trim()) return toast.error("Subject is required");
     if (editorMode === "html" && !editing.html_content.trim()) return toast.error("HTML content is required");
+    if (editorMode === "blocks" && blocks.length === 0) return toast.error("Add at least one block");
 
     setSaving(true);
+
+    // For blocks mode, generate HTML from blocks and embed block data as a comment for restoration
+    const finalHtmlContent = editorMode === "blocks"
+      ? `<!--BLOCKS:${JSON.stringify(blocks)}-->\n${blocksToHtml(blocks, editing.accent_color)}`
+      : editing.html_content || "";
+
     const payload = {
       name: editing.name,
       subject: editing.subject,
@@ -140,7 +161,7 @@ const AdminEmailTemplates = () => {
       button_url: editing.button_url || "",
       footer_text: editing.footer_text,
       accent_color: editing.accent_color,
-      html_content: editing.html_content || "",
+      html_content: finalHtmlContent,
       editor_mode: editorMode,
     };
 
@@ -160,7 +181,17 @@ const AdminEmailTemplates = () => {
   const handleDuplicate = (tpl: EmailTemplate) => {
     const { id, created_at, ...rest } = tpl;
     setEditing({ ...rest, name: `${rest.name} (copy)` });
-    setEditorMode((rest.editor_mode as EditorMode) || "variables");
+    const mode = (rest.editor_mode as EditorMode) || "variables";
+    setEditorMode(mode);
+    if (mode === "blocks" && rest.html_content) {
+      try {
+        const match = rest.html_content.match(/<!--BLOCKS:(.*?)-->/);
+        if (match) setBlocks(JSON.parse(match[1]));
+        else setBlocks([]);
+      } catch { setBlocks([]); }
+    } else {
+      setBlocks([]);
+    }
     setActiveTab("edit");
   };
 
@@ -179,8 +210,8 @@ const AdminEmailTemplates = () => {
   }
   if (!isAdmin) return null;
 
-  const modeLabel = { variables: "Variables", html: "HTML", both: "Both" };
-  const modeIcon = { variables: <Settings2 className="h-3.5 w-3.5" />, html: <Code className="h-3.5 w-3.5" />, both: <Palette className="h-3.5 w-3.5" /> };
+  const modeLabel = { variables: "Variables", html: "HTML", both: "Both", blocks: "Blocks" };
+  const modeIcon = { variables: <Settings2 className="h-3.5 w-3.5" />, html: <Code className="h-3.5 w-3.5" />, both: <Palette className="h-3.5 w-3.5" />, blocks: <LayoutGrid className="h-3.5 w-3.5" /> };
 
   return (
     <div className="cyber-grid min-h-screen py-8">
@@ -256,7 +287,7 @@ const AdminEmailTemplates = () => {
                 {/* Editor Mode Selector */}
                 <div className="flex items-center gap-2 px-4 pt-4 pb-2">
                   <span className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Editor Mode:</span>
-                  {(["variables", "html", "both"] as EditorMode[]).map((mode) => (
+                  {(["variables", "html", "both", "blocks"] as EditorMode[]).map((mode) => (
                     <button
                       key={mode}
                       onClick={() => setEditorMode(mode)}
@@ -382,6 +413,17 @@ const AdminEmailTemplates = () => {
                       </div>
                     )}
 
+                    {/* Blocks Editor */}
+                    {editorMode === "blocks" && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <LayoutGrid className="h-3.5 w-3.5 text-primary" />
+                          <span className="font-heading text-[10px] font-bold uppercase tracking-wider text-primary">Visual Block Builder</span>
+                        </div>
+                        <EmailBlockEditor blocks={blocks} onChange={setBlocks} accentColor={editing.accent_color} />
+                      </div>
+                    )}
+
                     <button
                       onClick={handleSave}
                       disabled={saving}
@@ -395,7 +437,15 @@ const AdminEmailTemplates = () => {
                   /* Preview */
                   <div className="p-4">
                     <div className="rounded border border-primary/10 overflow-hidden bg-white">
-                      {(editorMode === "html" || (editorMode === "both" && editing.html_content.trim())) ? (
+                      {editorMode === "blocks" ? (
+                        <iframe
+                          srcDoc={blocks.length > 0 ? blocksToHtml(blocks, editing.accent_color) : "<p style='padding:20px;color:#999;font-family:monospace'>Add blocks to preview</p>"}
+                          className="w-full border-0"
+                          style={{ minHeight: "400px" }}
+                          sandbox="allow-same-origin"
+                          title="Email Preview"
+                        />
+                      ) : (editorMode === "html" || (editorMode === "both" && editing.html_content.trim())) ? (
                         <iframe
                           srcDoc={editing.html_content || "<p style='padding:20px;color:#999;font-family:monospace'>No HTML content yet</p>"}
                           className="w-full border-0"
