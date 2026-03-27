@@ -200,7 +200,7 @@ const AdminPurchases = () => {
                     {p.status === "pending" && (
                       <>
                         <button
-                          onClick={() => approveMutation.mutate(p.id)}
+                          onClick={() => approveMutation.mutate(p)}
                           disabled={approveMutation.isPending}
                           className="flex items-center gap-1 rounded bg-green-600 px-3 py-1.5 text-[10px] font-bold text-white hover:bg-green-700 transition-all disabled:opacity-50"
                         >
@@ -228,7 +228,7 @@ const AdminPurchases = () => {
                       className="flex-1 rounded border border-primary/20 bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50"
                     />
                     <button
-                      onClick={() => rejectMutation.mutate({ purchaseId: p.id, reason: rejectReason })}
+                      onClick={() => rejectMutation.mutate({ purchase: p, reason: rejectReason })}
                       disabled={rejectMutation.isPending}
                       className="rounded bg-destructive px-3 py-1.5 text-[10px] font-bold text-destructive-foreground disabled:opacity-50"
                     >
