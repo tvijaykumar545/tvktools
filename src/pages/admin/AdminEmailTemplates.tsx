@@ -287,7 +287,7 @@ const AdminEmailTemplates = () => {
                 {/* Editor Mode Selector */}
                 <div className="flex items-center gap-2 px-4 pt-4 pb-2">
                   <span className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Editor Mode:</span>
-                  {(["variables", "html", "both"] as EditorMode[]).map((mode) => (
+                  {(["variables", "html", "both", "blocks"] as EditorMode[]).map((mode) => (
                     <button
                       key={mode}
                       onClick={() => setEditorMode(mode)}
