@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
-const DAILY_LIMIT = 5;
+const DAILY_LIMIT = 3;
 const STORAGE_KEY = "tvk_guest_usage";
 
 interface UsageData {
