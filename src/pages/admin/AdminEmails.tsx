@@ -46,6 +46,7 @@ const AdminEmails = () => {
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const [userEmails, setUserEmails] = useState<Record<string, string>>({});
+  const [savedTemplates, setSavedTemplates] = useState<SavedTemplate[]>([]);
 
   useEffect(() => {
     if (!authLoading && !adminLoading) {
