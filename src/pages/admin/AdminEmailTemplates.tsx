@@ -84,6 +84,7 @@ const AdminEmailTemplates = () => {
   const [activeTab, setActiveTab] = useState<"edit" | "preview">("edit");
   const [editorMode, setEditorMode] = useState<EditorMode>("variables");
   const [saving, setSaving] = useState(false);
+  const [blocks, setBlocks] = useState<EmailBlock[]>([]);
 
   useEffect(() => {
     if (!authLoading && !adminLoading) {
