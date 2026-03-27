@@ -148,6 +148,7 @@ const AdminEmails = () => {
       }
 
       const userProfile = users.find((u) => u.user_id === userId);
+      const savedTpl = savedTemplates.find((t) => t.id === selectedTemplate);
       try {
         await supabase.functions.invoke("send-transactional-email", {
           body: {
@@ -156,8 +157,13 @@ const AdminEmails = () => {
             idempotencyKey: `admin-notify-${userId}-${Date.now()}`,
             templateData: {
               subject,
+              heading: savedTpl?.heading || subject,
               messageBody: body,
               recipientName: userProfile?.display_name || undefined,
+              buttonText: savedTpl?.button_text || undefined,
+              buttonUrl: savedTpl?.button_url || undefined,
+              footerText: savedTpl?.footer_text || undefined,
+              accentColor: savedTpl?.accent_color || "#00ffff",
             },
           },
         });
