@@ -57,14 +57,15 @@ const AdminEmails = () => {
 
   useEffect(() => {
     if (!isAdmin) return;
-    const fetchUsers = async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("user_id, display_name")
-        .order("created_at", { ascending: false });
-      setUsers(data || []);
+    const fetchData = async () => {
+      const [usersRes, templatesRes] = await Promise.all([
+        supabase.from("profiles").select("user_id, display_name").order("created_at", { ascending: false }),
+        supabase.from("email_templates").select("*").order("created_at", { ascending: false }),
+      ]);
+      setUsers(usersRes.data || []);
+      setSavedTemplates((templatesRes.data as SavedTemplate[]) || []);
     };
-    fetchUsers();
+    fetchData();
   }, [isAdmin]);
 
   // Fetch emails via edge function that uses service role
