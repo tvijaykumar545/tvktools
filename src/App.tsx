@@ -34,6 +34,7 @@ import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminTools from "./pages/admin/AdminTools";
 import AdminPurchases from "./pages/admin/AdminPurchases";
+import AdminEmails from "./pages/admin/AdminEmails";
 import BuyPoints from "./pages/BuyPoints";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
@@ -81,6 +82,7 @@ const App = () => (
                   <Route path="/admin/blog" element={<AdminBlog />} />
                   <Route path="/admin/tools" element={<AdminTools />} />
                   <Route path="/admin/purchases" element={<AdminPurchases />} />
+                  <Route path="/admin/emails" element={<AdminEmails />} />
                   <Route path="/unsubscribe" element={<Unsubscribe />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
