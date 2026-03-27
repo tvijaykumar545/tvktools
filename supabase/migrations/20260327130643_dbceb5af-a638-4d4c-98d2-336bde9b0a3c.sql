@@ -1,0 +1,1 @@
+DROP POLICY "Users can insert own transactions" ON public.points_transactions;
