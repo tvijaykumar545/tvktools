@@ -143,8 +143,15 @@ const AdminEmailTemplates = () => {
     if (!editing.name.trim()) return toast.error("Template name is required");
     if (!editing.subject.trim()) return toast.error("Subject is required");
     if (editorMode === "html" && !editing.html_content.trim()) return toast.error("HTML content is required");
+    if (editorMode === "blocks" && blocks.length === 0) return toast.error("Add at least one block");
 
     setSaving(true);
+
+    // For blocks mode, generate HTML from blocks and embed block data as a comment for restoration
+    const finalHtmlContent = editorMode === "blocks"
+      ? `<!--BLOCKS:${JSON.stringify(blocks)}-->\n${blocksToHtml(blocks, editing.accent_color)}`
+      : editing.html_content || "";
+
     const payload = {
       name: editing.name,
       subject: editing.subject,
@@ -154,7 +161,7 @@ const AdminEmailTemplates = () => {
       button_url: editing.button_url || "",
       footer_text: editing.footer_text,
       accent_color: editing.accent_color,
-      html_content: editing.html_content || "",
+      html_content: finalHtmlContent,
       editor_mode: editorMode,
     };
 
