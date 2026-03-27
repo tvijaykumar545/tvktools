@@ -110,12 +110,24 @@ const AdminEmailTemplates = () => {
     setEditing({ ...DEFAULT_TEMPLATE });
     setEditorMode("variables");
     setActiveTab("edit");
+    setBlocks([]);
   };
 
   const handleEdit = (tpl: EmailTemplate) => {
     setEditing({ ...tpl });
-    setEditorMode((tpl.editor_mode as EditorMode) || "variables");
+    const mode = (tpl.editor_mode as EditorMode) || "variables";
+    setEditorMode(mode);
     setActiveTab("edit");
+    // Try to restore blocks from html_content metadata comment
+    if (mode === "blocks" && tpl.html_content) {
+      try {
+        const match = tpl.html_content.match(/<!--BLOCKS:(.*?)-->/);
+        if (match) setBlocks(JSON.parse(match[1]));
+        else setBlocks([]);
+      } catch { setBlocks([]); }
+    } else {
+      setBlocks([]);
+    }
   };
 
   const handleDelete = async (id: string) => {
