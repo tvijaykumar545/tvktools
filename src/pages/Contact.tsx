@@ -1,13 +1,24 @@
 import { useState } from "react";
 import { Mail, MapPin, MessageSquare } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    // Send contact confirmation email
+    const id = crypto.randomUUID();
+    await supabase.functions.invoke("send-transactional-email", {
+      body: {
+        templateName: "contact-confirmation",
+        recipientEmail: form.email,
+        idempotencyKey: `contact-confirm-${id}`,
+        templateData: { name: form.name },
+      },
+    });
   };
 
   return (

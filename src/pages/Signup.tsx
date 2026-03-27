@@ -35,6 +35,15 @@ const Signup = () => {
       setError(error.message);
     } else {
       setSuccess(true);
+      // Send welcome email
+      await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "welcome",
+          recipientEmail: email,
+          idempotencyKey: `welcome-${email}`,
+          templateData: { name: displayName || undefined },
+        },
+      });
     }
     setLoading(false);
   };

@@ -55,15 +55,30 @@ const AdminPurchases = () => {
   }, [isAdmin, qc]);
 
   const approveMutation = useMutation({
-    mutationFn: async (purchaseId: string) => {
+    mutationFn: async (purchase: any) => {
       if (!user) throw new Error("Not authenticated");
       const { data, error } = await supabase.rpc("admin_approve_purchase" as any, {
         p_admin_id: user.id,
-        p_purchase_id: purchaseId,
+        p_purchase_id: purchase.id,
       });
       if (error) throw error;
       const result = data as any;
       if (!result.success) throw new Error(result.error);
+      // Send approval email to user
+      if (purchase.user_email) {
+        await supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "purchase-approved",
+            recipientEmail: purchase.user_email,
+            idempotencyKey: `purchase-approved-${purchase.id}`,
+            templateData: {
+              packageName: purchase.package_name,
+              pointsAmount: purchase.points_amount,
+              priceInr: purchase.price_inr,
+            },
+          },
+        });
+      }
       return result;
     },
     onSuccess: () => {
@@ -74,16 +89,31 @@ const AdminPurchases = () => {
   });
 
   const rejectMutation = useMutation({
-    mutationFn: async ({ purchaseId, reason }: { purchaseId: string; reason: string }) => {
+    mutationFn: async ({ purchase, reason }: { purchase: any; reason: string }) => {
       if (!user) throw new Error("Not authenticated");
+      const finalReason = reason || "Payment could not be verified";
       const { data, error } = await supabase.rpc("admin_reject_purchase" as any, {
         p_admin_id: user.id,
-        p_purchase_id: purchaseId,
-        p_reason: reason || "Payment could not be verified",
+        p_purchase_id: purchase.id,
+        p_reason: finalReason,
       });
       if (error) throw error;
       const result = data as any;
       if (!result.success) throw new Error(result.error);
+      // Send rejection email to user
+      if (purchase.user_email) {
+        await supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "purchase-rejected",
+            recipientEmail: purchase.user_email,
+            idempotencyKey: `purchase-rejected-${purchase.id}`,
+            templateData: {
+              packageName: purchase.package_name,
+              reason: finalReason,
+            },
+          },
+        });
+      }
       return result;
     },
     onSuccess: () => {
@@ -170,7 +200,7 @@ const AdminPurchases = () => {
                     {p.status === "pending" && (
                       <>
                         <button
-                          onClick={() => approveMutation.mutate(p.id)}
+                          onClick={() => approveMutation.mutate(p)}
                           disabled={approveMutation.isPending}
                           className="flex items-center gap-1 rounded bg-green-600 px-3 py-1.5 text-[10px] font-bold text-white hover:bg-green-700 transition-all disabled:opacity-50"
                         >
@@ -198,7 +228,7 @@ const AdminPurchases = () => {
                       className="flex-1 rounded border border-primary/20 bg-background px-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50"
                     />
                     <button
-                      onClick={() => rejectMutation.mutate({ purchaseId: p.id, reason: rejectReason })}
+                      onClick={() => rejectMutation.mutate({ purchase: p, reason: rejectReason })}
                       disabled={rejectMutation.isPending}
                       className="rounded bg-destructive px-3 py-1.5 text-[10px] font-bold text-destructive-foreground disabled:opacity-50"
                     >
