@@ -3,13 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Send, ArrowLeft, Search, User, Mail } from "lucide-react";
-import { toast } from "sonner";
+import { Shield, Send, ArrowLeft, Search, User, Mail, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 interface UserProfile {
   user_id: string;
   display_name: string | null;
+}
+
+interface SavedTemplate {
+  id: string;
+  name: string;
+  subject: string;
+  heading: string;
+  body_text: string;
+  button_text: string;
+  button_url: string;
+  footer_text: string;
+  accent_color: string;
 }
 
 const PREDEFINED_TEMPLATES = [
@@ -34,6 +46,7 @@ const AdminEmails = () => {
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const [userEmails, setUserEmails] = useState<Record<string, string>>({});
+  const [savedTemplates, setSavedTemplates] = useState<SavedTemplate[]>([]);
 
   useEffect(() => {
     if (!authLoading && !adminLoading) {
@@ -44,14 +57,15 @@ const AdminEmails = () => {
 
   useEffect(() => {
     if (!isAdmin) return;
-    const fetchUsers = async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("user_id, display_name")
-        .order("created_at", { ascending: false });
-      setUsers(data || []);
+    const fetchData = async () => {
+      const [usersRes, templatesRes] = await Promise.all([
+        supabase.from("profiles").select("user_id, display_name").order("created_at", { ascending: false }),
+        supabase.from("email_templates").select("*").order("created_at", { ascending: false }),
+      ]);
+      setUsers(usersRes.data || []);
+      setSavedTemplates((templatesRes.data as SavedTemplate[]) || []);
     };
-    fetchUsers();
+    fetchData();
   }, [isAdmin]);
 
   // Fetch emails via edge function that uses service role
@@ -80,6 +94,13 @@ const AdminEmails = () => {
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
+    // Check saved templates first
+    const saved = savedTemplates.find((t) => t.id === templateId);
+    if (saved) {
+      setSubject(saved.subject);
+      setBody(saved.body_text);
+      return;
+    }
     const tpl = PREDEFINED_TEMPLATES.find((t) => t.id === templateId);
     if (tpl && tpl.id !== "custom") {
       setSubject(tpl.subject);
@@ -127,6 +148,7 @@ const AdminEmails = () => {
       }
 
       const userProfile = users.find((u) => u.user_id === userId);
+      const savedTpl = savedTemplates.find((t) => t.id === selectedTemplate);
       try {
         await supabase.functions.invoke("send-transactional-email", {
           body: {
@@ -135,8 +157,13 @@ const AdminEmails = () => {
             idempotencyKey: `admin-notify-${userId}-${Date.now()}`,
             templateData: {
               subject,
+              heading: savedTpl?.heading || subject,
               messageBody: body,
               recipientName: userProfile?.display_name || undefined,
+              buttonText: savedTpl?.button_text || undefined,
+              buttonUrl: savedTpl?.button_url || undefined,
+              footerText: savedTpl?.footer_text || undefined,
+              accentColor: savedTpl?.accent_color || "#00ffff",
             },
           },
         });
@@ -236,8 +263,8 @@ const AdminEmails = () => {
               <h2 className="font-heading text-sm font-bold text-foreground mb-3">Compose Email</h2>
 
               {/* Template picker */}
-              <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Template</label>
-              <div className="mt-1 grid grid-cols-2 gap-2 mb-4">
+              <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Quick Templates</label>
+              <div className="mt-1 grid grid-cols-2 gap-2 mb-3">
                 {PREDEFINED_TEMPLATES.map((tpl) => (
                   <button
                     key={tpl.id}
@@ -252,6 +279,32 @@ const AdminEmails = () => {
                   </button>
                 ))}
               </div>
+
+              {/* Saved templates */}
+              {savedTemplates.length > 0 && (
+                <>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Saved Templates</label>
+                    <Link to="/admin/email-templates" className="text-[10px] text-primary hover:underline">Manage →</Link>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    {savedTemplates.map((tpl) => (
+                      <button
+                        key={tpl.id}
+                        onClick={() => handleTemplateSelect(tpl.id)}
+                        className={`rounded border px-3 py-2 text-left text-[11px] transition-all flex items-center gap-2 ${
+                          selectedTemplate === tpl.id
+                            ? "border-primary/50 bg-primary/10 text-foreground"
+                            : "border-primary/10 bg-background text-muted-foreground hover:border-primary/30"
+                        }`}
+                      >
+                        <span className="h-2.5 w-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: tpl.accent_color }} />
+                        <span className="truncate">{tpl.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
 
               {/* Subject */}
               <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Subject</label>
