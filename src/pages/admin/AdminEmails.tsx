@@ -3,13 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Shield, Send, ArrowLeft, Search, User, Mail } from "lucide-react";
-import { toast } from "sonner";
+import { Shield, Send, ArrowLeft, Search, User, Mail, Palette } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 interface UserProfile {
   user_id: string;
   display_name: string | null;
+}
+
+interface SavedTemplate {
+  id: string;
+  name: string;
+  subject: string;
+  heading: string;
+  body_text: string;
+  button_text: string;
+  button_url: string;
+  footer_text: string;
+  accent_color: string;
 }
 
 const PREDEFINED_TEMPLATES = [
