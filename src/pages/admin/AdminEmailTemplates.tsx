@@ -3,7 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Plus, Save, Trash2, Edit2, Eye, Palette, Code, Settings2, Copy } from "lucide-react";
+import { ArrowLeft, Plus, Save, Trash2, Edit2, Eye, Palette, Code, Settings2, Copy, LayoutGrid } from "lucide-react";
+import EmailBlockEditor, { type EmailBlock, blocksToHtml } from "@/components/EmailBlockEditor";
 import { toast } from "sonner";
 
 type EditorMode = "variables" | "html" | "both";
