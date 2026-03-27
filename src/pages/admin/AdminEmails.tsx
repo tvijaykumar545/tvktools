@@ -22,6 +22,8 @@ interface SavedTemplate {
   button_url: string;
   footer_text: string;
   accent_color: string;
+  html_content?: string;
+  editor_mode?: string;
 }
 
 const PREDEFINED_TEMPLATES = [
