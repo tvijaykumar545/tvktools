@@ -7,7 +7,7 @@ import { ArrowLeft, Plus, Save, Trash2, Edit2, Eye, Palette, Code, Settings2, Co
 import EmailBlockEditor, { type EmailBlock, blocksToHtml } from "@/components/EmailBlockEditor";
 import { toast } from "sonner";
 
-type EditorMode = "variables" | "html" | "both";
+type EditorMode = "variables" | "html" | "both" | "blocks";
 
 interface EmailTemplate {
   id: string;
