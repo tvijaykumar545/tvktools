@@ -25,11 +25,6 @@ interface SavedTemplate {
 }
 
 const PREDEFINED_TEMPLATES = [
-  { id: "low-balance", label: "⚠️ Low Balance Alert", subject: "Your points balance is running low", body: "We noticed your points balance is getting low. Top up now to continue using premium tools without interruption.\n\nVisit the Buy Points page to recharge your account." },
-  { id: "account-warning", label: "🚨 Account Warning", subject: "Important notice about your account", body: "We'd like to bring an important matter regarding your account to your attention. Please review your account settings and ensure everything is in order.\n\nIf you have any questions, don't hesitate to reach out." },
-  { id: "new-feature", label: "🚀 New Feature Announcement", subject: "Exciting new features on tvktools!", body: "We've added some exciting new tools and features to the platform! Check out what's new and start using them today.\n\nVisit the Tools page to explore." },
-  { id: "maintenance", label: "🔧 Scheduled Maintenance", subject: "Upcoming scheduled maintenance", body: "We'll be performing scheduled maintenance to improve your experience. During this time, some tools may be temporarily unavailable.\n\nWe apologize for any inconvenience and appreciate your patience." },
-  { id: "welcome-back", label: "👋 Welcome Back", subject: "We miss you at tvktools!", body: "It's been a while since your last visit. We've been busy adding new tools and improvements. Come check out what's new!\n\nYour account and points are still waiting for you." },
   { id: "custom", label: "✍️ Custom Message", subject: "", body: "" },
 ];
 
@@ -263,48 +258,36 @@ const AdminEmails = () => {
               <h2 className="font-heading text-sm font-bold text-foreground mb-3">Compose Email</h2>
 
               {/* Template picker */}
-              <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Quick Templates</label>
-              <div className="mt-1 grid grid-cols-2 gap-2 mb-3">
-                {PREDEFINED_TEMPLATES.map((tpl) => (
+              <div className="flex items-center justify-between mb-1">
+                <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Templates</label>
+                <Link to="/admin/email-templates" className="text-[10px] text-primary hover:underline">Manage →</Link>
+              </div>
+              <div className="mt-1 grid grid-cols-2 gap-2 mb-4">
+                {savedTemplates.map((tpl) => (
                   <button
                     key={tpl.id}
                     onClick={() => handleTemplateSelect(tpl.id)}
-                    className={`rounded border px-3 py-2 text-left text-[11px] transition-all ${
+                    className={`rounded border px-3 py-2 text-left text-[11px] transition-all flex items-center gap-2 ${
                       selectedTemplate === tpl.id
                         ? "border-primary/50 bg-primary/10 text-foreground"
                         : "border-primary/10 bg-background text-muted-foreground hover:border-primary/30"
                     }`}
                   >
-                    {tpl.label}
+                    <span className="h-2.5 w-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: tpl.accent_color }} />
+                    <span className="truncate">{tpl.name}</span>
                   </button>
                 ))}
+                <button
+                  onClick={() => handleTemplateSelect("custom")}
+                  className={`rounded border px-3 py-2 text-left text-[11px] transition-all ${
+                    selectedTemplate === "custom"
+                      ? "border-primary/50 bg-primary/10 text-foreground"
+                      : "border-primary/10 bg-background text-muted-foreground hover:border-primary/30"
+                  }`}
+                >
+                  ✍️ Custom Message
+                </button>
               </div>
-
-              {/* Saved templates */}
-              {savedTemplates.length > 0 && (
-                <>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Saved Templates</label>
-                    <Link to="/admin/email-templates" className="text-[10px] text-primary hover:underline">Manage →</Link>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    {savedTemplates.map((tpl) => (
-                      <button
-                        key={tpl.id}
-                        onClick={() => handleTemplateSelect(tpl.id)}
-                        className={`rounded border px-3 py-2 text-left text-[11px] transition-all flex items-center gap-2 ${
-                          selectedTemplate === tpl.id
-                            ? "border-primary/50 bg-primary/10 text-foreground"
-                            : "border-primary/10 bg-background text-muted-foreground hover:border-primary/30"
-                        }`}
-                      >
-                        <span className="h-2.5 w-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: tpl.accent_color }} />
-                        <span className="truncate">{tpl.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
 
               {/* Subject */}
               <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Subject</label>
