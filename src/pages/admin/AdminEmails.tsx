@@ -257,8 +257,8 @@ const AdminEmails = () => {
               <h2 className="font-heading text-sm font-bold text-foreground mb-3">Compose Email</h2>
 
               {/* Template picker */}
-              <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Template</label>
-              <div className="mt-1 grid grid-cols-2 gap-2 mb-4">
+              <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Quick Templates</label>
+              <div className="mt-1 grid grid-cols-2 gap-2 mb-3">
                 {PREDEFINED_TEMPLATES.map((tpl) => (
                   <button
                     key={tpl.id}
@@ -273,6 +273,32 @@ const AdminEmails = () => {
                   </button>
                 ))}
               </div>
+
+              {/* Saved templates */}
+              {savedTemplates.length > 0 && (
+                <>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Saved Templates</label>
+                    <Link to="/admin/email-templates" className="text-[10px] text-primary hover:underline">Manage →</Link>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    {savedTemplates.map((tpl) => (
+                      <button
+                        key={tpl.id}
+                        onClick={() => handleTemplateSelect(tpl.id)}
+                        className={`rounded border px-3 py-2 text-left text-[11px] transition-all flex items-center gap-2 ${
+                          selectedTemplate === tpl.id
+                            ? "border-primary/50 bg-primary/10 text-foreground"
+                            : "border-primary/10 bg-background text-muted-foreground hover:border-primary/30"
+                        }`}
+                      >
+                        <span className="h-2.5 w-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: tpl.accent_color }} />
+                        <span className="truncate">{tpl.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
 
               {/* Subject */}
               <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Subject</label>
