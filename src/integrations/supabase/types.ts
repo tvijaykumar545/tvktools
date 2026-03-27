@@ -127,8 +127,10 @@ export type Database = {
           button_url: string | null
           created_at: string
           created_by: string
+          editor_mode: string
           footer_text: string | null
           heading: string
+          html_content: string
           id: string
           name: string
           subject: string
@@ -141,8 +143,10 @@ export type Database = {
           button_url?: string | null
           created_at?: string
           created_by: string
+          editor_mode?: string
           footer_text?: string | null
           heading?: string
+          html_content?: string
           id?: string
           name: string
           subject?: string
@@ -155,8 +159,10 @@ export type Database = {
           button_url?: string | null
           created_at?: string
           created_by?: string
+          editor_mode?: string
           footer_text?: string | null
           heading?: string
+          html_content?: string
           id?: string
           name?: string
           subject?: string
