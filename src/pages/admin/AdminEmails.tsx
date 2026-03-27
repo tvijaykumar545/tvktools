@@ -54,22 +54,28 @@ const AdminEmails = () => {
     fetchUsers();
   }, [isAdmin]);
 
-  // Fetch email for selected user via auth admin (we'll use the user_email from purchases or profile display)
+  // Fetch emails via edge function that uses service role
   const getEmail = async (userId: string): Promise<string | null> => {
     if (userEmails[userId]) return userEmails[userId];
-    // Try to get from points_purchases (has user_email)
-    const { data } = await supabase
-      .from("points_purchases")
-      .select("user_email")
-      .eq("user_id", userId)
-      .not("user_email", "is", null)
-      .limit(1)
-      .maybeSingle();
-    if (data?.user_email) {
-      setUserEmails((prev) => ({ ...prev, [userId]: data.user_email! }));
-      return data.user_email;
+    return null; // Will be resolved in bulk before sending
+  };
+
+  const fetchEmailsForUsers = async (userIds: string[]): Promise<Record<string, string>> => {
+    // Filter out already known emails
+    const unknownIds = userIds.filter((id) => !userEmails[id]);
+    if (unknownIds.length === 0) return userEmails;
+
+    try {
+      const { data, error } = await supabase.functions.invoke("get-user-emails", {
+        body: { user_ids: unknownIds },
+      });
+      if (error) throw error;
+      const newEmails = data?.emails || {};
+      setUserEmails((prev) => ({ ...prev, ...newEmails }));
+      return { ...userEmails, ...newEmails };
+    } catch {
+      return userEmails;
     }
-    return null;
   };
 
   const handleTemplateSelect = (templateId: string) => {
