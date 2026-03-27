@@ -413,6 +413,17 @@ const AdminEmailTemplates = () => {
                       </div>
                     )}
 
+                    {/* Blocks Editor */}
+                    {editorMode === "blocks" && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <LayoutGrid className="h-3.5 w-3.5 text-primary" />
+                          <span className="font-heading text-[10px] font-bold uppercase tracking-wider text-primary">Visual Block Builder</span>
+                        </div>
+                        <EmailBlockEditor blocks={blocks} onChange={setBlocks} accentColor={editing.accent_color} />
+                      </div>
+                    )}
+
                     <button
                       onClick={handleSave}
                       disabled={saving}
