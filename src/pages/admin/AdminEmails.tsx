@@ -94,6 +94,13 @@ const AdminEmails = () => {
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
+    // Check saved templates first
+    const saved = savedTemplates.find((t) => t.id === templateId);
+    if (saved) {
+      setSubject(saved.subject);
+      setBody(saved.body_text);
+      return;
+    }
     const tpl = PREDEFINED_TEMPLATES.find((t) => t.id === templateId);
     if (tpl && tpl.id !== "custom") {
       setSubject(tpl.subject);
