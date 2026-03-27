@@ -210,8 +210,8 @@ const AdminEmailTemplates = () => {
   }
   if (!isAdmin) return null;
 
-  const modeLabel = { variables: "Variables", html: "HTML", both: "Both" };
-  const modeIcon = { variables: <Settings2 className="h-3.5 w-3.5" />, html: <Code className="h-3.5 w-3.5" />, both: <Palette className="h-3.5 w-3.5" /> };
+  const modeLabel = { variables: "Variables", html: "HTML", both: "Both", blocks: "Blocks" };
+  const modeIcon = { variables: <Settings2 className="h-3.5 w-3.5" />, html: <Code className="h-3.5 w-3.5" />, both: <Palette className="h-3.5 w-3.5" />, blocks: <LayoutGrid className="h-3.5 w-3.5" /> };
 
   return (
     <div className="cyber-grid min-h-screen py-8">
