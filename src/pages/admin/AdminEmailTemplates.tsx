@@ -181,7 +181,17 @@ const AdminEmailTemplates = () => {
   const handleDuplicate = (tpl: EmailTemplate) => {
     const { id, created_at, ...rest } = tpl;
     setEditing({ ...rest, name: `${rest.name} (copy)` });
-    setEditorMode((rest.editor_mode as EditorMode) || "variables");
+    const mode = (rest.editor_mode as EditorMode) || "variables";
+    setEditorMode(mode);
+    if (mode === "blocks" && rest.html_content) {
+      try {
+        const match = rest.html_content.match(/<!--BLOCKS:(.*?)-->/);
+        if (match) setBlocks(JSON.parse(match[1]));
+        else setBlocks([]);
+      } catch { setBlocks([]); }
+    } else {
+      setBlocks([]);
+    }
     setActiveTab("edit");
   };
 
