@@ -437,7 +437,15 @@ const AdminEmailTemplates = () => {
                   /* Preview */
                   <div className="p-4">
                     <div className="rounded border border-primary/10 overflow-hidden bg-white">
-                      {(editorMode === "html" || (editorMode === "both" && editing.html_content.trim())) ? (
+                      {editorMode === "blocks" ? (
+                        <iframe
+                          srcDoc={blocks.length > 0 ? blocksToHtml(blocks, editing.accent_color) : "<p style='padding:20px;color:#999;font-family:monospace'>Add blocks to preview</p>"}
+                          className="w-full border-0"
+                          style={{ minHeight: "400px" }}
+                          sandbox="allow-same-origin"
+                          title="Email Preview"
+                        />
+                      ) : (editorMode === "html" || (editorMode === "both" && editing.html_content.trim())) ? (
                         <iframe
                           srcDoc={editing.html_content || "<p style='padding:20px;color:#999;font-family:monospace'>No HTML content yet</p>"}
                           className="w-full border-0"
