@@ -13,10 +13,12 @@ import { template as welcomeEmail } from './welcome.tsx'
 import { template as purchaseApproved } from './purchase-approved.tsx'
 import { template as purchaseRejected } from './purchase-rejected.tsx'
 import { template as contactConfirmation } from './contact-confirmation.tsx'
+import { template as adminNotification } from './admin-notification.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'welcome': welcomeEmail,
   'purchase-approved': purchaseApproved,
   'purchase-rejected': purchaseRejected,
   'contact-confirmation': contactConfirmation,
+  'admin-notification': adminNotification,
 }
