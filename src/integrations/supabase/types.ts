@@ -119,6 +119,51 @@ export type Database = {
         }
         Relationships: []
       }
+      email_templates: {
+        Row: {
+          accent_color: string
+          body_text: string
+          button_text: string | null
+          button_url: string | null
+          created_at: string
+          created_by: string
+          footer_text: string | null
+          heading: string
+          id: string
+          name: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          accent_color?: string
+          body_text?: string
+          button_text?: string | null
+          button_url?: string | null
+          created_at?: string
+          created_by: string
+          footer_text?: string | null
+          heading?: string
+          id?: string
+          name: string
+          subject?: string
+          updated_at?: string
+        }
+        Update: {
+          accent_color?: string
+          body_text?: string
+          button_text?: string | null
+          button_url?: string | null
+          created_at?: string
+          created_by?: string
+          footer_text?: string | null
+          heading?: string
+          id?: string
+          name?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_unsubscribe_tokens: {
         Row: {
           created_at: string
