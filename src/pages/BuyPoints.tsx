@@ -66,10 +66,8 @@ const BuyPoints = () => {
           .from("payment-screenshots")
           .upload(filePath, screenshotFile);
         if (uploadError) throw new Error("Failed to upload screenshot");
-        const { data: urlData } = supabase.storage
-          .from("payment-screenshots")
-          .getPublicUrl(filePath);
-        screenshotUrl = urlData.publicUrl;
+        // Store just the file path - admins will use signed URLs to view
+        screenshotUrl = filePath;
         setUploading(false);
       }
 
