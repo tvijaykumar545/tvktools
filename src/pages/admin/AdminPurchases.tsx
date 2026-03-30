@@ -192,9 +192,18 @@ const AdminPurchases = () => {
 
                   <div className="flex items-center gap-2">
                     {p.screenshot_url && (
-                      <a href={p.screenshot_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-primary hover:bg-primary/10 transition-all">
+                      <button
+                        onClick={async () => {
+                          const { data } = await supabase.storage
+                            .from("payment-screenshots")
+                            .createSignedUrl(p.screenshot_url!, 3600);
+                          if (data?.signedUrl) window.open(data.signedUrl, "_blank");
+                          else toast.error("Failed to load screenshot");
+                        }}
+                        className="flex items-center gap-1 rounded border border-primary/20 px-2 py-1 text-[10px] text-primary hover:bg-primary/10 transition-all"
+                      >
                         <Image className="h-3 w-3" /> Screenshot <ExternalLink className="h-2.5 w-2.5" />
-                      </a>
+                      </button>
                     )}
 
                     {p.status === "pending" && (
