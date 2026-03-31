@@ -38,7 +38,6 @@ serve(async (req) => {
     if (!pkg) throw new Error("Invalid package");
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY") || "";
-    console.log("Stripe key prefix:", stripeKey.substring(0, 8));
     const stripe = new Stripe(stripeKey, {
       apiVersion: "2025-08-27.basil",
     });
