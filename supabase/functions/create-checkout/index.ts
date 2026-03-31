@@ -35,7 +35,7 @@ serve(async (req) => {
     if (!pkg) throw new Error("Invalid package");
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-      apiVersion: "2025-08-27.basil",
+      apiVersion: "2024-06-20",
     });
 
     // Look up existing customer
@@ -50,7 +50,6 @@ serve(async (req) => {
     }
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: [
