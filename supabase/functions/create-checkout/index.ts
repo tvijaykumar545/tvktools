@@ -8,12 +8,12 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const PRICE_MAP: Record<string, { priceId: string; points: number }> = {
-  starter: { priceId: "price_1TGvM1SCqiET0xf4qRGtPnYs", points: 100 },
-  basic: { priceId: "price_1TGvCPSCqiET0xf4xGW9Othp", points: 300 },
-  standard: { priceId: "price_1TGvCYSCqiET0xf4eLTSyVnk", points: 700 },
-  pro: { priceId: "price_1TGvCZSCqiET0xf4GU8fKvDZ", points: 1500 },
-  power: { priceId: "price_1TGvCaSCqiET0xf42qI7m5PR", points: 5000 },
+const PACKAGE_MAP: Record<string, { name: string; amount: number; points: number }> = {
+  starter: { name: "Starter Pack - 100 Points", amount: 9900, points: 100 },
+  basic: { name: "Basic Pack - 300 Points", amount: 24900, points: 300 },
+  standard: { name: "Standard Pack - 700 Points", amount: 49900, points: 700 },
+  pro: { name: "Pro Pack - 1500 Points", amount: 89900, points: 1500 },
+  power: { name: "Power Pack - 5000 Points", amount: 249900, points: 5000 },
 };
 
 serve(async (req) => {
