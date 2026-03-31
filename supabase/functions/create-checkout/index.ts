@@ -35,7 +35,7 @@ serve(async (req) => {
     if (!pkg) throw new Error("Invalid package");
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
-      apiVersion: "2025-08-27.basil",
+      apiVersion: "2024-06-20",
     });
 
     // Look up existing customer
