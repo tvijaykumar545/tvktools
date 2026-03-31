@@ -9,7 +9,7 @@ const corsHeaders = {
 };
 
 const PRICE_MAP: Record<string, { priceId: string; points: number }> = {
-  starter: { priceId: "price_1TGvBvSCqiET0xf4QWeiVTaU", points: 100 },
+  starter: { priceId: "price_1TGvM1SCqiET0xf4qRGtPnYs", points: 100 },
   basic: { priceId: "price_1TGvCPSCqiET0xf4xGW9Othp", points: 300 },
   standard: { priceId: "price_1TGvCYSCqiET0xf4eLTSyVnk", points: 700 },
   pro: { priceId: "price_1TGvCZSCqiET0xf4GU8fKvDZ", points: 1500 },
