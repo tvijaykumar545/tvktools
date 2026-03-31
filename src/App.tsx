@@ -36,8 +36,6 @@ import AdminTools from "./pages/admin/AdminTools";
 import AdminPurchases from "./pages/admin/AdminPurchases";
 import AdminEmails from "./pages/admin/AdminEmails";
 import AdminEmailTemplates from "./pages/admin/AdminEmailTemplates";
-import BuyPoints from "./pages/BuyPoints";
-import PaymentSuccess from "./pages/PaymentSuccess";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 
