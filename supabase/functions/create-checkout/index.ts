@@ -52,8 +52,6 @@ serve(async (req) => {
       console.log("Customer lookup skipped:", e.message);
     }
 
-    const origin = req.headers.get("origin") || req.headers.get("referer")?.replace(/\/$/, "") || "https://tvktools.lovable.app";
-
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       customer: customerId,
@@ -63,8 +61,8 @@ serve(async (req) => {
         quantity: 1,
       }],
       mode: "payment",
-      success_url: `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/buy-points`,
+      success_url: "https://tvktools.lovable.dev/payment-success?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://tvktools.lovable.dev/buy-points",
       metadata: {
         user_id: user.id,
         package_id: packageId,
