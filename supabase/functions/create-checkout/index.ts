@@ -38,9 +38,14 @@ serve(async (req) => {
     if (!pkg) throw new Error("Invalid package");
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY") || "";
+    console.log("Stripe key info:", { prefix: stripeKey.substring(0, 7), length: stripeKey.length });
     const stripe = new Stripe(stripeKey, {
       apiVersion: "2025-08-27.basil",
     });
+
+    // Verify account
+    const account = await stripe.accounts.retrieve();
+    console.log("Stripe account:", account.id);
 
     // Look up existing customer in the current mode
     let customerId: string | undefined;
