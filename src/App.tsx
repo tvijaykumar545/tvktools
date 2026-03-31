@@ -37,6 +37,7 @@ import AdminPurchases from "./pages/admin/AdminPurchases";
 import AdminEmails from "./pages/admin/AdminEmails";
 import AdminEmailTemplates from "./pages/admin/AdminEmailTemplates";
 import BuyPoints from "./pages/BuyPoints";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 
@@ -70,6 +71,7 @@ const App = () => (
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/buy-points" element={<BuyPoints />} />
+                  <Route path="/payment-success" element={<PaymentSuccess />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
