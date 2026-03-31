@@ -125,14 +125,14 @@ const Pricing = () => {
                 </div>
 
                 <Link
-                  to="/buy-points"
+                  to="/contact"
                   className={`mt-6 block rounded py-3 text-center font-heading text-xs font-bold transition-all ${
                     plan.popular
                       ? "bg-secondary text-secondary-foreground neon-glow-magenta hover:bg-secondary/90"
                       : "border border-primary/30 text-primary hover:bg-primary/10"
                   }`}
                 >
-                  Buy Points
+                  Contact Us
                 </Link>
               </div>
             );

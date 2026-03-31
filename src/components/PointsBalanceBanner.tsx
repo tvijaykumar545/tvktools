@@ -43,10 +43,10 @@ const PointsBalanceBanner = ({ balance, toolCost, isGuest }: PointsBalanceBanner
             </p>
             <div className="mt-2 flex gap-2">
               <Link
-                to="/buy-points"
+                to="/dashboard"
                 className="inline-block rounded bg-primary px-3 py-1.5 font-heading text-xs font-bold text-primary-foreground hover:bg-primary/90 transition-all"
               >
-                Buy Points
+                View Dashboard
               </Link>
               <Link
                 to="/dashboard"
