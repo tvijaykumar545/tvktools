@@ -10,10 +10,10 @@ const corsHeaders = {
 
 const PACKAGE_MAP: Record<string, { priceId: string; points: number }> = {
   starter: { priceId: "price_1TGvM1SCqiET0xf4qRGtPnYs", points: 100 },
-  basic:   { priceId: "price_1TGvCPSCqiET0xf4xGW9Othp", points: 300 },
-  standard:{ priceId: "price_1TGvCYSCqiET0xf4eLTSyVnk", points: 700 },
-  pro:     { priceId: "price_1TGvCZSCqiET0xf4GU8fKvDZ", points: 1500 },
-  power:   { priceId: "price_1TGvCaSCqiET0xf42qI7m5PR", points: 5000 },
+  basic: { priceId: "price_1TGvCPSCqiET0xf4xGW9Othp", points: 300 },
+  standard: { priceId: "price_1TGvCYSCqiET0xf4eLTSyVnk", points: 700 },
+  pro: { priceId: "price_1TGvCZSCqiET0xf4GU8fKvDZ", points: 1500 },
+  power: { priceId: "price_1TGvCaSCqiET0xf42qI7m5PR", points: 5000 },
 };
 
 serve(async (req) => {
@@ -21,10 +21,7 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const supabaseClient = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
-  );
+  const supabaseClient = createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_ANON_KEY") ?? "");
 
   try {
     const authHeader = req.headers.get("Authorization")!;
@@ -56,10 +53,12 @@ serve(async (req) => {
       payment_method_types: ["card"],
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
-      line_items: [{
-        price: pkg.priceId,
-        quantity: 1,
-      }],
+      line_items: [
+        {
+          price: pkg.priceId,
+          quantity: 1,
+        },
+      ],
       mode: "payment",
       success_url: "https://tvktools.lovable.dev/payment-success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "https://tvktools.lovable.dev/buy-points",
