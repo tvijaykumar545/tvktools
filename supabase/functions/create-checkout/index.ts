@@ -34,7 +34,7 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated");
 
     const { packageId } = await req.json();
-    const pkg = PRICE_MAP[packageId];
+    const pkg = PACKAGE_MAP[packageId];
     if (!pkg) throw new Error("Invalid package");
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY") || "";
@@ -50,7 +50,6 @@ serve(async (req) => {
         customerId = customers.data[0].id;
       }
     } catch (e) {
-      // If customer lookup fails, proceed without customer ID
       console.log("Customer lookup skipped:", e.message);
     }
 
@@ -58,7 +57,14 @@ serve(async (req) => {
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       payment_method_types: ["card"],
-      line_items: [{ price: pkg.priceId, quantity: 1 }],
+      line_items: [{
+        price_data: {
+          currency: "inr",
+          product_data: { name: pkg.name },
+          unit_amount: pkg.amount,
+        },
+        quantity: 1,
+      }],
       mode: "payment",
       success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.get("origin")}/buy-points`,
