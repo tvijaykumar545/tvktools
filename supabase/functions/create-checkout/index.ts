@@ -37,14 +37,21 @@ serve(async (req) => {
     const pkg = PRICE_MAP[packageId];
     if (!pkg) throw new Error("Invalid package");
 
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY") || "";
+    const stripe = new Stripe(stripeKey, {
       apiVersion: "2025-08-27.basil",
     });
 
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+    // Look up existing customer in the current mode
     let customerId: string | undefined;
-    if (customers.data.length > 0) {
-      customerId = customers.data[0].id;
+    try {
+      const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+      if (customers.data.length > 0) {
+        customerId = customers.data[0].id;
+      }
+    } catch (e) {
+      // If customer lookup fails, proceed without customer ID
+      console.log("Customer lookup skipped:", e.message);
     }
 
     const session = await stripe.checkout.sessions.create({
