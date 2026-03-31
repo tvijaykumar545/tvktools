@@ -9,11 +9,11 @@ const corsHeaders = {
 };
 
 const PRICE_MAP: Record<string, { priceId: string; points: number }> = {
-  starter: { priceId: "price_1TGvBvSCqiET0xf4QWeiVTaU", points: 100 },
-  basic: { priceId: "price_1TGvCPSCqiET0xf4xGW9Othp", points: 300 },
-  standard: { priceId: "price_1TGvCYSCqiET0xf4eLTSyVnk", points: 700 },
-  pro: { priceId: "price_1TGvCZSCqiET0xf4GU8fKvDZ", points: 1500 },
-  power: { priceId: "price_1TGvCaSCqiET0xf42qI7m5PR", points: 5000 },
+  starter: { priceId: "price_1TGvM1SCqiET0xf4qRGtPnYs", points: 100 },
+  basic: { priceId: "price_1TGvM2SCqiET0xf4QOVZnAIL", points: 300 },
+  standard: { priceId: "price_1TGvM3SCqiET0xf4Tyn9WXGd", points: 700 },
+  pro: { priceId: "price_1TGvM3SCqiET0xf4brISdnnE", points: 1500 },
+  power: { priceId: "price_1TGvM4SCqiET0xf4PdDa8Ioa", points: 5000 },
 };
 
 serve(async (req) => {
