@@ -12,6 +12,7 @@ export interface Tool {
   isPopular?: boolean;
   isNew?: boolean;
   type: "frontend" | "backend";
+  pointsCost?: number;
 }
 
 export interface Category {

@@ -30,6 +30,7 @@ const toFrontendTool = (t: ManagedTool): Tool => ({
   isPopular: t.is_popular,
   isNew: t.is_new,
   type: t.type as "frontend" | "backend",
+  pointsCost: t.points_cost,
 });
 
 export const useManagedTools = () => {
