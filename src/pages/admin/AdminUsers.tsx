@@ -187,15 +187,6 @@ const AdminUsers = () => {
                 >
                   <Minus className="h-3 w-3" /> Points
                 </button>
-                <select
-                  value={u.plan}
-                  onChange={(e) => updatePlan(u.user_id, e.target.value)}
-                  className="rounded border border-primary/20 bg-muted px-2 py-1 font-heading text-[10px] text-foreground outline-none"
-                >
-                  <option value="free">Free</option>
-                  <option value="pro">Pro</option>
-                  <option value="enterprise">Enterprise</option>
-                </select>
                 <button
                   onClick={() => toggleAdminRole(u.user_id)}
                   className={`rounded px-3 py-1 font-heading text-[10px] font-bold transition-all ${
