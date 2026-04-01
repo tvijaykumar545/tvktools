@@ -37,6 +37,7 @@ import AdminPurchases from "./pages/admin/AdminPurchases";
 import AdminEmails from "./pages/admin/AdminEmails";
 import AdminEmailTemplates from "./pages/admin/AdminEmailTemplates";
 import Unsubscribe from "./pages/Unsubscribe";
+import BuyPoints from "./pages/BuyPoints";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
