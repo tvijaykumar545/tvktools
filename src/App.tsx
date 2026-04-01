@@ -37,6 +37,7 @@ import AdminPurchases from "./pages/admin/AdminPurchases";
 import AdminEmails from "./pages/admin/AdminEmails";
 import AdminEmailTemplates from "./pages/admin/AdminEmailTemplates";
 import Unsubscribe from "./pages/Unsubscribe";
+import BuyPoints from "./pages/BuyPoints";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -83,6 +84,7 @@ const App = () => (
                   <Route path="/admin/purchases" element={<AdminPurchases />} />
                   <Route path="/admin/emails" element={<AdminEmails />} />
                   <Route path="/admin/email-templates" element={<AdminEmailTemplates />} />
+                  <Route path="/buy-points" element={<BuyPoints />} />
                   <Route path="/unsubscribe" element={<Unsubscribe />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
