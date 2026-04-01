@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Lock } from "lucide-react";
+import { Lock, Coins } from "lucide-react";
 import type { Tool } from "@/data/tools";
 import { Badge } from "@/components/ui/badge";
 
@@ -32,13 +32,13 @@ const ToolCard = ({ tool, usageCount }: ToolCardProps) => {
               HOT
             </Badge>
           )}
-          {tool.isFree ? (
-            <Badge className="border-primary/50 bg-primary/10 text-primary text-[10px] font-heading">
-              FREE
+          {tool.pointsCost && tool.pointsCost > 0 ? (
+            <Badge className="border-secondary/50 bg-secondary/10 text-secondary text-[10px] font-heading flex items-center gap-0.5">
+              <Coins className="h-2.5 w-2.5" /> {tool.pointsCost} pts
             </Badge>
           ) : (
-            <Badge className="border-muted-foreground/50 bg-muted text-muted-foreground text-[10px] font-heading">
-              PRO
+            <Badge className="border-primary/50 bg-primary/10 text-primary text-[10px] font-heading">
+              FREE
             </Badge>
           )}
         </div>
