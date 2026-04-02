@@ -45,8 +45,23 @@ const ToolPage = () => {
   const deductPoints = useDeductPoints();
   const trackUsageWithToast = useToolUsageWithToast();
   
-  const handleToolUsage = () => {
-    trackUsageWithToast();
+  const handleToolUsage = async () => {
+    if (isGuest) {
+      const success = trackUsageWithToast();
+      if (!success) return;
+    } else if (toolPointsCost > 0) {
+      try {
+        await deductPoints.mutateAsync({
+          toolId: tool.id,
+          toolName: tool.name,
+          pointsCost: toolPointsCost,
+        });
+        toast.success(`${toolPointsCost} points deducted`);
+      } catch (err: any) {
+        toast.error(err.message || "Insufficient points");
+        return;
+      }
+    }
     if (tool) trackUsage(tool.id, tool.name, tool.category);
   };
   const [input, setInput] = useState("");
