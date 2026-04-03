@@ -56,6 +56,30 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_reward_claims: {
+        Row: {
+          claimed_date: string
+          created_at: string
+          id: string
+          points_awarded: number
+          user_id: string
+        }
+        Insert: {
+          claimed_date?: string
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          user_id: string
+        }
+        Update: {
+          claimed_date?: string
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -377,6 +401,51 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_claims: {
+        Row: {
+          created_at: string
+          id: string
+          points_awarded: number
+          referred_user_id: string
+          referrer_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          referred_user_id: string
+          referrer_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          referred_user_id?: string
+          referrer_id?: string
+        }
+        Relationships: []
+      }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -527,6 +596,11 @@ export type Database = {
       }
       admin_reject_purchase: {
         Args: { p_admin_id: string; p_purchase_id: string; p_reason?: string }
+        Returns: Json
+      }
+      claim_daily_reward: { Args: { p_user_id: string }; Returns: Json }
+      claim_referral_bonus: {
+        Args: { p_referral_code: string; p_referred_user_id: string }
         Returns: Json
       }
       credit_points_purchase: {
