@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 const Signup = () => {
+  const [searchParams] = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [referralCode, setReferralCode] = useState(searchParams.get("ref") || "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -23,18 +26,32 @@ const Signup = () => {
     e.preventDefault();
     setError("");
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data: signupData, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: window.location.origin,
-        data: { display_name: displayName },
+        data: {
+          display_name: displayName,
+          referral_code: referralCode.trim() || undefined,
+        },
       },
     });
     if (error) {
       setError(error.message);
     } else {
       setSuccess(true);
+      // Claim referral bonus if code provided
+      if (referralCode.trim() && signupData.user?.id) {
+        try {
+          await supabase.rpc("claim_referral_bonus" as any, {
+            p_referral_code: referralCode.trim(),
+            p_referred_user_id: signupData.user.id,
+          });
+        } catch {
+          // Silently fail - referral is optional
+        }
+      }
       // Send welcome email
       await supabase.functions.invoke("send-transactional-email", {
         body: {
@@ -114,6 +131,19 @@ const Signup = () => {
               required
               minLength={6}
               className="mt-1 h-10 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground outline-none focus:border-primary/50"
+            />
+          </div>
+          <div>
+            <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Referral Code <span className="text-muted-foreground/50">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value)}
+              placeholder="e.g. TVK-XXXX-XXXX"
+              maxLength={20}
+              className="mt-1 h-10 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary/50"
             />
           </div>
           <button
