@@ -30,8 +30,10 @@ const PointsRewardsPanel = () => {
 
   const handleCopyCode = () => {
     if (referralCode) {
-      navigator.clipboard.writeText(referralCode);
+      const signupLink = `${window.location.origin}/signup?ref=${encodeURIComponent(referralCode)}`;
+      navigator.clipboard.writeText(signupLink);
       setCopied(true);
+      toast.success("Referral link copied!");
       setTimeout(() => setCopied(false), 2000);
     }
   };
