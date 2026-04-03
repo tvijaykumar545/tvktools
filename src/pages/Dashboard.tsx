@@ -7,6 +7,7 @@ import { useToolFavorites } from "@/hooks/useToolFavorites";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { usePointsBalance, usePointsTransactions } from "@/hooks/usePoints";
 import PointsTransactionList from "@/components/PointsTransactionList";
+import PointsRewardsPanel from "@/components/PointsRewardsPanel";
 
 const Dashboard = () => {
   const { user, profile, loading, signOut } = useAuth();
