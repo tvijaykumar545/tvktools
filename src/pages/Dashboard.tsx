@@ -98,6 +98,11 @@ const Dashboard = () => {
           ))}
         </div>
 
+        {/* Earn Points */}
+        <div className="mt-8">
+          <PointsRewardsPanel />
+        </div>
+
 
         {/* Favorites */}
         <div className="mt-8 rounded border border-primary/10 bg-card p-5 border-glow">
