@@ -133,6 +133,19 @@ const Signup = () => {
               className="mt-1 h-10 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground outline-none focus:border-primary/50"
             />
           </div>
+          <div>
+            <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Referral Code <span className="text-muted-foreground/50">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value)}
+              placeholder="e.g. TVK-XXXX-XXXX"
+              maxLength={20}
+              className="mt-1 h-10 w-full rounded border border-primary/20 bg-muted px-3 text-sm text-foreground placeholder-muted-foreground outline-none focus:border-primary/50"
+            />
+          </div>
           <button
             type="submit"
             disabled={loading}
