@@ -20,4 +20,4 @@ Disallow: /signup
 Disallow: /forgot-password
 Disallow: /reset-password
 
-Sitemap: https://tvktools.lovable.app/sitemap.xml
+Sitemap: https://tvktools.tvktechnology.in/sitemap.xml
