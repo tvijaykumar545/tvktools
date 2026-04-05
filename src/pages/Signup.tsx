@@ -86,7 +86,10 @@ const Signup = () => {
     <div className="flex min-h-screen items-center justify-center cyber-grid px-4">
       <div className="w-full max-w-md rounded border border-primary/20 bg-card p-8 neon-glow">
         <div className="text-center">
-          <h1 className="font-heading text-2xl font-bold text-primary neon-text">Create Account</h1>
+          <Link to="/" className="inline-block font-heading text-3xl font-extrabold tracking-tight text-primary neon-text hover:opacity-80 transition-opacity">
+            TVK Tools
+          </Link>
+          <h1 className="mt-3 font-heading text-2xl font-bold text-primary neon-text">Create Account</h1>
           <p className="mt-1 text-sm text-muted-foreground">Join TVK Tools for free</p>
         </div>
 
