@@ -502,6 +502,8 @@ export const getToolPlaceholder = (toolId: string): string => {
     "ai-slogan-generator": "An eco-friendly water bottle company called HydraGreen",
     "ai-grammar-checker": "Their going to the store too by some grocerys. Me and him went yesterday to.",
     "ai-image-generator": "A magical forest with glowing mushrooms, fireflies, and a crystal-clear stream under moonlight",
+    "ai-dax-generator": "Calculate year-over-year sales growth percentage for each product category",
+    "ai-power-query-generator": "Merge two tables on CustomerID, remove duplicates, and add a custom column for full name by combining FirstName and LastName",
     "readability-checker": "Paste your article content here to analyze its readability score and grade level.",
     "slug-generator": "How to Build a React App in 2026 - A Complete Guide!",
     "open-graph-generator": "My Amazing App\nThe best tool for developers\nhttps://myapp.com\nhttps://myapp.com/og-image.jpg",
