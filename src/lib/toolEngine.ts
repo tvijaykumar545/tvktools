@@ -600,6 +600,16 @@ export const getToolFaq = (toolId: string, toolName?: string, toolDescription?: 
       { q: "How do I use the AI Image Generator?", a: "Type a detailed description of the image you want (e.g., 'a magical forest with glowing mushrooms at night') and click 'Generate Image'. The AI creates a unique image from your prompt." },
       { q: "What resolution are the generated images?", a: "Images are generated at 1024×1024 resolution and can be downloaded directly from the output panel." },
     ],
+    "ai-dax-generator": [
+      { q: "How do I use the AI DAX Formula Generator?", a: "Describe what you want to calculate in plain English (e.g., 'year-over-year sales growth') and click 'Run Tool'. The AI generates a ready-to-use DAX formula with explanations." },
+      { q: "What types of DAX formulas can it generate?", a: "It supports measures, calculated columns, time intelligence (YTD, QTD, MTD), ranking, filtering, and complex aggregations — covering virtually all Power BI scenarios." },
+      { q: "Can I use these formulas directly in Power BI?", a: "Yes! Copy the generated formula and paste it directly into Power BI Desktop's formula bar. The tool also explains each function used so you understand the logic." },
+    ],
+    "ai-power-query-generator": [
+      { q: "How do I use the AI Power Query Generator?", a: "Describe your data transformation step in natural language (e.g., 'merge tables on ID and remove nulls') and click 'Run Tool'. The AI generates M code you can paste into Power Query Editor." },
+      { q: "What transformations does it support?", a: "It handles merges, appends, pivots, unpivots, custom columns, conditional logic, data type conversions, text/date parsing, and more." },
+      { q: "Do I need to know M code to use this?", a: "Not at all! Just describe what you want in plain English. The tool generates the M code and explains each step so you can learn as you go." },
+    ],
 
     // SEO Tools
     "keyword-suggestions": [
