@@ -502,6 +502,8 @@ export const getToolPlaceholder = (toolId: string): string => {
     "ai-slogan-generator": "An eco-friendly water bottle company called HydraGreen",
     "ai-grammar-checker": "Their going to the store too by some grocerys. Me and him went yesterday to.",
     "ai-image-generator": "A magical forest with glowing mushrooms, fireflies, and a crystal-clear stream under moonlight",
+    "ai-dax-generator": "Calculate year-over-year sales growth percentage for each product category",
+    "ai-power-query-generator": "Merge two tables on CustomerID, remove duplicates, and add a custom column for full name by combining FirstName and LastName",
     "readability-checker": "Paste your article content here to analyze its readability score and grade level.",
     "slug-generator": "How to Build a React App in 2026 - A Complete Guide!",
     "open-graph-generator": "My Amazing App\nThe best tool for developers\nhttps://myapp.com\nhttps://myapp.com/og-image.jpg",
@@ -597,6 +599,16 @@ export const getToolFaq = (toolId: string, toolName?: string, toolDescription?: 
     "ai-image-generator": [
       { q: "How do I use the AI Image Generator?", a: "Type a detailed description of the image you want (e.g., 'a magical forest with glowing mushrooms at night') and click 'Generate Image'. The AI creates a unique image from your prompt." },
       { q: "What resolution are the generated images?", a: "Images are generated at 1024×1024 resolution and can be downloaded directly from the output panel." },
+    ],
+    "ai-dax-generator": [
+      { q: "How do I use the AI DAX Formula Generator?", a: "Describe what you want to calculate in plain English (e.g., 'year-over-year sales growth') and click 'Run Tool'. The AI generates a ready-to-use DAX formula with explanations." },
+      { q: "What types of DAX formulas can it generate?", a: "It supports measures, calculated columns, time intelligence (YTD, QTD, MTD), ranking, filtering, and complex aggregations — covering virtually all Power BI scenarios." },
+      { q: "Can I use these formulas directly in Power BI?", a: "Yes! Copy the generated formula and paste it directly into Power BI Desktop's formula bar. The tool also explains each function used so you understand the logic." },
+    ],
+    "ai-power-query-generator": [
+      { q: "How do I use the AI Power Query Generator?", a: "Describe your data transformation step in natural language (e.g., 'merge tables on ID and remove nulls') and click 'Run Tool'. The AI generates M code you can paste into Power Query Editor." },
+      { q: "What transformations does it support?", a: "It handles merges, appends, pivots, unpivots, custom columns, conditional logic, data type conversions, text/date parsing, and more." },
+      { q: "Do I need to know M code to use this?", a: "Not at all! Just describe what you want in plain English. The tool generates the M code and explains each step so you can learn as you go." },
     ],
 
     // SEO Tools
@@ -924,6 +936,8 @@ export const getToolDemoOutput = (toolId: string): string => {
     "ai-slogan-generator": "💡 Slogan Suggestions:\n\n1. \"HydraGreen — Drink Pure. Live Green.\"\n2. \"Every Sip Saves the Planet.\"\n3. \"Hydration Without the Waste.\"\n4. \"HydraGreen: Where Sustainability Meets Hydration.\"\n5. \"Refill. Refresh. Reimagine.\"\n6. \"The Last Bottle You'll Ever Need.\"\n7. \"Go Green. Stay Hydrated. 💧\"",
     "ai-grammar-checker": "✏️ Grammar Check Results:\n\n❌ \"Their going\" → ✅ \"They're going\"\n❌ \"to by\" → ✅ \"to buy\"\n❌ \"grocerys\" → ✅ \"groceries\"\n❌ \"Me and him\" → ✅ \"He and I\"\n\n📊 Score: 4 errors found\n\nCorrected text:\n\"They're going to the store to buy some groceries. He and I went yesterday too.\"",
     "ai-image-generator": "🖼️ AI Image Generator\n\nGenerating a stunning image from your prompt...\n\n✨ A magical forest with glowing mushrooms, fireflies dancing in the air, and a crystal-clear stream reflecting the moonlight above...\n\n🎨 Style: Photorealistic, Fantasy, High Detail\n📐 Resolution: 1024x1024\n\n[Image will appear here after generation]",
+    "ai-dax-generator": "📊 DAX Formula Generated:\n\nYoY Sales Growth % =\nVAR CurrentYearSales =\n    CALCULATE(\n        SUM(Sales[Amount]),\n        DATESYTD('Date'[Date])\n    )\nVAR PreviousYearSales =\n    CALCULATE(\n        SUM(Sales[Amount]),\n        DATESYTD(DATEADD('Date'[Date], -1, YEAR))\n    )\nRETURN\n    IF(\n        PreviousYearSales <> 0,\n        DIVIDE(CurrentYearSales - PreviousYearSales, PreviousYearSales),\n        BLANK()\n    )\n\n📝 Explanation:\n• DATESYTD — calculates year-to-date totals\n• DATEADD — shifts date back by 1 year for comparison\n• DIVIDE — safely handles division by zero\n• Returns percentage growth between current and previous year",
+    "ai-power-query-generator": "⚡ Power Query M Code Generated:\n\nlet\n    Source1 = Excel.Workbook(File.Contents(\"Customers.xlsx\")),\n    Source2 = Excel.Workbook(File.Contents(\"Orders.xlsx\")),\n    Customers = Source1{[Name=\"Sheet1\"]}[Data],\n    Orders = Source2{[Name=\"Sheet1\"]}[Data],\n    Merged = Table.NestedJoin(Customers, {\"CustomerID\"}, Orders, {\"CustomerID\"}, \"Orders\", JoinKind.LeftOuter),\n    Expanded = Table.ExpandTableColumn(Merged, \"Orders\", {\"OrderDate\", \"Amount\"}),\n    Deduped = Table.Distinct(Expanded, {\"CustomerID\"}),\n    AddFullName = Table.AddColumn(Deduped, \"FullName\", each [FirstName] & \" \" & [LastName], type text)\nin\n    AddFullName\n\n📝 Explanation:\n• Table.NestedJoin — merges two tables on CustomerID\n• Table.Distinct — removes duplicate rows\n• Table.AddColumn — creates FullName by combining FirstName + LastName\n• Copy this into Advanced Editor in Power Query",
     "keyword-suggestions": "🔑 Keyword Suggestions for \"best coffee machines for home\":\n\n📈 High Volume:\n• best home coffee maker (12,100/mo)\n• coffee machine for home (8,100/mo)\n• home espresso machine (6,600/mo)\n\n🎯 Long-Tail:\n• best coffee machine for home under $200\n• automatic coffee maker with grinder\n• small coffee machine for apartment\n\n💡 Related:\n• drip coffee maker reviews\n• single serve vs drip coffee maker",
     "seo-title-generator": "📰 SEO Title Suggestions:\n\n1. \"25 Easy Meal Prep Ideas for Beginners (2026 Guide)\"\n2. \"Meal Prep Ideas That Save Time & Money | Weekly Plans\"\n3. \"Best Meal Prep Ideas: Quick, Healthy & Budget-Friendly\"\n4. \"Meal Prep 101: Simple Ideas for the Entire Week\"\n5. \"Healthy Meal Prep Ideas You Can Make in Under 1 Hour\"",
     "competitor-keywords": "🕵️ Competitor Keyword Analysis: hubspot.com\n\n📊 Top Ranking Keywords:\n• \"CRM software\" — Position #1 (201K/mo)\n• \"email marketing\" — Position #3 (110K/mo)\n• \"marketing automation\" — Position #2 (40K/mo)\n• \"sales pipeline\" — Position #1 (22K/mo)\n\n🎯 Content Gap Opportunities:\n• \"free CRM tools\"\n• \"small business marketing\"",

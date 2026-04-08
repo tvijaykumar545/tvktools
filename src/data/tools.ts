@@ -25,7 +25,7 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: "ai", name: "AI Tools", description: "AI-powered generation and analysis", icon: Brain, color: "neon-cyan", toolCount: 16 },
+  { id: "ai", name: "AI Tools", description: "AI-powered generation and analysis", icon: Brain, color: "neon-cyan", toolCount: 18 },
   { id: "seo", name: "SEO Tools", description: "Optimize your search rankings", icon: Search, color: "neon-magenta", toolCount: 13 },
   { id: "developer", name: "Developer Tools", description: "Code formatting and utilities", icon: Code, color: "neon-yellow", toolCount: 20 },
   { id: "image", name: "Image Tools", description: "Image conversion and editing", icon: Image, color: "neon-blue", toolCount: 10 },
@@ -51,6 +51,8 @@ export const tools: Tool[] = [
   { id: "ai-slogan-generator", name: "AI Slogan Generator", description: "Create catchy slogans for brands and products", category: "ai", icon: "💡", isFree: true, type: "backend" },
   { id: "ai-grammar-checker", name: "AI Grammar Checker", description: "Fix grammar, spelling, and punctuation errors", category: "ai", icon: "✏️", isFree: true, isPopular: true, type: "backend" },
   { id: "ai-image-generator", name: "AI Image Generator", description: "Generate stunning images from text prompts using AI", category: "ai", icon: "🖼️", isFree: false, isNew: true, type: "backend" },
+  { id: "ai-dax-generator", name: "AI DAX Formula Generator", description: "Generate Power BI DAX formulas from plain English descriptions — measures, calculated columns, and time intelligence", category: "ai", icon: "📊", isFree: false, isNew: true, isPopular: true, type: "backend" },
+  { id: "ai-power-query-generator", name: "AI Power Query Generator", description: "Create Power Query M code for data transformations, merges, and custom connectors using natural language", category: "ai", icon: "⚡", isFree: false, isNew: true, type: "backend" },
 
   // SEO Tools
   { id: "keyword-suggestions", name: "Keyword Suggestions", description: "Discover high-value keywords for your content", category: "seo", icon: "🔑", isFree: true, isPopular: true, type: "backend" },
