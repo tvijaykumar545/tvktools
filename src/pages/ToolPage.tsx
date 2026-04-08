@@ -26,6 +26,56 @@ import UsageLimitBanner from "@/components/UsageLimitBanner";
 import { usePointsBalance, useToolPointsCost, useDeductPoints } from "@/hooks/usePoints";
 import PointsBalanceBanner from "@/components/PointsBalanceBanner";
 
+/** Extract only the code/formula block from AI output, stripping explanations */
+const extractCodeFromOutput = (output: string): string => {
+  const codeBlockMatch = output.match(/```[\w]*\n([\s\S]*?)```/);
+  if (codeBlockMatch) return codeBlockMatch[1].trim();
+  const formulaPatterns = [
+    /^(\w[\w\s]*=\s*\n(?:[\s\S]*?)(?=\n\n📝|\n\n💡|\n\nExplanation|$))/m,
+    /(let\s*\n[\s\S]*?\nin\s*\n?\s*\w+)/i,
+    /((?:SELECT|CREATE|INSERT|UPDATE|DELETE|WITH)\s[\s\S]*?;)/i,
+  ];
+  for (const pattern of formulaPatterns) {
+    const match = output.match(pattern);
+    if (match) return match[1].trim();
+  }
+  const lines = output.split('\n');
+  let bestBlock = '';
+  let currentBlock = '';
+  for (const line of lines) {
+    if (line.startsWith('  ') || line.startsWith('\t') || /^(VAR|RETURN|let|in|SELECT|FROM|WHERE|CALCULATE|SUM|IF|DIVIDE)\b/i.test(line.trim())) {
+      currentBlock += (currentBlock ? '\n' : '') + line;
+    } else {
+      if (currentBlock.length > bestBlock.length) bestBlock = currentBlock;
+      currentBlock = '';
+    }
+  }
+  if (currentBlock.length > bestBlock.length) bestBlock = currentBlock;
+  if (bestBlock.trim()) return bestBlock.trim();
+  return output;
+};
+
+const CopyCodeButton = ({ output }: { output: string }) => {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    const code = extractCodeFromOutput(output);
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    toast.success("Code/formula copied!");
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <button
+      onClick={handleCopy}
+      className="absolute top-2 right-2 z-10 flex items-center gap-1 rounded bg-primary/20 px-2 py-1 text-xs font-medium text-primary hover:bg-primary/30 transition-colors"
+      title="Copy code/formula only"
+    >
+      {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+      {copied ? "Copied!" : "Copy Code"}
+    </button>
+  );
+};
+
 const ToolPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: dbTools } = useManagedTools();
