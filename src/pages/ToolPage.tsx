@@ -457,13 +457,17 @@ const ToolPage = () => {
                 )}
               </div>
             ) : output && tool.type === "backend" ? (
-              <div className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4 text-sm text-foreground prose prose-invert prose-sm max-w-none prose-headings:text-primary prose-strong:text-foreground prose-li:text-foreground prose-p:text-foreground">
+              <div className="relative flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4 text-sm text-foreground prose prose-invert prose-sm max-w-none prose-headings:text-primary prose-strong:text-foreground prose-li:text-foreground prose-p:text-foreground">
+                <CopyCodeButton output={output} />
                 <ReactMarkdown>{output}</ReactMarkdown>
               </div>
             ) : (
-              <pre className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4 font-body text-sm text-foreground whitespace-pre-wrap">
-                {output || "Results will appear here..."}
-              </pre>
+              <div className="relative">
+                {output && <CopyCodeButton output={output} />}
+                <pre className="flex-1 min-h-[300px] overflow-auto rounded border border-primary/20 bg-card p-4 font-body text-sm text-foreground whitespace-pre-wrap">
+                  {output || "Results will appear here..."}
+                </pre>
+              </div>
             )}
           </div>
         </div>
