@@ -183,18 +183,14 @@ const ToolPage = () => {
       const userInput = input || placeholder;
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.access_token) {
-          toast.error("Please log in to use AI tools.");
-          setLoading(false);
-          return;
-        }
+        const token = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
         const resp = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-image-gen`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${session.access_token}`,
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ prompt: userInput }),
           }
@@ -224,18 +220,14 @@ const ToolPage = () => {
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
-        toast.error("Please log in to use AI tools.");
-        setLoading(false);
-        return;
-      }
+      const token = session?.access_token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
       const resp = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-tool`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ toolId: tool.id, input: userInput }),
           signal: controller.signal,

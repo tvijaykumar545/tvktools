@@ -38,25 +38,28 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    // Authenticate user
+    // Check for auth header - guests can use with anon key, logged-in users with their token
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    
+    let isAuthenticated = false;
+    if (authHeader?.startsWith("Bearer ")) {
+      const token = authHeader.replace("Bearer ", "");
+      // If the token is NOT the anon key, validate it as a user JWT
+      if (token !== anonKey) {
+        const supabase = createClient(
+          Deno.env.get("SUPABASE_URL")!,
+          anonKey,
+          { global: { headers: { Authorization: authHeader } } }
+        );
+        const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
+        if (!claimsError && claimsData?.claims) {
+          isAuthenticated = true;
+        }
+      }
+      // If token is anon key, allow as guest (isAuthenticated stays false)
+    } else {
+      return new Response(JSON.stringify({ error: "Authorization header required" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
