@@ -190,7 +190,7 @@ const ToolPage = () => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${session.access_token}`,
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ prompt: userInput }),
           }
@@ -227,7 +227,7 @@ const ToolPage = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ toolId: tool.id, input: userInput }),
           signal: controller.signal,
