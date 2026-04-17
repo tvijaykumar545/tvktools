@@ -30,9 +30,11 @@ function generateToken(): string {
     .join('')
 }
 
-// Auth note: this function uses verify_jwt = true in config.toml, so Supabase's
-// gateway validates the caller's JWT (anon or service_role) before the request
-// reaches this code. No in-function auth check is needed.
+// Auth: this function is configured with verify_jwt = false in config.toml so we
+// must validate the caller in code. We accept either:
+//   1. A valid user JWT (authenticated end-user triggering an email), OR
+//   2. The service_role key (server-side / edge-function-to-edge-function calls).
+// Anonymous/unauthenticated callers are rejected to prevent email-spam abuse.
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
@@ -41,7 +43,53 @@ Deno.serve(async (req) => {
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
+  const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+
+  // --- Auth check (in-code, since verify_jwt = false) ---
+  const authHeader = req.headers.get('Authorization') || ''
+  const token = authHeader.startsWith('Bearer ')
+    ? authHeader.slice('Bearer '.length).trim()
+    : ''
+
+  if (!token) {
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+
+  // Service role bypass (for cron / edge-function-to-edge-function calls)
+  const isServiceRole = !!supabaseServiceKey && token === supabaseServiceKey
+
+  if (!isServiceRole) {
+    // Reject the anon key — only authenticated end-user JWTs allowed.
+    if (supabaseAnonKey && token === supabaseAnonKey) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+    try {
+      const authClient = (await import('npm:@supabase/supabase-js@2')).createClient(
+        supabaseUrl!,
+        supabaseAnonKey!,
+      )
+      const { data, error } = await authClient.auth.getClaims(token)
+      if (error || !data?.claims?.sub) {
+        return new Response(
+          JSON.stringify({ error: 'Unauthorized' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+    } catch (_e) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+  }
+  // --- end auth check ---
 
   if (!supabaseUrl || !supabaseServiceKey) {
     console.error('Missing required environment variables')
