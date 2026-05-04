@@ -148,7 +148,7 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
 
   if (loading) return null;
 
-  const otherReviews = reviews.filter((r) => r.user_id !== user?.id);
+  const otherReviews = reviews.filter((r) => !r.is_mine);
 
   return (
     <section className="mt-16">
