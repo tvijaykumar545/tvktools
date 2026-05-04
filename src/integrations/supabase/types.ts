@@ -638,6 +638,7 @@ export type Database = {
           usage_count: number
         }[]
       }
+      get_my_review_id: { Args: { p_tool_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
