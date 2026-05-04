@@ -19,19 +19,48 @@ serve(async (req) => {
       });
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
-      { global: { headers: { Authorization: authHeader } } }
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    const supabase = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
     const token = authHeader.replace("Bearer ", "");
     const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
+    if (claimsError || !claimsData?.claims?.sub) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+    const userId = claimsData.claims.sub as string;
+
+    // Server-side points deduction
+    const serviceClient = createClient(supabaseUrl, serviceKey);
+    const { data: toolRow } = await serviceClient
+      .from("managed_tools")
+      .select("points_cost, name")
+      .eq("id", "ai-image-generator")
+      .maybeSingle();
+    const cost = (toolRow as any)?.points_cost ?? 0;
+    const toolName = (toolRow as any)?.name ?? "AI Image Generator";
+    if (cost > 0) {
+      const { data: deductData, error: deductErr } = await serviceClient.rpc("deduct_tool_points", {
+        p_user_id: userId,
+        p_tool_id: "ai-image-generator",
+        p_tool_name: toolName,
+        p_points_cost: cost,
+      });
+      if (deductErr || !(deductData as any)?.success) {
+        return new Response(JSON.stringify({
+          error: (deductData as any)?.error || "Insufficient points",
+        }), {
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     const { prompt } = await req.json();
