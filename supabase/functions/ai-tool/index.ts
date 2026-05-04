@@ -34,30 +34,54 @@ const toolPrompts: Record<string, string> = {
   "ai-power-query-generator": "You are a Power Query M code expert. Given the user's plain English description of a data transformation, generate the correct M code for the Power Query Advanced Editor. Provide: 1) The complete M code in a let...in block, 2) A step-by-step explanation of each transformation, 3) Tips for using it in Power BI Desktop, 4) Any prerequisites like data source setup. Use proper Table., List., and Text. functions with clear step naming.",
 };
 
+// Simple in-memory rate limit for guests by IP (per-instance, best-effort)
+const guestUsage = new Map<string, { count: number; date: string }>();
+const GUEST_DAILY_LIMIT = 2;
+
+function getClientIp(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+    req.headers.get("cf-connecting-ip") ||
+    "unknown";
+}
+
+function checkGuestLimit(ip: string): boolean {
+  const today = new Date().toISOString().slice(0, 10);
+  const rec = guestUsage.get(ip);
+  if (!rec || rec.date !== today) {
+    guestUsage.set(ip, { count: 1, date: today });
+    return true;
+  }
+  if (rec.count >= GUEST_DAILY_LIMIT) return false;
+  rec.count += 1;
+  return true;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    // Check for auth header - guests can use with anon key, logged-in users with their token
     const authHeader = req.headers.get("Authorization");
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    
-    let isAuthenticated = false;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    let userId: string | null = null;
     if (authHeader?.startsWith("Bearer ")) {
       const token = authHeader.replace("Bearer ", "");
-      // If the token is NOT the anon key, validate it as a user JWT
       if (token !== anonKey) {
-        const supabase = createClient(
-          Deno.env.get("SUPABASE_URL")!,
-          anonKey,
-          { global: { headers: { Authorization: authHeader } } }
-        );
+        const supabase = createClient(supabaseUrl, anonKey, {
+          global: { headers: { Authorization: authHeader } },
+        });
         const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
-        if (!claimsError && claimsData?.claims) {
-          isAuthenticated = true;
+        if (!claimsError && claimsData?.claims?.sub) {
+          userId = claimsData.claims.sub as string;
+        } else {
+          return new Response(JSON.stringify({ error: "Unauthorized" }), {
+            status: 401,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
         }
       }
-      // If token is anon key, allow as guest (isAuthenticated stays false)
     } else {
       return new Response(JSON.stringify({ error: "Authorization header required" }), {
         status: 401,
@@ -67,21 +91,58 @@ serve(async (req) => {
 
     const { toolId, input } = await req.json();
 
-    // Validate toolId
-    if (!toolId || typeof toolId !== 'string' || !toolPrompts[toolId]) {
+    if (!toolId || typeof toolId !== "string" || !toolPrompts[toolId]) {
       return new Response(JSON.stringify({ error: "Invalid or unsupported tool." }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Validate input length
     const MAX_INPUT = 4000;
-    if (typeof input !== 'string' || input.trim().length === 0 || input.length > MAX_INPUT) {
+    if (typeof input !== "string" || input.trim().length === 0 || input.length > MAX_INPUT) {
       return new Response(JSON.stringify({ error: `Input must be between 1 and ${MAX_INPUT} characters.` }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Server-side enforcement
+    const serviceClient = createClient(supabaseUrl, serviceKey);
+
+    if (userId) {
+      // Look up tool points cost
+      const { data: toolRow } = await serviceClient
+        .from("managed_tools")
+        .select("points_cost, name")
+        .eq("id", toolId)
+        .maybeSingle();
+      const cost = (toolRow as any)?.points_cost ?? 0;
+      const toolName = (toolRow as any)?.name ?? toolId;
+      if (cost > 0) {
+        const { data: deductData, error: deductErr } = await serviceClient.rpc("deduct_tool_points", {
+          p_user_id: userId,
+          p_tool_id: toolId,
+          p_tool_name: toolName,
+          p_points_cost: cost,
+        });
+        if (deductErr || !(deductData as any)?.success) {
+          return new Response(JSON.stringify({
+            error: (deductData as any)?.error || "Insufficient points",
+          }), {
+            status: 402,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+      }
+    } else {
+      // Guest: enforce server-side daily limit
+      const ip = getClientIp(req);
+      if (!checkGuestLimit(ip)) {
+        return new Response(JSON.stringify({ error: "Daily guest limit reached. Please sign in." }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");

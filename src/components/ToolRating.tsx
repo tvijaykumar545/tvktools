@@ -13,10 +13,10 @@ const feedbackSchema = z.object({
 
 interface Review {
   id: string;
-  user_id: string;
   rating: number;
   feedback: string;
   created_at: string;
+  is_mine?: boolean;
 }
 
 interface ToolRatingProps {
@@ -37,15 +37,23 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
     try {
       const { data } = await supabase
         .from("tool_reviews" as any)
-        .select("*")
+        .select("id, rating, feedback, created_at")
         .eq("tool_id", toolId)
         .order("created_at", { ascending: false });
 
       const reviewData = ((data as unknown) as Review[]) || [];
-      setReviews(reviewData);
 
+      let mineId: string | null = null;
       if (user) {
-        const mine = reviewData.find((r) => r.user_id === user.id);
+        const { data: myIdData } = await supabase.rpc("get_my_review_id" as any, { p_tool_id: toolId });
+        mineId = (myIdData as any) ?? null;
+      }
+
+      const annotated = reviewData.map(r => ({ ...r, is_mine: !!mineId && r.id === mineId }));
+      setReviews(annotated);
+
+      if (mineId) {
+        const mine = annotated.find((r) => r.is_mine) || null;
         if (mine) {
           setUserReview(mine);
           setUserRating(mine.rating);
@@ -140,7 +148,7 @@ const ToolRating = ({ toolId }: ToolRatingProps) => {
 
   if (loading) return null;
 
-  const otherReviews = reviews.filter((r) => r.user_id !== user?.id);
+  const otherReviews = reviews.filter((r) => !r.is_mine);
 
   return (
     <section className="mt-16">
