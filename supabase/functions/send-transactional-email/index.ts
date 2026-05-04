@@ -148,6 +148,15 @@ Deno.serve(async (req) => {
     )
   }
 
+  // Authorization: restrict customHtml and arbitrary recipients to admins/service-role
+  const isPrivileged = isServiceRole || callerIsAdmin
+  if (customHtml && !isPrivileged) {
+    return new Response(
+      JSON.stringify({ error: 'Forbidden: customHtml is restricted' }),
+      { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+
   if (!templateName) {
     return new Response(
       JSON.stringify({ error: 'templateName is required' }),
@@ -189,6 +198,17 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     )
+  }
+
+  // Non-privileged callers may only send to their own email address
+  // (template-fixed recipients are still allowed since they aren't user-controlled).
+  if (!isPrivileged && !template.to) {
+    if (!callerEmail || effectiveRecipient.toLowerCase() !== callerEmail) {
+      return new Response(
+        JSON.stringify({ error: 'Forbidden: can only send to your own email address' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
   }
 
   // Create Supabase client with service role (bypasses RLS)
