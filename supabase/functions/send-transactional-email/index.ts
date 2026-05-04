@@ -61,6 +61,8 @@ Deno.serve(async (req) => {
 
   // Service role bypass (for cron / edge-function-to-edge-function calls)
   const isServiceRole = !!supabaseServiceKey && token === supabaseServiceKey
+  let callerEmail: string | null = null
+  let callerIsAdmin = false
 
   if (!isServiceRole) {
     // Reject the anon key — only authenticated end-user JWTs allowed.
@@ -81,6 +83,21 @@ Deno.serve(async (req) => {
           JSON.stringify({ error: 'Unauthorized' }),
           { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         )
+      }
+      callerEmail = (data.claims.email as string | undefined)?.toLowerCase() ?? null
+      // Check admin role using service-role client
+      if (supabaseServiceKey) {
+        const adminClient = (await import('npm:@supabase/supabase-js@2')).createClient(
+          supabaseUrl!,
+          supabaseServiceKey,
+        )
+        const { data: roleRow } = await adminClient
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', data.claims.sub)
+          .eq('role', 'admin')
+          .maybeSingle()
+        callerIsAdmin = !!roleRow
       }
     } catch (_e) {
       return new Response(
