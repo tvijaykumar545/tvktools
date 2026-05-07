@@ -92,6 +92,27 @@ Deno.serve(async (req) => {
 
     const order = await rzpResponse.json();
 
+    // Persist intended package details server-side to prevent client-side tampering at verify time
+    const serviceClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+    const { error: insertErr } = await serviceClient.from("razorpay_orders").insert({
+      order_id: order.id,
+      user_id: user.id,
+      package_name,
+      points_amount,
+      price_inr,
+      status: "created",
+    });
+    if (insertErr) {
+      console.error("Failed to persist order intent:", insertErr);
+      return new Response(JSON.stringify({ error: "Failed to create payment order" }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     return new Response(JSON.stringify({
       order_id: order.id,
       amount: order.amount,
