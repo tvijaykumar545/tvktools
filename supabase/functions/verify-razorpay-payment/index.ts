@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, package_name, points_amount, price_inr } = await req.json();
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await req.json();
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return new Response(JSON.stringify({ error: "Missing payment details" }), {
@@ -66,17 +66,45 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Credit points using the existing database function
+    // Look up the trusted server-side order intent — never trust client-supplied package values
     const serviceClient = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    const { data: orderRow, error: orderErr } = await serviceClient
+      .from("razorpay_orders")
+      .select("user_id, package_name, points_amount, price_inr, status")
+      .eq("order_id", razorpay_order_id)
+      .maybeSingle();
+
+    if (orderErr || !orderRow) {
+      console.error("Order lookup failed:", orderErr);
+      return new Response(JSON.stringify({ error: "Order not found" }), {
+        status: 404,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (orderRow.user_id !== user.id) {
+      return new Response(JSON.stringify({ error: "Order does not belong to user" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (orderRow.status === "verified") {
+      return new Response(JSON.stringify({ error: "Order already processed" }), {
+        status: 409,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { data, error } = await serviceClient.rpc("credit_points_purchase", {
       p_user_id: user.id,
-      p_package_name: package_name,
-      p_points_amount: points_amount,
-      p_price_inr: price_inr,
+      p_package_name: orderRow.package_name,
+      p_points_amount: orderRow.points_amount,
+      p_price_inr: orderRow.price_inr,
     });
 
     if (error) {
