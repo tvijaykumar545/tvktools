@@ -138,20 +138,24 @@ function textCaseConverter(input: string): string {
 }
 
 function uuidGenerator(): string {
-  const uuids = Array.from({ length: 5 }, () =>
-    "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0;
-      return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-    })
-  );
+  const uuids = Array.from({ length: 5 }, () => crypto.randomUUID());
   return uuids.join("\n");
+}
+
+function secureRandomInt(maxExclusive: number): number {
+  const buf = new Uint32Array(1);
+  const limit = Math.floor(0xffffffff / maxExclusive) * maxExclusive;
+  while (true) {
+    crypto.getRandomValues(buf);
+    if (buf[0] < limit) return buf[0] % maxExclusive;
+  }
 }
 
 function passwordGenerator(input: string): string {
   const length = Math.min(Math.max(parseInt(input) || 16, 8), 128);
   const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
   const passwords = Array.from({ length: 5 }, () =>
-    Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join("")
+    Array.from({ length }, () => chars[secureRandomInt(chars.length)]).join("")
   );
   return `Generated ${passwords.length} passwords (length: ${length}):\n\n${passwords.join("\n")}`;
 }
