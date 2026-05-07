@@ -115,6 +115,11 @@ Deno.serve(async (req) => {
       });
     }
 
+    await serviceClient
+      .from("razorpay_orders")
+      .update({ status: "verified", verified_at: new Date().toISOString() })
+      .eq("order_id", razorpay_order_id);
+
     return new Response(JSON.stringify({ success: true, balance: data?.balance }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
