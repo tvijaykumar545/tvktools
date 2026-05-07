@@ -138,20 +138,24 @@ function textCaseConverter(input: string): string {
 }
 
 function uuidGenerator(): string {
-  const uuids = Array.from({ length: 5 }, () =>
-    "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0;
-      return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-    })
-  );
+  const uuids = Array.from({ length: 5 }, () => crypto.randomUUID());
   return uuids.join("\n");
+}
+
+function secureRandomInt(maxExclusive: number): number {
+  const buf = new Uint32Array(1);
+  const limit = Math.floor(0xffffffff / maxExclusive) * maxExclusive;
+  while (true) {
+    crypto.getRandomValues(buf);
+    if (buf[0] < limit) return buf[0] % maxExclusive;
+  }
 }
 
 function passwordGenerator(input: string): string {
   const length = Math.min(Math.max(parseInt(input) || 16, 8), 128);
   const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
   const passwords = Array.from({ length: 5 }, () =>
-    Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join("")
+    Array.from({ length }, () => chars[secureRandomInt(chars.length)]).join("")
   );
   return `Generated ${passwords.length} passwords (length: ${length}):\n\n${passwords.join("\n")}`;
 }
@@ -177,9 +181,17 @@ function randomNumber(input: string): string {
 }
 
 function secretKeysGenerator(input: string): string {
-  const length = parseInt(input) || 32;
-  const hex = (len: number) => Array.from({ length: len }, () => Math.floor(Math.random() * 16).toString(16)).join("");
-  return `🔑 Secret Keys (length: ${length})\n\nHex: ${hex(length)}\nBase64: ${btoa(hex(length / 2)).substring(0, length)}\nAlphanumeric: ${Array.from({ length }, () => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[Math.floor(Math.random() * 62)]).join("")}\nURL-safe: ${Array.from({ length }, () => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"[Math.floor(Math.random() * 64)]).join("")}`;
+  const length = Math.min(Math.max(parseInt(input) || 32, 8), 256);
+  const hex = (len: number) => {
+    const buf = new Uint8Array(Math.ceil(len / 2));
+    crypto.getRandomValues(buf);
+    return Array.from(buf).map((b) => b.toString(16).padStart(2, "0")).join("").substring(0, len);
+  };
+  const alphaChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const urlSafeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+  const alphaNum = Array.from({ length }, () => alphaChars[secureRandomInt(alphaChars.length)]).join("");
+  const urlSafe = Array.from({ length }, () => urlSafeChars[secureRandomInt(urlSafeChars.length)]).join("");
+  return `🔑 Secret Keys (length: ${length})\n\nHex: ${hex(length)}\nBase64: ${btoa(hex(length / 2)).substring(0, length)}\nAlphanumeric: ${alphaNum}\nURL-safe: ${urlSafe}`;
 }
 
 function hashGenerator(input: string): string {

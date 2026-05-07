@@ -401,6 +401,39 @@ export type Database = {
         }
         Relationships: []
       }
+      razorpay_orders: {
+        Row: {
+          created_at: string
+          order_id: string
+          package_name: string
+          points_amount: number
+          price_inr: number
+          status: string
+          user_id: string
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          order_id: string
+          package_name: string
+          points_amount: number
+          price_inr: number
+          status?: string
+          user_id: string
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          order_id?: string
+          package_name?: string
+          points_amount?: number
+          price_inr?: number
+          status?: string
+          user_id?: string
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       referral_claims: {
         Row: {
           created_at: string

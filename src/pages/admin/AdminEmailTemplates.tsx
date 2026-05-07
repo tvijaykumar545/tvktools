@@ -60,17 +60,37 @@ const STARTER_HTML = `<!DOCTYPE html>
 </body>
 </html>`;
 
+const escapeHtml = (s: string) =>
+  String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+// Only allow safe http(s)/mailto URLs in preview to prevent javascript: scheme XSS
+const safeUrl = (url: string) => {
+  const trimmed = String(url ?? "").trim();
+  if (!trimmed) return "#";
+  if (/^(https?:|mailto:)/i.test(trimmed)) return escapeHtml(trimmed);
+  return "#";
+};
+
+// Restrict accent color to a hex value to avoid CSS/HTML breakout
+const safeColor = (c: string) => (/^#[0-9a-fA-F]{3,8}$/.test(String(c ?? "")) ? c : "#00ffff");
+
 const generatePreviewHtml = (tpl: Omit<EmailTemplate, "id" | "created_at"> & { id?: string }) => {
+  const accent = safeColor(tpl.accent_color);
   return `<!DOCTYPE html><html><head></head><body style="margin:0;padding:0;background:#ffffff;font-family:'Space Mono','Courier New',Courier,monospace">
 <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;margin:0 auto">
 <tr><td style="background:#0a0a14;padding:24px 25px;text-align:center">
-<span style="color:${tpl.accent_color};font-size:20px;font-weight:bold;letter-spacing:2px">⚡ tvktools</span>
+<span style="color:${accent};font-size:20px;font-weight:bold;letter-spacing:2px">⚡ tvktools</span>
 </td></tr>
 <tr><td style="padding:30px 25px">
-${tpl.heading ? `<h1 style="font-size:22px;font-weight:bold;color:#0a0a14;margin:0 0 20px">${tpl.heading}</h1>` : ""}
-<p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 20px;white-space:pre-wrap">${tpl.body_text || "Your message content will appear here..."}</p>
-${tpl.button_text ? `<div style="text-align:center;margin:24px 0"><a href="${tpl.button_url || "#"}" style="display:inline-block;padding:12px 28px;background:${tpl.accent_color};color:#0a0a14;font-weight:bold;font-size:13px;border-radius:4px;text-decoration:none;letter-spacing:1px">${tpl.button_text}</a></div>` : ""}
-${tpl.footer_text ? `<hr style="border-color:#e0e0e0;margin:20px 0"><p style="font-size:12px;color:#999;margin:0">${tpl.footer_text}</p>` : ""}
+${tpl.heading ? `<h1 style="font-size:22px;font-weight:bold;color:#0a0a14;margin:0 0 20px">${escapeHtml(tpl.heading)}</h1>` : ""}
+<p style="font-size:14px;color:#333;line-height:1.7;margin:0 0 20px;white-space:pre-wrap">${tpl.body_text ? escapeHtml(tpl.body_text) : "Your message content will appear here..."}</p>
+${tpl.button_text ? `<div style="text-align:center;margin:24px 0"><a href="${safeUrl(tpl.button_url)}" style="display:inline-block;padding:12px 28px;background:${accent};color:#0a0a14;font-weight:bold;font-size:13px;border-radius:4px;text-decoration:none;letter-spacing:1px">${escapeHtml(tpl.button_text)}</a></div>` : ""}
+${tpl.footer_text ? `<hr style="border-color:#e0e0e0;margin:20px 0"><p style="font-size:12px;color:#999;margin:0">${escapeHtml(tpl.footer_text)}</p>` : ""}
 </td></tr></table></body></html>`;
 };
 
