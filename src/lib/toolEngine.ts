@@ -181,9 +181,17 @@ function randomNumber(input: string): string {
 }
 
 function secretKeysGenerator(input: string): string {
-  const length = parseInt(input) || 32;
-  const hex = (len: number) => Array.from({ length: len }, () => Math.floor(Math.random() * 16).toString(16)).join("");
-  return `🔑 Secret Keys (length: ${length})\n\nHex: ${hex(length)}\nBase64: ${btoa(hex(length / 2)).substring(0, length)}\nAlphanumeric: ${Array.from({ length }, () => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[Math.floor(Math.random() * 62)]).join("")}\nURL-safe: ${Array.from({ length }, () => "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"[Math.floor(Math.random() * 64)]).join("")}`;
+  const length = Math.min(Math.max(parseInt(input) || 32, 8), 256);
+  const hex = (len: number) => {
+    const buf = new Uint8Array(Math.ceil(len / 2));
+    crypto.getRandomValues(buf);
+    return Array.from(buf).map((b) => b.toString(16).padStart(2, "0")).join("").substring(0, len);
+  };
+  const alphaChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const urlSafeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+  const alphaNum = Array.from({ length }, () => alphaChars[secureRandomInt(alphaChars.length)]).join("");
+  const urlSafe = Array.from({ length }, () => urlSafeChars[secureRandomInt(urlSafeChars.length)]).join("");
+  return `🔑 Secret Keys (length: ${length})\n\nHex: ${hex(length)}\nBase64: ${btoa(hex(length / 2)).substring(0, length)}\nAlphanumeric: ${alphaNum}\nURL-safe: ${urlSafe}`;
 }
 
 function hashGenerator(input: string): string {
