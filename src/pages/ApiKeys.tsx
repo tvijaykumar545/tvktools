@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Key, Copy, Check, Trash2, Plus, AlertTriangle, BookOpen } from "lucide-react";
+import { Key, Copy, Check, Trash2, Plus, AlertTriangle, BookOpen, RefreshCw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
