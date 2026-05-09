@@ -776,6 +776,7 @@ export type Database = {
         }[]
       }
       revoke_api_key: { Args: { p_id: string }; Returns: Json }
+      rotate_api_key: { Args: { p_id: string }; Returns: Json }
       submit_purchase_request: {
         Args: {
           p_package_name: string
