@@ -179,12 +179,21 @@ const ApiKeys = () => {
                       {k.last_used_at && ` · last used ${new Date(k.last_used_at).toLocaleDateString()}`}
                     </div>
                   </div>
-                  <button
-                    onClick={() => revoke(k.id)}
-                    className="inline-flex items-center gap-1 rounded border border-destructive/30 px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10"
-                  >
-                    <Trash2 className="h-3 w-3" /> Revoke
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => rotate(k.id, k.name)}
+                      disabled={busy}
+                      className="inline-flex items-center gap-1 rounded border border-primary/30 px-3 py-1.5 text-xs text-primary hover:bg-primary/10 disabled:opacity-50"
+                    >
+                      <RefreshCw className="h-3 w-3" /> Rotate
+                    </button>
+                    <button
+                      onClick={() => revoke(k.id)}
+                      className="inline-flex items-center gap-1 rounded border border-destructive/30 px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10"
+                    >
+                      <Trash2 className="h-3 w-3" /> Revoke
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
