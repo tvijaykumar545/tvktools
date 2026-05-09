@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Key, Copy, Check, Trash2, Plus, AlertTriangle, BookOpen } from "lucide-react";
+import { Key, Copy, Check, Trash2, Plus, AlertTriangle, BookOpen, RefreshCw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -61,6 +61,20 @@ const ApiKeys = () => {
       return;
     }
     toast({ title: "Key revoked" });
+    refresh();
+  };
+
+  const rotate = async (id: string, name: string) => {
+    if (!confirm(`Rotate "${name}"? The current key will be revoked immediately and a new one issued.`)) return;
+    setBusy(true);
+    const { data, error } = await supabase.rpc("rotate_api_key" as any, { p_id: id });
+    setBusy(false);
+    if (error || !(data as any)?.success) {
+      toast({ title: "Failed to rotate", description: (data as any)?.error || error?.message, variant: "destructive" });
+      return;
+    }
+    setJustCreated((data as any).key);
+    toast({ title: "Key rotated", description: "Copy the new key — it won't be shown again." });
     refresh();
   };
 
@@ -165,12 +179,21 @@ const ApiKeys = () => {
                       {k.last_used_at && ` · last used ${new Date(k.last_used_at).toLocaleDateString()}`}
                     </div>
                   </div>
-                  <button
-                    onClick={() => revoke(k.id)}
-                    className="inline-flex items-center gap-1 rounded border border-destructive/30 px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10"
-                  >
-                    <Trash2 className="h-3 w-3" /> Revoke
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => rotate(k.id, k.name)}
+                      disabled={busy}
+                      className="inline-flex items-center gap-1 rounded border border-primary/30 px-3 py-1.5 text-xs text-primary hover:bg-primary/10 disabled:opacity-50"
+                    >
+                      <RefreshCw className="h-3 w-3" /> Rotate
+                    </button>
+                    <button
+                      onClick={() => revoke(k.id)}
+                      className="inline-flex items-center gap-1 rounded border border-destructive/30 px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10"
+                    >
+                      <Trash2 className="h-3 w-3" /> Revoke
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
