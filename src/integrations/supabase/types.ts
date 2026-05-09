@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_keys: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string
+          revoked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name: string
+          revoked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string
+          revoked_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      api_request_log: {
+        Row: {
+          api_key_id: string
+          created_at: string
+          endpoint: string
+          id: string
+          method: string
+          points_charged: number
+          status: number
+          user_id: string
+        }
+        Insert: {
+          api_key_id: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          method: string
+          points_charged?: number
+          status: number
+          user_id: string
+        }
+        Update: {
+          api_key_id?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          method?: string
+          points_charged?: number
+          status?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -631,11 +700,21 @@ export type Database = {
         Args: { p_admin_id: string; p_purchase_id: string; p_reason?: string }
         Returns: Json
       }
+      api_deduct_points: {
+        Args: {
+          p_points_cost: number
+          p_tool_id: string
+          p_tool_name: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
       claim_daily_reward: { Args: { p_user_id: string }; Returns: Json }
       claim_referral_bonus: {
         Args: { p_referral_code: string; p_referred_user_id: string }
         Returns: Json
       }
+      create_api_key: { Args: { p_name: string }; Returns: Json }
       credit_points_purchase: {
         Args: {
           p_package_name: string
@@ -696,6 +775,7 @@ export type Database = {
           read_ct: number
         }[]
       }
+      revoke_api_key: { Args: { p_id: string }; Returns: Json }
       submit_purchase_request: {
         Args: {
           p_package_name: string
@@ -706,6 +786,13 @@ export type Database = {
           p_user_id: string
         }
         Returns: Json
+      }
+      verify_api_key: {
+        Args: { p_plain: string }
+        Returns: {
+          api_key_id: string
+          user_id: string
+        }[]
       }
     }
     Enums: {
