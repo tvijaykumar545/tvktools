@@ -44,7 +44,6 @@ const Documentation = () => {
       <SEOHead
         title="API Documentation — TVK Tools Developer API"
         description="Use the TVK Tools REST API to run AI tools, look up tool catalog, and manage points programmatically with simple API key authentication."
-        canonical="https://tvktools.tvktechnology.in/documentation"
       />
       <div className="cyber-grid min-h-screen py-12">
         <div className="container mx-auto max-w-5xl px-4">
