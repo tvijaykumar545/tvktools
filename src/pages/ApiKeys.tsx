@@ -64,6 +64,20 @@ const ApiKeys = () => {
     refresh();
   };
 
+  const rotate = async (id: string, name: string) => {
+    if (!confirm(`Rotate "${name}"? The current key will be revoked immediately and a new one issued.`)) return;
+    setBusy(true);
+    const { data, error } = await supabase.rpc("rotate_api_key" as any, { p_id: id });
+    setBusy(false);
+    if (error || !(data as any)?.success) {
+      toast({ title: "Failed to rotate", description: (data as any)?.error || error?.message, variant: "destructive" });
+      return;
+    }
+    setJustCreated((data as any).key);
+    toast({ title: "Key rotated", description: "Copy the new key — it won't be shown again." });
+    refresh();
+  };
+
   const copy = async (text: string) => {
     await navigator.clipboard.writeText(text);
     setCopied(true);
