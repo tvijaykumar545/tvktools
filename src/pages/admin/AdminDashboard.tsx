@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, BarChart3, Wrench, Shield, FileText, Coins, Mail, Palette } from "lucide-react";
+import { Users, BarChart3, Wrench, Shield, FileText, Coins, Mail, Palette, Key } from "lucide-react";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -109,6 +109,10 @@ const AdminDashboard = () => {
           <Link to="/admin/email-templates" className="flex items-center gap-3 rounded border border-primary/20 bg-card p-4 transition-all hover:border-primary/50 border-glow">
             <Palette className="h-5 w-5 text-primary" />
             <span className="font-heading text-xs font-semibold text-foreground">Email Templates</span>
+          </Link>
+          <Link to="/admin/api-management" className="flex items-center gap-3 rounded border border-secondary/20 bg-card p-4 transition-all hover:border-secondary/50 neon-glow-magenta">
+            <Key className="h-5 w-5 text-secondary" />
+            <span className="font-heading text-xs font-semibold text-foreground">API Management</span>
           </Link>
         </div>
       </div>
