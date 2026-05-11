@@ -548,6 +548,39 @@ export type Database = {
         }
         Relationships: []
       }
+      rpc_audit_log: {
+        Row: {
+          args: Json | null
+          caller_user_id: string | null
+          created_at: string
+          duration_ms: number | null
+          error_message: string | null
+          function_name: string
+          id: string
+          success: boolean
+        }
+        Insert: {
+          args?: Json | null
+          caller_user_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          function_name: string
+          id?: string
+          success: boolean
+        }
+        Update: {
+          args?: Json | null
+          caller_user_id?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          error_message?: string | null
+          function_name?: string
+          id?: string
+          success?: boolean
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -757,6 +790,16 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      log_rpc_call: {
+        Args: {
+          p_args: Json
+          p_caller: string
+          p_error?: string
+          p_function_name: string
+          p_success: boolean
+        }
+        Returns: undefined
       }
       move_to_dlq: {
         Args: {
