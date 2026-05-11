@@ -88,6 +88,7 @@ const App = () => (
                   <Route path="/admin/emails" element={<AdminEmails />} />
                   <Route path="/admin/email-templates" element={<AdminEmailTemplates />} />
                   <Route path="/admin/api-management" element={<AdminApiManagement />} />
+                  <Route path="/admin/rpc-audit" element={<AdminRpcAudit />} />
                   <Route path="/buy-points" element={<BuyPoints />} />
                   <Route path="/api-access" element={<ApiKeys />} />
                   <Route path="/unsubscribe" element={<Unsubscribe />} />
