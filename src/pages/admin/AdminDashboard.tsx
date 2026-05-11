@@ -114,6 +114,10 @@ const AdminDashboard = () => {
             <Key className="h-5 w-5 text-secondary" />
             <span className="font-heading text-xs font-semibold text-foreground">API Management</span>
           </Link>
+          <Link to="/admin/rpc-audit" className="flex items-center gap-3 rounded border border-secondary/20 bg-card p-4 transition-all hover:border-secondary/50 neon-glow-magenta">
+            <Activity className="h-5 w-5 text-secondary" />
+            <span className="font-heading text-xs font-semibold text-foreground">RPC Audit Log</span>
+          </Link>
         </div>
       </div>
     </div>
