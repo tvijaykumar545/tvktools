@@ -37,6 +37,7 @@ import AdminPurchases from "./pages/admin/AdminPurchases";
 import AdminEmails from "./pages/admin/AdminEmails";
 import AdminEmailTemplates from "./pages/admin/AdminEmailTemplates";
 import AdminApiManagement from "./pages/admin/AdminApiManagement";
+import AdminRpcAudit from "./pages/admin/AdminRpcAudit";
 import Unsubscribe from "./pages/Unsubscribe";
 import BuyPoints from "./pages/BuyPoints";
 import ApiKeys from "./pages/ApiKeys";
@@ -87,6 +88,7 @@ const App = () => (
                   <Route path="/admin/emails" element={<AdminEmails />} />
                   <Route path="/admin/email-templates" element={<AdminEmailTemplates />} />
                   <Route path="/admin/api-management" element={<AdminApiManagement />} />
+                  <Route path="/admin/rpc-audit" element={<AdminRpcAudit />} />
                   <Route path="/buy-points" element={<BuyPoints />} />
                   <Route path="/api-access" element={<ApiKeys />} />
                   <Route path="/unsubscribe" element={<Unsubscribe />} />
