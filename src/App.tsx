@@ -37,6 +37,7 @@ import AdminPurchases from "./pages/admin/AdminPurchases";
 import AdminEmails from "./pages/admin/AdminEmails";
 import AdminEmailTemplates from "./pages/admin/AdminEmailTemplates";
 import AdminApiManagement from "./pages/admin/AdminApiManagement";
+import AdminRpcAudit from "./pages/admin/AdminRpcAudit";
 import Unsubscribe from "./pages/Unsubscribe";
 import BuyPoints from "./pages/BuyPoints";
 import ApiKeys from "./pages/ApiKeys";
