@@ -9,7 +9,7 @@ interface SEOHeadProps {
 }
 
 const SITE_NAME = "TVK Tools";
-const BASE_URL = "https://tvktools.lovable.app";
+const BASE_URL = "https://tvktools.tvktechnology.in";
 const DEFAULT_DESC = "Free AI-powered tools for SEO, developers, and creators. Convert, analyze, generate, and optimize with 50+ tools.";
 
 const SEOHead = ({
