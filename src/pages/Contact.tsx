@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Mail, MapPin, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import SEOHead from "@/components/SEOHead";
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
