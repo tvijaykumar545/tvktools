@@ -1,3 +1,5 @@
+import SEOHead from "@/components/SEOHead";
+
 const PrivacyPolicy = () => {
   const sections = [
     { title: "Information We Collect", content: "We collect information you provide directly, such as your email address and display name when you create an account. We also collect usage data including which tools you use and how often." },
