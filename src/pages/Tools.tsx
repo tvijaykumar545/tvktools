@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Search } from "lucide-react";
 import { tools as staticTools, categories, type ToolCategory } from "@/data/tools";
 import ToolCard from "@/components/ToolCard";
+import SEOHead from "@/components/SEOHead";
 import { useManagedTools } from "@/hooks/useManagedTools";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
