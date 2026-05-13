@@ -17,6 +17,7 @@ const Terms = () => {
 
   return (
     <div className="cyber-grid min-h-screen py-16">
+      <SEOHead title="Terms & Conditions" description="Terms and conditions for using TVK Tools." path="/terms-conditions" />
       <div className="container mx-auto max-w-3xl px-4">
         <h1 className="font-heading text-3xl font-bold text-primary neon-text">Terms & Conditions</h1>
         <p className="mt-2 text-xs text-muted-foreground">Last updated: March 2026</p>
