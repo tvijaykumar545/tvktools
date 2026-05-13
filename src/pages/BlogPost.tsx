@@ -51,6 +51,22 @@ const BlogPost = () => {
 
   return (
     <div className="cyber-grid min-h-screen py-16">
+      <SEOHead
+        title={post.title}
+        description={post.content.slice(0, 155).replace(/[#*`>\n]/g, " ").trim()}
+        path={`/blog/${id}`}
+        type="article"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: post.title,
+          datePublished: post.created_at,
+          articleSection: post.category,
+          author: { "@type": "Organization", name: "TVK Tools" },
+          publisher: { "@type": "Organization", name: "TVK Tools" },
+          mainEntityOfPage: `https://tvktools.tvktechnology.in/blog/${id}`,
+        }}
+      />
       <div className="container mx-auto max-w-3xl px-4">
         <Link to="/blog" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary">
           <ArrowLeft className="h-3 w-3" /> Back to Blog
