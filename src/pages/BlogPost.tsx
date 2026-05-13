@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Clock, Calendar, Tag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ReactMarkdown from "react-markdown";
+import SEOHead from "@/components/SEOHead";
 
 interface Post {
   title: string;
