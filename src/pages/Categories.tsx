@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { categories, getToolsByCategory } from "@/data/tools";
+import SEOHead from "@/components/SEOHead";
 
 const Categories = () => {
   return (
     <div className="cyber-grid min-h-screen py-8">
+      <SEOHead title="Tool Categories" description="Explore TVK Tools by category — AI, SEO, developer, image, PDF, QR, and more." path="/categories" />
       <div className="container mx-auto px-4">
         <h1 className="font-heading text-3xl font-bold text-primary neon-text">Categories</h1>
         <p className="mt-1 text-sm text-muted-foreground">Explore tools by category</p>
