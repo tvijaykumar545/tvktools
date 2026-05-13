@@ -32,6 +32,7 @@ const CategoryPage = () => {
 
   return (
     <div className="cyber-grid min-h-screen py-8">
+      <SEOHead title={`${category.name} Tools`} description={`Browse ${catTools.length}+ ${category.name.toLowerCase()} tools on TVK Tools.`} path={`/categories/${category.id}`} />
       <div className="container mx-auto px-4">
         <Link to="/categories" className="text-xs text-muted-foreground hover:text-primary">
           ← All Categories
