@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Check, Zap, Sparkles, Crown, Rocket, BatteryCharging } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 
 const plans = [
   {
