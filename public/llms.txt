@@ -1,0 +1,23 @@
+# TVK Tools
+
+> 50+ free AI-powered tools for SEO, developers, content creators, and everyday productivity. Points-based — no subscriptions.
+
+TVK Tools is a SaaS platform from TVK Technologies offering instant utility tools (JSON, image, PDF, QR, regex, encoders) and AI-powered tools (writing, code, SEO, image generation) under a single points-based economy priced for the Indian market (INR).
+
+## Pages
+
+- [Home](/): Search, browse, and launch any of the 50+ tools.
+- [All Tools](/tools): Full searchable tool catalog with category filters.
+- [Categories](/categories): Browse tools grouped by AI, SEO, Developer, Image, PDF, and Utility.
+- [Pricing](/pricing): Points packages — pay once, use anytime.
+- [Buy Points](/buy-points): Purchase points via Razorpay or screenshot upload.
+- [Blog](/blog): Tutorials and guides on AI tools, SEO, automation, and development.
+- [Documentation](/documentation): How to use TVK Tools and the public API.
+- [API Access](/api-access): Manage API keys for programmatic tool usage.
+- [About](/about): What TVK Tools is and who it's for.
+- [Contact](/contact): Reach the team for support and feedback.
+
+## Optional
+
+- [Privacy Policy](/privacy-policy)
+- [Terms & Conditions](/terms-conditions)
