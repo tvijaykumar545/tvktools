@@ -320,16 +320,30 @@ const ToolPage = () => {
         path={`/tool/${tool.id}`}
         jsonLd={{
           "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          name: tool.name,
-          description: tool.description,
-          applicationCategory: "WebApplication",
-          operatingSystem: "Web",
-          offers: {
-            "@type": "Offer",
-            price: tool.isFree ? "0" : "9.99",
-            priceCurrency: "USD",
-          },
+          "@graph": [
+            {
+              "@type": "SoftwareApplication",
+              name: tool.name,
+              description: tool.description,
+              applicationCategory: "WebApplication",
+              operatingSystem: "Web",
+              offers: {
+                "@type": "Offer",
+                price: tool.isFree ? "0" : "9.99",
+                priceCurrency: "USD",
+              },
+            },
+            ...(faqs && faqs.length > 0
+              ? [{
+                  "@type": "FAQPage",
+                  mainEntity: faqs.map((f) => ({
+                    "@type": "Question",
+                    name: f.question,
+                    acceptedAnswer: { "@type": "Answer", text: f.answer },
+                  })),
+                }]
+              : []),
+          ],
         }}
       />
       <div className="container mx-auto px-4">
