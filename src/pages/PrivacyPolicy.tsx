@@ -1,3 +1,5 @@
+import SEOHead from "@/components/SEOHead";
+
 const PrivacyPolicy = () => {
   const sections = [
     { title: "Information We Collect", content: "We collect information you provide directly, such as your email address and display name when you create an account. We also collect usage data including which tools you use and how often." },
@@ -13,6 +15,7 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="cyber-grid min-h-screen py-16">
+      <SEOHead title="Privacy Policy" description="How TVK Tools collects, uses, and protects your information." path="/privacy-policy" />
       <div className="container mx-auto max-w-3xl px-4">
         <h1 className="font-heading text-3xl font-bold text-primary neon-text">Privacy Policy</h1>
         <p className="mt-2 text-xs text-muted-foreground">Last updated: March 2026</p>

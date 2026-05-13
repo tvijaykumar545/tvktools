@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Check, Zap, Sparkles, Crown, Rocket, BatteryCharging } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
 
 const plans = [
   {
@@ -76,6 +77,7 @@ const plans = [
 const Pricing = () => {
   return (
     <div className="cyber-grid min-h-screen py-16">
+      <SEOHead title="Pricing — Buy Points" description="Simple points-based pricing for TVK Tools. Buy points and use any AI tool — no subscriptions, ever." path="/pricing" />
       <div className="container mx-auto px-4">
         <div className="text-center">
           <h1 className="font-heading text-3xl font-bold text-primary neon-text md:text-4xl">

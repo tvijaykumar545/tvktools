@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import SEOHead from "@/components/SEOHead";
 
 interface BlogPost {
   id: string;
@@ -35,6 +36,24 @@ const Blog = () => {
 
   return (
     <div className="cyber-grid min-h-screen py-16">
+      <SEOHead
+        title="Blog — Tutorials & Guides"
+        description="Tutorials, guides, and insights on AI tools, SEO, automation, and development from TVK Tools."
+        path="/blog"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          name: "TVK Tools Blog",
+          url: "https://tvktools.tvktechnology.in/blog",
+          blogPost: posts.map((p) => ({
+            "@type": "BlogPosting",
+            headline: p.title,
+            description: p.excerpt,
+            datePublished: p.created_at,
+            url: `https://tvktools.tvktechnology.in/blog/${p.slug}`,
+          })),
+        }}
+      />
       <div className="container mx-auto px-4">
         <h1 className="font-heading text-3xl font-bold text-primary neon-text">Blog</h1>
         <p className="mt-2 text-sm text-muted-foreground">

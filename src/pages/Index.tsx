@@ -35,11 +35,11 @@ const Index = () => {
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "TVK Tools",
-          url: "https://tvktools.lovable.app",
+          url: "https://tvktools.tvktechnology.in",
           description: "Free AI-powered tools for SEO, developers, and creators.",
           potentialAction: {
             "@type": "SearchAction",
-            target: "https://tvktools.lovable.app/tools?q={search_term_string}",
+            target: "https://tvktools.tvktechnology.in/tools?q={search_term_string}",
             "query-input": "required name=search_term_string",
           },
         }}

@@ -1,3 +1,5 @@
+import SEOHead from "@/components/SEOHead";
+
 const Terms = () => {
   const sections = [
     { title: "Acceptance of Terms", content: "By accessing or using TVK Tools, you agree to be bound by these Terms & Conditions. If you do not agree, please do not use our services." },
@@ -15,6 +17,7 @@ const Terms = () => {
 
   return (
     <div className="cyber-grid min-h-screen py-16">
+      <SEOHead title="Terms & Conditions" description="Terms and conditions for using TVK Tools." path="/terms-conditions" />
       <div className="container mx-auto max-w-3xl px-4">
         <h1 className="font-heading text-3xl font-bold text-primary neon-text">Terms & Conditions</h1>
         <p className="mt-2 text-xs text-muted-foreground">Last updated: March 2026</p>
