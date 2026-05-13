@@ -24,6 +24,7 @@ const Contact = () => {
 
   return (
     <div className="cyber-grid min-h-screen py-16">
+      <SEOHead title="Contact Us" description="Get in touch with the TVK Tools team — questions, feedback, and support." path="/contact" />
       <div className="container mx-auto max-w-3xl px-4">
         <h1 className="font-heading text-3xl font-bold text-primary neon-text">Contact Us</h1>
         <p className="mt-2 text-sm text-muted-foreground">Have a question or feedback? We'd love to hear from you.</p>
