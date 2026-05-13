@@ -336,10 +336,10 @@ const ToolPage = () => {
             ...(faqs && faqs.length > 0
               ? [{
                   "@type": "FAQPage",
-                  mainEntity: faqs.map((f) => ({
+                  mainEntity: faqs.map((f: any) => ({
                     "@type": "Question",
-                    name: f.question,
-                    acceptedAnswer: { "@type": "Answer", text: f.answer },
+                    name: f.q ?? f.question,
+                    acceptedAnswer: { "@type": "Answer", text: f.a ?? f.answer },
                   })),
                 }]
               : []),
