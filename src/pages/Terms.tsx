@@ -1,3 +1,5 @@
+import SEOHead from "@/components/SEOHead";
+
 const Terms = () => {
   const sections = [
     { title: "Acceptance of Terms", content: "By accessing or using TVK Tools, you agree to be bound by these Terms & Conditions. If you do not agree, please do not use our services." },
