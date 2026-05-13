@@ -51,6 +51,7 @@ const Tools = () => {
 
   return (
     <div className="cyber-grid min-h-screen py-8">
+      <SEOHead title="All Tools — 50+ AI & Utility Tools" description="Browse all 50+ TVK Tools across AI, SEO, developer, image, PDF, QR, and utility categories." path="/tools" />
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <h1 className="font-heading text-3xl font-bold text-primary neon-text">All Tools</h1>
