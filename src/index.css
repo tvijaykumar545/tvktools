@@ -1,108 +1,108 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* Southwest Desert — Light/Default (warm canyon palette) */
+  /* Y2K — Light/Default (chrome + iridescent bubblegum) */
   :root {
-    --background: 34 50% 96%;        /* #faf5ef cream sand */
-    --foreground: 22 33% 18%;        /* #3d2b1f deep brown */
+    --background: 208 100% 97%;      /* #F0F8FF alice blue */
+    --foreground: 240 33% 30%;       /* #333366 deep periwinkle */
 
-    --card: 40 100% 98%;             /* #fffcf7 surface */
-    --card-foreground: 22 33% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 33% 30%;
 
-    --popover: 40 100% 98%;
-    --popover-foreground: 22 33% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 33% 30%;
 
-    --primary: 23 54% 50%;           /* #c2703e terracotta */
-    --primary-foreground: 40 100% 98%;
+    --primary: 190 100% 50%;         /* #00D4FF cyan */
+    --primary-foreground: 240 33% 15%;
 
-    --secondary: 120 12% 54%;        /* #7a9a7a sage */
-    --secondary-foreground: 40 100% 98%;
+    --secondary: 310 100% 50%;       /* #FF00D4 magenta */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 34 30% 90%;
-    --muted-foreground: 22 20% 38%;
+    --muted: 208 60% 93%;
+    --muted-foreground: 240 25% 45%;
 
-    --accent: 34 57% 70%;            /* #deb887 sand */
-    --accent-foreground: 22 33% 18%;
+    --accent: 150 100% 50%;          /* #00FF88 mint */
+    --accent-foreground: 240 33% 15%;
 
-    --destructive: 8 72% 48%;
-    --destructive-foreground: 40 100% 98%;
+    --destructive: 0 90% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 23 30% 78%;
-    --input: 34 30% 90%;
-    --ring: 23 54% 50%;
+    --border: 240 60% 80%;
+    --input: 208 70% 95%;
+    --ring: 190 100% 50%;
 
-    --radius: 0.375rem;              /* 6px */
-    --border-width: 2px;
-    --shadow-offset-y: 3px;
-    --shadow-elev: 0 var(--shadow-offset-y) 0 0 hsl(22 33% 18% / 0.08),
-                   0 var(--shadow-offset-y) 8px -2px hsl(22 33% 18% / 0.12);
+    --radius: 1.5rem;                /* 24px bubble shapes */
+    --border-width: 3px;
+    --shadow-offset-y: 10px;
+    --shadow-elev: 0 var(--shadow-offset-y) 0 0 hsl(310 100% 50% / 0.12),
+                   0 var(--shadow-offset-y) 30px -6px hsl(190 100% 50% / 0.35);
 
-    --sidebar-background: 34 45% 94%;
-    --sidebar-foreground: 22 33% 18%;
-    --sidebar-primary: 23 54% 50%;
-    --sidebar-primary-foreground: 40 100% 98%;
-    --sidebar-accent: 34 30% 88%;
-    --sidebar-accent-foreground: 22 33% 18%;
-    --sidebar-border: 23 30% 78%;
-    --sidebar-ring: 23 54% 50%;
+    --sidebar-background: 208 100% 98%;
+    --sidebar-foreground: 240 33% 30%;
+    --sidebar-primary: 190 100% 50%;
+    --sidebar-primary-foreground: 240 33% 15%;
+    --sidebar-accent: 208 70% 93%;
+    --sidebar-accent-foreground: 240 33% 30%;
+    --sidebar-border: 240 60% 80%;
+    --sidebar-ring: 190 100% 50%;
 
-    --neon-cyan: 23 54% 50%;
-    --neon-magenta: 120 12% 54%;
-    --neon-yellow: 34 57% 70%;
-    --neon-blue: 200 35% 50%;
-    --surface: 40 100% 98%;
-    --surface-hover: 34 45% 94%;
+    --neon-cyan: 190 100% 50%;
+    --neon-magenta: 310 100% 50%;
+    --neon-yellow: 150 100% 50%;
+    --neon-blue: 220 100% 65%;
+    --surface: 0 0% 100%;
+    --surface-hover: 208 70% 95%;
   }
 
-  /* Southwest Desert — Dark (canyon night) */
+  /* Y2K — Dark (deep space chrome) */
   .light {
-    --background: 22 40% 10%;        /* deep canyon brown */
-    --foreground: 34 50% 94%;
+    --background: 240 50% 8%;
+    --foreground: 208 100% 96%;
 
-    --card: 22 35% 14%;
-    --card-foreground: 34 50% 94%;
+    --card: 240 45% 12%;
+    --card-foreground: 208 100% 96%;
 
-    --popover: 22 35% 12%;
-    --popover-foreground: 34 50% 94%;
+    --popover: 240 45% 10%;
+    --popover-foreground: 208 100% 96%;
 
-    --primary: 23 70% 58%;
-    --primary-foreground: 22 40% 10%;
+    --primary: 190 100% 55%;
+    --primary-foreground: 240 50% 8%;
 
-    --secondary: 120 18% 60%;
-    --secondary-foreground: 22 40% 10%;
+    --secondary: 310 100% 60%;
+    --secondary-foreground: 240 50% 8%;
 
-    --muted: 22 25% 20%;
-    --muted-foreground: 34 25% 72%;
+    --muted: 240 35% 18%;
+    --muted-foreground: 208 50% 75%;
 
-    --accent: 34 60% 65%;
-    --accent-foreground: 22 40% 10%;
+    --accent: 150 100% 55%;
+    --accent-foreground: 240 50% 8%;
 
-    --destructive: 8 72% 55%;
-    --destructive-foreground: 34 50% 94%;
+    --destructive: 0 90% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 23 30% 30%;
-    --input: 22 25% 18%;
-    --ring: 23 70% 58%;
+    --border: 240 60% 35%;
+    --input: 240 35% 16%;
+    --ring: 190 100% 55%;
 
-    --sidebar-background: 22 38% 12%;
-    --sidebar-foreground: 34 50% 94%;
-    --sidebar-primary: 23 70% 58%;
-    --sidebar-primary-foreground: 22 40% 10%;
-    --sidebar-accent: 22 25% 20%;
-    --sidebar-accent-foreground: 34 50% 94%;
-    --sidebar-border: 23 30% 30%;
-    --sidebar-ring: 23 70% 58%;
+    --sidebar-background: 240 50% 10%;
+    --sidebar-foreground: 208 100% 96%;
+    --sidebar-primary: 190 100% 55%;
+    --sidebar-primary-foreground: 240 50% 8%;
+    --sidebar-accent: 240 35% 18%;
+    --sidebar-accent-foreground: 208 100% 96%;
+    --sidebar-border: 240 60% 35%;
+    --sidebar-ring: 190 100% 55%;
 
-    --neon-cyan: 23 70% 58%;
-    --neon-magenta: 120 18% 60%;
-    --neon-yellow: 34 60% 65%;
-    --neon-blue: 200 45% 55%;
-    --surface: 22 35% 14%;
-    --surface-hover: 22 35% 18%;
+    --neon-cyan: 190 100% 55%;
+    --neon-magenta: 310 100% 60%;
+    --neon-yellow: 150 100% 55%;
+    --neon-blue: 220 100% 70%;
+    --surface: 240 45% 12%;
+    --surface-hover: 240 45% 16%;
   }
 }
 
