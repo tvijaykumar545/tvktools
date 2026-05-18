@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Camera, Save, ArrowLeft, Shield, Mail, Bell, Globe, Layers } from "lucide-react";
+import { User, Camera, Save, ArrowLeft, Shield, Mail, Bell, Globe, Layers, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -25,7 +25,7 @@ const Settings = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, neonIntensity, setNeonIntensity } = useTheme();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [displayName, setDisplayName] = useState("");
@@ -333,6 +333,49 @@ const Settings = () => {
                   </button>
                 </div>
               </div>
+
+              {/* Light-mode neon intensity */}
+              {theme === "light" && (
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label className="font-heading text-[10px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                      <Sparkles className="h-3 w-3" /> Neon Intensity (Light Mode)
+                    </label>
+                    <span className="font-heading text-[10px] font-bold text-primary tabular-nums">
+                      {neonIntensity}%
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={200}
+                    step={5}
+                    value={neonIntensity}
+                    onChange={(e) => setNeonIntensity(Number(e.target.value))}
+                    aria-label="Light mode neon glow intensity"
+                    className="mt-2 w-full accent-primary cursor-pointer"
+                  />
+                  <div className="mt-1 flex justify-between text-[9px] text-muted-foreground font-heading uppercase tracking-wider">
+                    <span>Off</span>
+                    <span>Default</span>
+                    <span>Max</span>
+                  </div>
+                  <div className="mt-3 flex items-center gap-3">
+                    <span
+                      className="rounded bg-primary px-3 py-1.5 font-heading text-[10px] font-bold text-primary-foreground neon-glow"
+                    >
+                      Preview Glow
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setNeonIntensity(100)}
+                      className="text-[10px] text-primary hover:underline"
+                    >
+                      Reset to default
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* Default Category */}
               <div>
