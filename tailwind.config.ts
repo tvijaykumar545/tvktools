@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['"Poppins"', "system-ui", "sans-serif"],
+        heading: ['"Orbitron"', "system-ui", "sans-serif"],
         body: ['"Inter"', "system-ui", "sans-serif"],
         mono: ['ui-monospace', "SFMono-Regular", "monospace"],
       },
