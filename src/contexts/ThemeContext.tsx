@@ -7,11 +7,18 @@ type Theme = "dark" | "light";
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  /** Light-mode neon glow multiplier, 0–200 (100 = default 1x). Ignored in dark mode. */
+  neonIntensity: number;
+  setNeonIntensity: (v: number) => void;
 }
+
+const DEFAULT_INTENSITY = 100;
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: "dark",
   toggleTheme: () => {},
+  neonIntensity: DEFAULT_INTENSITY,
+  setNeonIntensity: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
@@ -24,6 +31,21 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     }
     return "dark";
   });
+
+  const [neonIntensity, setNeonIntensityState] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("tvk-neon-intensity");
+      const parsed = stored ? Number(stored) : NaN;
+      if (Number.isFinite(parsed) && parsed >= 0 && parsed <= 200) return parsed;
+    }
+    return DEFAULT_INTENSITY;
+  });
+
+  const setNeonIntensity = (v: number) => {
+    const clamped = Math.max(0, Math.min(200, Math.round(v)));
+    setNeonIntensityState(clamped);
+    localStorage.setItem("tvk-neon-intensity", String(clamped));
+  };
 
   // Load theme from database when user logs in
   useEffect(() => {
@@ -75,10 +97,17 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [theme, user]);
 
+  // Apply neon intensity as a CSS variable. Only in light mode; dark stays at 1x.
+  useEffect(() => {
+    const root = document.documentElement;
+    const multiplier = theme === "light" ? neonIntensity / 100 : 1;
+    root.style.setProperty("--neon-intensity", String(multiplier));
+  }, [neonIntensity, theme]);
+
   const toggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, neonIntensity, setNeonIntensity }}>
       {children}
     </ThemeContext.Provider>
   );
