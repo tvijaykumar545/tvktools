@@ -152,7 +152,8 @@ const ToolPage = () => {
         toast.error("Daily limit reached! Sign up for unlimited access.");
         return;
       }
-    } else if (toolPointsCost > 0) {
+    } else if (toolPointsCost > 0 && tool.type !== "backend") {
+      // Backend tools deduct server-side inside the edge function to avoid double charging.
       try {
         await deductPoints.mutateAsync({
           toolId: tool.id,
