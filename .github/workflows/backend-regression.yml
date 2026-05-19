@@ -1,0 +1,34 @@
+name: Backend tools regression
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - "supabase/functions/ai-tool/**"
+      - "src/test/backend-tools.regression.test.ts"
+      - "vitest.regression.config.ts"
+      - ".github/workflows/backend-regression.yml"
+  schedule:
+    # Daily smoke at 06:00 UTC to catch silent drift in the deployed function.
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    name: ai-tool: no 402, no empty output
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+      TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Run backend regression suite
+        run: bun run test:backend-regression

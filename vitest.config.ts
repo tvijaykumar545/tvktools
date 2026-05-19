@@ -9,6 +9,13 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
     include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    // Backend regression suite is network-bound and consumes AI credits.
+    // Run it explicitly via `bun run test:backend-regression`.
+    exclude: [
+      "node_modules/**",
+      "dist/**",
+      "src/test/backend-tools.regression.test.ts",
+    ],
   },
   resolve: {
     alias: { "@": path.resolve(__dirname, "./src") },
