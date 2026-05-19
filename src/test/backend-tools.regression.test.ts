@@ -20,13 +20,35 @@
  *   - TEST_USER_EMAIL                   (a real signed-up user with >= 50 points)
  *   - TEST_USER_PASSWORD
  */
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { createClient } from "@supabase/supabase-js";
+import { appendFileSync } from "node:fs";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const ANON_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
 const TEST_USER_EMAIL = process.env.TEST_USER_EMAIL;
 const TEST_USER_PASSWORD = process.env.TEST_USER_PASSWORD;
+const GITHUB_STEP_SUMMARY = process.env.GITHUB_STEP_SUMMARY;
+const IS_CI = !!process.env.GITHUB_ACTIONS;
+
+type Failure = {
+  toolId: string;
+  status: number;
+  statusText: string;
+  reason: string;
+  bodySnippet: string;
+};
+const failures: Failure[] = [];
+
+function reportFailure(f: Failure) {
+  failures.push(f);
+  if (IS_CI) {
+    // GitHub Actions annotation — surfaces inline at the top of the run.
+    const msg = `Tool "${f.toolId}" failed: HTTP ${f.status} ${f.statusText} — ${f.reason}`;
+    // eslint-disable-next-line no-console
+    console.log(`::error title=Backend regression: ${f.toolId}::${msg}`);
+  }
+}
 
 // Keep in sync with `toolPrompts` in supabase/functions/ai-tool/index.ts
 const TOOL_IDS = [
@@ -124,26 +146,79 @@ describe("ai-tool backend regression (no 402, no empty output)", () => {
     accessToken = data.session.access_token;
   });
 
+  afterAll(() => {
+    if (!failures.length) return;
+    const first = failures[0];
+    const header = `❌ Backend regression: ${failures.length} tool(s) failed. First failure: "${first.toolId}" → HTTP ${first.status} ${first.statusText} (${first.reason})`;
+    // eslint-disable-next-line no-console
+    console.log(header);
+    if (GITHUB_STEP_SUMMARY) {
+      const lines = [
+        `### ❌ Backend regression failures (${failures.length})`,
+        "",
+        `**First failing tool:** \`${first.toolId}\` — HTTP \`${first.status} ${first.statusText}\` — ${first.reason}`,
+        "",
+        "| Tool | Status | Reason |",
+        "| --- | --- | --- |",
+        ...failures.map(
+          (f) => `| \`${f.toolId}\` | ${f.status} ${f.statusText} | ${f.reason} |`,
+        ),
+        "",
+      ].join("\n");
+      try {
+        appendFileSync(GITHUB_STEP_SUMMARY, lines + "\n");
+      } catch {
+        /* ignore */
+      }
+    }
+  });
+
   TOOL_IDS.forEach((toolId) => {
     it(
       `tool "${toolId}" returns a non-empty response and never 402`,
       async () => {
         const res = await callTool(toolId);
+        const bodyText = res.ok ? "" : await res.clone().text();
+        const snippet = bodyText.slice(0, 300);
 
-        // The headline regression: points / auth path returning 402.
+        if (res.status === 402) {
+          reportFailure({
+            toolId,
+            status: res.status,
+            statusText: res.statusText,
+            reason: "402 Unauthorized (points/auth regression)",
+            bodySnippet: snippet,
+          });
+        } else if (!res.ok) {
+          reportFailure({
+            toolId,
+            status: res.status,
+            statusText: res.statusText,
+            reason: `non-2xx response: ${snippet}`,
+            bodySnippet: snippet,
+          });
+        }
+
         expect(
           res.status,
-          `${toolId} returned 402 — points/auth regression (body: ${await res
-            .clone()
-            .text()})`,
+          `${toolId} returned 402 — points/auth regression (body: ${snippet})`,
         ).not.toBe(402);
 
         expect(
           res.ok,
-          `${toolId} returned HTTP ${res.status} ${res.statusText}`,
+          `${toolId} returned HTTP ${res.status} ${res.statusText} (body: ${snippet})`,
         ).toBe(true);
 
         const content = await readStreamedContent(res);
+        if (content.trim().length === 0) {
+          reportFailure({
+            toolId,
+            status: res.status,
+            statusText: res.statusText,
+            reason: "empty streamed body",
+            bodySnippet: "",
+          });
+        }
         expect(
           content.trim().length,
           `${toolId} streamed an empty body`,
