@@ -119,7 +119,7 @@ serve(async (req) => {
       const cost = (toolRow as any)?.points_cost ?? 0;
       const toolName = (toolRow as any)?.name ?? toolId;
       if (cost > 0) {
-        const { data: deductData, error: deductErr } = await serviceClient.rpc("deduct_tool_points", {
+        const { data: deductData, error: deductErr } = await serviceClient.rpc("api_deduct_points", {
           p_user_id: userId,
           p_tool_id: toolId,
           p_tool_name: toolName,
