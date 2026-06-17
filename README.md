@@ -1,73 +1,112 @@
-# Welcome to your Lovable project
+# TVK Tools
 
-## Project info
+A points-based SaaS toolkit for the Indian market with 50+ AI-powered tools. Built with React, Vite, and Supabase.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Self-Hosting Guide
 
-## How can I edit this code?
+### Prerequisites
 
-There are several ways of editing your application.
+- **Node.js** 18+ (or [Bun](https://bun.sh) 1.0+)
+- A **Supabase project** with the required schema, edge functions, and auth configured
+- A **Lovable Cloud / Lovable AI Gateway** API key (for AI-powered tools)
 
-**Use Lovable**
+### 1. Clone & Install
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+```bash
+git clone https://github.com/tvijaykumar545/tvktools.git
+cd tvktools
 
-Changes made via Lovable will be committed automatically to this repo.
+# With Bun (recommended — used in project scripts)
+bun install
 
-**Use your preferred IDE**
+# Or with npm
+npm install
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 2. Environment Variables
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Create a `.env` file in the project root with your Supabase credentials:
 
-Follow these steps:
+```env
+VITE_SUPABASE_PROJECT_ID="your-project-id"
+VITE_SUPABASE_PUBLISHABLE_KEY="your-anon-key"
+VITE_SUPABASE_URL="https://your-project.supabase.co"
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+> The **publishable (anon) key** is safe to expose in the browser bundle. It is used by the Supabase client for authentication and public data access. Row Level Security (RLS) policies enforce access control on the backend.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 3. Local Development
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+# Start the dev server on port 8080
+bun run dev
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Or with npm
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 4. Production Build
 
-**Use GitHub Codespaces**
+```bash
+# Generate the sitemap and build static assets
+bun run build
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+# Or with npm
+npm run build
+```
 
-## What technologies are used for this project?
+Output is written to the `dist/` directory. This is a **single-page application (SPA)** — any static file server must be configured to serve `index.html` for all unmatched routes.
 
-This project is built with:
+### 5. Deployment Options
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Deploy the contents of `dist/` to any static host:
 
-## How can I deploy this project?
+| Platform | Notes |
+|----------|-------|
+| **Vercel** | SPA fallback is automatic |
+| **Netlify** | Add `_redirects`: `/* /index.html 200` |
+| **Cloudflare Pages** | SPA fallback is automatic |
+| **AWS S3 + CloudFront** | Set error page to `index.html` |
+| **Nginx** | Use `try_files $uri $uri/ /index.html;` |
+| **GitHub Pages** | Works with `404.html` trick or hash router |
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+### 6. Backend Dependencies (Not Self-Hosted)
 
-## Can I connect a custom domain to my Lovable project?
+The following services run in the cloud and are **not included** in this static build:
 
-Yes, you can!
+| Service | Purpose | Setup Required |
+|---------|---------|----------------|
+| **Supabase** | Auth, PostgreSQL database, edge functions, storage | Create a project and deploy the edge functions in `supabase/functions/` |
+| **Lovable AI Gateway** | AI completions for text/code/DAX/etc. | Set `LOVABLE_API_KEY` as a secret in your Supabase edge function environment |
+| **Razorpay** | INR point purchases | Configure keys in Supabase secrets and edge function environment |
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+To fully replicate the backend, you will need to:
+1. Set up a Supabase project with the same database schema and RLS policies.
+2. Deploy all edge functions from `supabase/functions/`.
+3. Configure the required secrets (`LOVABLE_API_KEY`, Razorpay keys, etc.) in the Supabase dashboard.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+### 7. Running Tests
+
+```bash
+# Unit tests
+bun run test
+
+# Backend regression suite (requires CI secrets: TEST_USER_EMAIL, TEST_USER_PASSWORD)
+bun run test:backend-regression
+```
+
+### Tech Stack
+
+- [Vite](https://vitejs.dev/) — Build tool
+- [React](https://react.dev/) — UI library
+- [TypeScript](https://www.typescriptlang.org/) — Type safety
+- [Tailwind CSS](https://tailwindcss.com/) — Styling
+- [shadcn/ui](https://ui.shadcn.com/) — UI components
+- [Supabase](https://supabase.com/) — Backend, auth, database
+- [Lovable AI Gateway](https://ai.gateway.lovable.dev/) — AI model access
+
+### License
+
+This project is proprietary. All rights reserved.
